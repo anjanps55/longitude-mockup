@@ -842,23 +842,6 @@
   }
   .sheet-link:hover { color: var(--terra-600); }
 
-  /* ===== FAB ===== */
-  .fab-ask {
-    position: absolute; bottom: calc(96px + var(--safe-bottom)); right: 20px;
-    z-index: 49;
-  }
-  .fab-ask-btn {
-    width: 56px; height: 56px; border-radius: 20px;
-    background: var(--grad-terra); border: none; color: white;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.3s;
-    box-shadow: 0 6px 24px rgba(212,114,92,0.35);
-    -webkit-tap-highlight-color: transparent;
-  }
-  .fab-ask-btn:active { transform: scale(0.9); }
-  .fab-ask-btn:hover { box-shadow: 0 8px 32px rgba(212,114,92,0.45); }
-  .fab-ask-btn svg { width: 26px; height: 26px; }
-
   /* ===== DASHBOARD AVATAR ===== */
   .dash-avatar {
     width: 38px; height: 38px; border-radius: 12px;
@@ -891,6 +874,96 @@
   .stagger > *:nth-child(10) { animation-delay: 0.40s; }
   .stagger > *:nth-child(11) { animation-delay: 0.44s; }
   .stagger > *:nth-child(12) { animation-delay: 0.48s; }
+
+  /* ===== CONDITION DROPDOWN ===== */
+  .condition-dropdown-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .condition-dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px 7px 10px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(221,212,204,0.6);
+    background: var(--warm-white);
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brown-700);
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 2px 8px rgba(61,44,46,0.04);
+  }
+  .condition-dropdown-btn:hover {
+    border-color: var(--terra-200);
+    background: var(--terra-50);
+  }
+  .condition-dropdown-btn:active { transform: scale(0.96); }
+  .condition-dropdown-btn .dd-emoji { font-size: 14px; }
+  .condition-dropdown-btn .dd-chevron {
+    width: 14px; height: 14px;
+    color: var(--brown-400);
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    flex-shrink: 0;
+  }
+  .condition-dropdown-btn.open .dd-chevron { transform: rotate(180deg); }
+
+  .condition-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 260px;
+    background: var(--warm-white);
+    border-radius: 18px;
+    border: 1px solid rgba(221,212,204,0.6);
+    box-shadow: 0 12px 40px rgba(61,44,46,0.14), 0 4px 12px rgba(61,44,46,0.06);
+    z-index: 200;
+    padding: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.97);
+    transition: all 0.25s cubic-bezier(.4,0,.2,1);
+  }
+  .condition-dropdown-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+  .dd-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    font-family: 'Outfit', sans-serif;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .dd-option:hover { background: var(--brown-50); }
+  .dd-option:active { transform: scale(0.98); }
+  .dd-option.active {
+    background: var(--terra-50);
+    box-shadow: inset 0 0 0 1.5px var(--terra-100);
+  }
+  .dd-option-emoji { font-size: 18px; flex-shrink: 0; }
+  .dd-option-name { font-size: 13px; font-weight: 600; color: var(--brown-800); }
+  .dd-option-meta { font-size: 11px; color: var(--brown-400); margin-top: 1px; }
+
+  /* ===== CONTENT FADE TRANSITION ===== */
+  .dynamic-content {
+    transition: opacity 0.2s ease;
+  }
+  .dynamic-content.fading {
+    opacity: 0;
+  }
 </style>
 </head>
 <body>
@@ -937,529 +1010,61 @@
   <div class="screen" id="screen-dashboard">
     <div class="topbar">
       <div>
-        <div class="screen-title" style="font-size:28px;">Hi, Maya</div>
-        <div class="screen-subtitle">Your health advocacy dashboard</div>
+        <div class="screen-title" style="font-size:28px;" id="dash-greeting">Hi, Maya</div>
+        <div class="screen-subtitle" id="dash-subtitle">Your health advocacy dashboard</div>
       </div>
       <div class="topbar-spacer"></div>
-      <button class="topbar-action">&#x1F514;</button>
-      <div class="dash-avatar" onclick="go('profile')">M</div>
+      <!-- Condition Dropdown -->
+      <div class="condition-dropdown-wrap" id="condition-dropdown-wrap">
+        <button class="condition-dropdown-btn" id="condition-dropdown-btn" onclick="toggleDropdown()">
+          <span class="dd-emoji" id="dd-current-emoji">&#x1FAB7;</span>
+          <span id="dd-current-name">FSGS</span>
+          <svg class="dd-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="condition-dropdown-menu" id="condition-dropdown-menu">
+          <button class="dd-option active" data-condition="fsgs" onclick="selectCondition('fsgs')">
+            <span class="dd-option-emoji">&#x1FAB7;</span>
+            <div><div class="dd-option-name">FSGS</div><div class="dd-option-meta">Maya, 34</div></div>
+          </button>
+          <button class="dd-option" data-condition="crc" onclick="selectCondition('crc')">
+            <span class="dd-option-emoji">&#x1F397;</span>
+            <div><div class="dd-option-name">Stage 4 CRC</div><div class="dd-option-meta">David, 58</div></div>
+          </button>
+          <button class="dd-option" data-condition="gallstones" onclick="selectCondition('gallstones')">
+            <span class="dd-option-emoji">&#x1FAC1;</span>
+            <div><div class="dd-option-name">Gallstones</div><div class="dd-option-meta">Priya, 45</div></div>
+          </button>
+          <button class="dd-option" data-condition="kidneystones" onclick="selectCondition('kidneystones')">
+            <span class="dd-option-emoji">&#x1F48E;</span>
+            <div><div class="dd-option-name">Kidney Stones</div><div class="dd-option-meta">Marcus, 38</div></div>
+          </button>
+          <button class="dd-option" data-condition="perimenopause" onclick="selectCondition('perimenopause')">
+            <span class="dd-option-emoji">&#x1F469;</span>
+            <div><div class="dd-option-name">Perimenopause</div><div class="dd-option-meta">Sarah, 47</div></div>
+          </button>
+        </div>
+      </div>
+      <div class="dash-avatar" onclick="go('profile')" id="dash-avatar">M</div>
     </div>
     <div class="screen-scroll screen-pad-bottom">
-      <div class="stagger">
-        <div class="alert-card alert-amber" onclick="go('condition')">
-          <div class="alert-icon">&#x2728;</div>
-          <div class="alert-text">
-            <div class="alert-title">Advocacy Action Needed</div>
-            Your FSGS diagnosis may have a genetic component (8-35% of cases). Genetic testing could change your treatment. <strong style="color:var(--brown-800);">Tap to learn what to ask.</strong>
-          </div>
-        </div>
-
-        <div class="card" onclick="go('visit')">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--terra-50);color:var(--terra-500);">&#x1F4CB;</div>
-            <div><div class="card-title">Visit Briefing Ready</div><div class="card-desc">Dr. Patel &mdash; Nephrology &mdash; Apr 18</div></div>
-          </div>
-          <div class="card-desc">3 evidence-based questions prepared for your upcoming appointment.</div>
-          <span class="tag tag-terra">3 Questions Ready</span>
-        </div>
-
-        <div class="card" onclick="go('labs')">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--rose-50);color:var(--rose-400);">&#x1F9EA;</div>
-            <div><div class="card-title">Lab Trend Alert</div><div class="card-desc">eGFR declining over 18 months</div></div>
-          </div>
-          <div class="card-desc">Your kidney function has decreased 12% since Oct 2024. This may warrant a conversation with your nephrologist.</div>
-          <span class="tag tag-rose">Declining Trend</span>
-        </div>
-
-        <div class="card" onclick="go('ask')">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--grad-terra);color:white;font-size:18px;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            </div>
-            <div><div class="card-title">Ask Longitude</div><div class="card-desc">AI-powered health intelligence</div></div>
-          </div>
-          <div class="card-desc">Get personalized, evidence-based answers about your conditions, medications, and treatment options.</div>
-          <span class="tag tag-terra">Ask anything</span>
-        </div>
-
-        <div class="card" onclick="go('trials')">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--sage-50);color:var(--sage-500);">&#x1F3AF;</div>
-            <div><div class="card-title">2 Clinical Trials Found</div><div class="card-desc">Matching your FSGS profile</div></div>
-          </div>
-          <div class="card-desc">New trials studying non-immunosuppressive approaches. One enrolling within 50 miles.</div>
-          <span class="tag tag-sage">High Match</span>
-        </div>
-
-        <div class="card" onclick="go('genetics')">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--lav-50);color:var(--lav-400);">&#x1F9EC;</div>
-            <div><div class="card-title">Genetic Insight</div><div class="card-desc">CYP2C19 needs attention</div></div>
-          </div>
-          <div class="card-desc">Your pharmacogenomics profile shows you may be a poor metabolizer for one of your medications.</div>
-          <span class="tag tag-amber">Action Recommended</span>
-        </div>
-
-        <div class="card" onclick="go('conditions')">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--terra-50);color:var(--terra-500);">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-            </div>
-            <div><div class="card-title">Your Conditions</div><div class="card-desc">Explore condition briefings, questions, and advocacy guides</div></div>
-          </div>
-          <div class="card-desc">Access detailed briefings with evidence-based questions for every condition you're tracking.</div>
-          <span class="tag tag-terra">5 Conditions</span>
-        </div>
-
-        <div class="section-label">Your Medications</div>
-        <div class="med-item" onclick="openMedSheet('prednisone')"><div class="med-icon" style="background:var(--amber-50);">&#x1F48A;</div><div><div class="med-name">Prednisone</div><div class="med-dose">20mg daily</div></div><div class="med-warning">&#x26A0;&#xFE0F;</div></div>
-        <div class="med-item" onclick="openMedSheet('lisinopril')"><div class="med-icon" style="background:var(--sage-50);">&#x1F48A;</div><div><div class="med-name">Lisinopril</div><div class="med-dose">10mg daily</div></div><div class="med-warning" style="opacity:.3">&#x2705;</div></div>
-        <div class="med-item" onclick="openMedSheet('omeprazole')"><div class="med-icon" style="background:var(--lav-50);">&#x1F48A;</div><div><div class="med-name">Omeprazole</div><div class="med-dose">20mg daily</div></div><div class="med-warning">&#x26A0;&#xFE0F;</div></div>
+      <div class="stagger dynamic-content" id="dash-content">
+        <!-- Dashboard content injected by JS -->
       </div>
     </div>
     <div class="nav-bar" id="nav-dashboard"></div>
   </div>
 
-  <!-- ===== CONDITION ===== -->
+  <!-- ===== CONDITION BRIEFING ===== -->
   <div class="screen" id="screen-condition">
-    <div class="briefing-header">
-      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="briefing-header" id="briefing-header">
+      <button class="briefing-back" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
       <div class="briefing-condition">Condition Briefing</div>
-      <div class="briefing-title">Focal Segmental Glomerulosclerosis (FSGS)</div>
-      <div class="briefing-meta">Diagnosed Feb 2026 &middot; Updated today</div>
+      <div class="briefing-title" id="briefing-title">FSGS</div>
+      <div class="briefing-meta" id="briefing-meta">Diagnosed Feb 2026</div>
     </div>
     <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger" style="padding-top:16px;">
-        <div class="alert-card alert-amber static">
-          <div class="alert-icon">&#x1F9EC;</div>
-          <div class="alert-text">
-            <div class="alert-title">Genetic Testing May Change Your Treatment</div>
-            8-35% of FSGS cases have a genetic cause. Genetic FSGS generally <strong>does not respond to steroids</strong>. In one study, 50% of patients with genetic variants received unnecessary immunosuppression.
-            <div style="margin-top:8px;font-size:11px;color:var(--brown-400);">Source: Kidney International, 2024</div>
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:4px;">Key Facts</div>
-        <div class="card static">
-          <ul style="font-size:13px;color:var(--brown-600);padding-left:18px;line-height:2.2;">
-            <li>FSGS accounts for <strong>40% of adult nephrotic syndrome</strong></li>
-            <li>Over <strong>50 monogenic causes</strong> of steroid-resistant FSGS identified</li>
-            <li>Genetic testing can prevent months of unnecessary treatment</li>
-            <li>APOL1 high-risk variants found in <strong>~14% of African Americans</strong></li>
-          </ul>
-        </div>
-        <div class="section-label">Questions for Your Nephrologist</div>
-        <div class="question-item" style="border-left:3px solid var(--terra-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--terra-500);">Priority 1</div>
-          <div class="question-head">
-            <div class="question-text">"Should I get genetic testing before starting immunosuppressive therapy?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">8-35% of FSGS is genetic and steroid-resistant. Testing can prevent ineffective treatment. (Kidney International, 2024)</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Should I get genetic testing before starting immunosuppressive therapy?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--terra-300);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--terra-400);">Priority 2</div>
-          <div class="question-head">
-            <div class="question-text">"What specific genetic panel should be ordered for FSGS?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Exome sequencing found diagnostic variants in 29% of adults with FSGS. (JASN, 2023)</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'What specific genetic panel should be ordered for FSGS?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--amber-500);">Priority 3</div>
-          <div class="question-head">
-            <div class="question-text">"If I have genetic FSGS, what are the treatment alternatives?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Genetic FSGS requires targeted management. (Nature Reviews Nephrology, 2024)</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'If I have genetic FSGS, what are the treatment alternatives?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--brown-200);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--brown-400);">Also Ask</div>
-          <div class="question-head">
-            <div class="question-text">"Should my family members be tested for hereditary implications?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Genetic counseling recommended for all confirmed genetic FSGS cases. (KDIGO, 2025)</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Should my family members be tested for hereditary implications?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div style="padding:16px;">
-          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
-          <button class="btn btn-secondary" style="margin-top:10px;" onclick="go('trials')">View Related Clinical Trials</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== CONDITIONS LIBRARY ===== -->
-  <div class="screen" id="screen-conditions">
-    <div class="topbar">
-      <button class="topbar-back" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <div><div class="topbar-title">Your Conditions</div><div class="topbar-subtitle">Briefings, questions &amp; advocacy guides</div></div>
-    </div>
-    <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger" style="padding-top:8px;">
-        <div class="card" onclick="go('condition')" style="border-left:4px solid var(--terra-500);">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--terra-50);color:var(--terra-500);">&#x1F9EC;</div>
-            <div style="flex:1;"><div class="card-title">FSGS</div><div class="card-desc">Focal Segmental Glomerulosclerosis — kidney scarring affecting filtration</div></div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="card" onclick="go('crc')" style="border-left:4px solid var(--terra-600);">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--terra-50);color:var(--terra-600);">&#x1F3AF;</div>
-            <div style="flex:1;"><div class="card-title">Stage 4 Colorectal Cancer</div><div class="card-desc">Metastatic CRC — molecular profiling determines treatment eligibility</div></div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="card" onclick="go('gallstones')" style="border-left:4px solid var(--amber-500);">
-          <div class="card-header">
-            <div class="card-icon" style="background:var(--amber-50);color:var(--amber-500);">&#x1F48E;</div>
-            <div style="flex:1;"><div class="card-title">Gallstones</div><div class="card-desc">Cholelithiasis — most are silent, but complications can be emergencies</div></div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="card" onclick="go('kidneystones')" style="border-left:4px solid var(--amber-600);">
-          <div class="card-header">
-            <div class="card-icon" style="background:linear-gradient(135deg, var(--amber-50) 0%, var(--sage-50) 100%);color:var(--amber-600);">&#x1FAA8;</div>
-            <div style="flex:1;"><div class="card-title">Kidney Stones</div><div class="card-desc">Nephrolithiasis — stone composition determines prevention strategy</div></div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="card" onclick="go('perimenopause')" style="border-left:4px solid var(--lav-400);">
-          <div class="card-header">
-            <div class="card-icon" style="background:linear-gradient(135deg, var(--lav-50) 0%, var(--rose-50) 100%);color:var(--lav-400);">&#x1F338;</div>
-            <div style="flex:1;"><div class="card-title">Perimenopause</div><div class="card-desc">Hormonal transition — frequently misdiagnosed as anxiety or depression</div></div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== COLORECTAL CANCER BRIEFING ===== -->
-  <div class="screen" id="screen-crc">
-    <div class="briefing-header" style="background:var(--grad-terra);">
-      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <div class="briefing-condition">Condition Briefing</div>
-      <div class="briefing-title">Stage 4 Colorectal Cancer</div>
-      <div class="briefing-meta">Metastatic CRC &middot; Updated today</div>
-    </div>
-    <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger" style="padding-top:16px;">
-        <div class="alert-card alert-amber static">
-          <div class="alert-icon">&#x26A0;&#xFE0F;</div>
-          <div class="alert-text">
-            <div class="alert-title">Molecular Profiling Is Not Optional</div>
-            Molecular profiling determines whether you qualify for immunotherapy, targeted therapy, or clinical trials that could change your outcome.
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:4px;">Questions for Your Oncologist</div>
-        <div class="question-item" style="border-left:3px solid var(--terra-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--terra-500);">Priority 1</div>
-          <div class="question-head">
-            <div class="question-text">"Has my tumor been tested for MSI/MMR status, and am I eligible for immunotherapy?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">KEYNOTE-177 trial showed pembrolizumab achieved 16.5-month PFS in MSI-H mCRC patients. Only ~5% of mCRC is MSI-H, but for those patients, immunotherapy is transformative.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Has my tumor been tested for MSI/MMR status, and am I eligible for immunotherapy?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--terra-300);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--terra-400);">Priority 2</div>
-          <div class="question-head">
-            <div class="question-text">"Has comprehensive molecular profiling been done &mdash; KRAS, NRAS, BRAF, HER2, NTRK, TMB?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">NCCN 2025 guidelines mandate comprehensive biomarker testing for all mCRC patients. Approximately 50% of tumors are KRAS mutant, which excludes anti-EGFR therapy and directs treatment toward alternative targeted agents.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Has comprehensive molecular profiling been done — KRAS, NRAS, BRAF, HER2, NTRK, TMB?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--amber-500);">Priority 3</div>
-          <div class="question-head">
-            <div class="question-text">"Should I be tested for DPD deficiency before starting 5-FU/capecitabine?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">The EMA mandates DPYD testing before fluoropyrimidine therapy. 3-8% of patients carry DPYD variants causing potentially fatal toxicity. This is entirely preventable with pre-treatment genotyping.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Should I be tested for DPD deficiency before starting 5-FU/capecitabine?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:6px;">Advocacy Failure</div>
-        <div class="alert-card alert-rose static">
-          <div class="alert-icon">&#x1F6A8;</div>
-          <div class="alert-text">
-            <div class="alert-title">Up to 30% of mCRC patients may not receive comprehensive biomarker testing.</div>
-            Without full molecular profiling, patients may miss eligibility for immunotherapy, targeted therapy, or clinical trials that could significantly improve outcomes. Ask your oncologist to confirm all recommended biomarkers have been tested.
-          </div>
-        </div>
-        <div style="padding:16px;">
-          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
-          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for CRC clinical trials...')">Find Clinical Trials</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== GALLSTONES BRIEFING ===== -->
-  <div class="screen" id="screen-gallstones">
-    <div class="briefing-header" style="background:linear-gradient(135deg, var(--amber-500) 0%, var(--amber-300) 100%);">
-      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <div class="briefing-condition">Condition Briefing</div>
-      <div class="briefing-title">Gallstones</div>
-      <div class="briefing-meta">Cholelithiasis &middot; Updated today</div>
-    </div>
-    <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger" style="padding-top:16px;">
-        <div class="alert-card alert-amber static">
-          <div class="alert-icon">&#x1F4A1;</div>
-          <div class="alert-text">
-            <div class="alert-title">Most Gallstones Don't Need Treatment</div>
-            Most gallstones (80%) are asymptomatic and don't need treatment &mdash; but knowing the warning signs of cholangitis or pancreatitis could save your life.
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:4px;">Questions for Your Doctor</div>
-        <div class="question-item" style="border-left:3px solid var(--amber-500);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--amber-600);">Priority 1</div>
-          <div class="question-head">
-            <div class="question-text">"Are my stones symptomatic enough for surgery, or is watchful waiting appropriate?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Only 1-2% of asymptomatic gallstone patients develop symptoms per year. NIH and SAGES guidelines support watchful waiting for incidental, asymptomatic stones. Surgery is indicated for biliary colic, not silent stones.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Are my stones symptomatic enough for surgery, or is watchful waiting appropriate?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--amber-500);">Priority 2</div>
-          <div class="question-head">
-            <div class="question-text">"Could a stone be in my bile duct? Do I need MRCP or ERCP?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">MRCP has near-100% negative predictive value for common bile duct stones, making it ideal for ruling out choledocholithiasis non-invasively. ERCP carries a 5-10% complication risk (pancreatitis, perforation) and should only be used therapeutically, not diagnostically.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Could a stone be in my bile duct? Do I need MRCP or ERCP?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--rose-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--rose-500);">Priority 3</div>
-          <div class="question-head">
-            <div class="question-text">"What are the warning signs that I need to go to the ER immediately?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Charcot's triad (fever + RUQ pain + jaundice) indicates cholangitis requiring emergency intervention. Reynolds' pentad adds confusion and hypotension, indicating septic cholangitis with high mortality if untreated.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'What are the warning signs that I need to go to the ER immediately?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:6px;">Red Flags</div>
-        <div class="alert-card alert-rose static">
-          <div class="alert-icon">&#x1F6A8;</div>
-          <div class="alert-text">
-            <div class="alert-title">Fever + RUQ pain + jaundice = ER immediately</div>
-            This combination (Charcot's triad) suggests ascending cholangitis, a life-threatening infection of the biliary system. Do not wait for a scheduled appointment. Call 911 or go to the emergency department.
-          </div>
-        </div>
-        <div style="padding:16px;">
-          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
-          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for gallstone clinical trials...')">Find Clinical Trials</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== KIDNEY STONES BRIEFING ===== -->
-  <div class="screen" id="screen-kidneystones">
-    <div class="briefing-header" style="background:linear-gradient(135deg, var(--amber-600) 0%, var(--sage-400) 100%);">
-      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <div class="briefing-condition">Condition Briefing</div>
-      <div class="briefing-title">Kidney Stones</div>
-      <div class="briefing-meta">Nephrolithiasis &middot; Updated today</div>
-    </div>
-    <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger" style="padding-top:16px;">
-        <div class="alert-card alert-amber static">
-          <div class="alert-icon">&#x26A0;&#xFE0F;</div>
-          <div class="alert-text">
-            <div class="alert-title">Prevention Is Undertreated</div>
-            Only 7% of high-risk stone patients receive the metabolic workup that could prevent their next stone. Stone composition determines everything.
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:4px;">Questions for Your Urologist</div>
-        <div class="question-item" style="border-left:3px solid var(--amber-600);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--amber-600);">Priority 1</div>
-          <div class="question-head">
-            <div class="question-text">"Was my stone sent for composition analysis, and what type is it?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">AUA/EAU guidelines recommend stone composition analysis for all retrieved stones. Treatment differs dramatically by type: calcium oxalate (dietary changes, thiazides), uric acid (alkalinization, allopurinol), struvite (infection treatment), cystine (tiopronin, hydration).</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Was my stone sent for composition analysis, and what type is it?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--sage-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--sage-500);">Priority 2</div>
-          <div class="question-head">
-            <div class="question-text">"Should I have a 24-hour urine metabolic workup?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Only 7% of recurrent stone formers receive a 24-hour urine collection, despite AUA guidelines recommending it for all recurrent stone formers. This test identifies specific metabolic abnormalities (hypercalciuria, hyperoxaluria, hypocitraturia) that can be treated to prevent recurrence.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Should I have a 24-hour urine metabolic workup?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--lav-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--lav-500);">Priority 3</div>
-          <div class="question-head">
-            <div class="question-text">"Could I have primary hyperparathyroidism?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Primary hyperparathyroidism causes approximately 5% of kidney stones and is completely treatable with parathyroidectomy. PTH levels are rarely checked in stone patients despite guidelines. A simple blood test for calcium and PTH can identify this curable cause.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Could I have primary hyperparathyroidism?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:6px;">Advocacy Failure</div>
-        <div class="alert-card alert-rose static">
-          <div class="alert-icon">&#x1F6A8;</div>
-          <div class="alert-text">
-            <div class="alert-title">93% of recurrent stone formers treated reactively rather than preventively.</div>
-            Most patients receive surgery for each stone episode without ever getting the metabolic workup that could prevent future stones. Demand a 24-hour urine collection and stone composition analysis. Prevention is possible.
-          </div>
-        </div>
-        <div style="padding:16px;">
-          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
-          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for kidney stone clinical trials...')">Find Clinical Trials</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== PERIMENOPAUSE BRIEFING ===== -->
-  <div class="screen" id="screen-perimenopause">
-    <div class="briefing-header" style="background:linear-gradient(135deg, var(--lav-400) 0%, var(--rose-300) 100%);">
-      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <div class="briefing-condition">Condition Briefing</div>
-      <div class="briefing-title">Perimenopause</div>
-      <div class="briefing-meta">Hormonal Transition &middot; Updated today</div>
-    </div>
-    <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger" style="padding-top:16px;">
-        <div class="alert-card alert-rose static">
-          <div class="alert-icon">&#x1F4A1;</div>
-          <div class="alert-text">
-            <div class="alert-title">Your Symptoms Are Real</div>
-            Nearly 40% of perimenopausal women report feeling misdiagnosed. Over 50% receive a psychiatric diagnosis before perimenopause is considered. Your symptoms are real.
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:4px;">Questions for Your Doctor</div>
-        <div class="question-item" style="border-left:3px solid var(--lav-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--lav-500);">Priority 1</div>
-          <div class="question-head">
-            <div class="question-text">"Could this be perimenopause, not anxiety/depression/thyroid?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Over 50% of perimenopausal women receive a psychiatric diagnosis before perimenopause is considered. Only 42% of clinicians initiate discussion about menopause symptoms. Symptoms overlap significantly with anxiety, depression, and thyroid disorders.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Could this be perimenopause, not anxiety/depression/thyroid?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--rose-300);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--rose-400);">Priority 2</div>
-          <div class="question-head">
-            <div class="question-text">"Am I a candidate for HRT, and which type?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">In 2025, the FDA removed misleading black box warnings on HRT based on the flawed 2002 WHI study. Transdermal estradiol is safer than oral (no VTE risk increase). The timing hypothesis shows maximum benefit when started within 10 years of menopause onset.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Am I a candidate for HRT, and which type?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--amber-500);">Priority 3</div>
-          <div class="question-head">
-            <div class="question-text">"When should I get a bone density scan?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">Women lose up to 10% of bone mass in the first 5 post-menopausal years, with the fastest bone loss occurring 2-3 years around the final menstrual period. Early DEXA scanning can identify women at highest risk before fractures occur.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'When should I get a bone density scan?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:6px;">Key Advocacy Update</div>
-        <div class="alert-card alert-sage static">
-          <div class="alert-icon">&#x2705;</div>
-          <div class="alert-text">
-            <div class="alert-title">In 2025, the FDA removed misleading black box warnings on HRT.</div>
-            The warnings were based on the flawed 2002 WHI study that used older oral formulations in women over 60. Modern transdermal HRT started in the perimenopause window has a favorable risk-benefit profile. Discuss current evidence with your doctor.
-          </div>
-        </div>
-        <div style="padding:16px;">
-          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
-          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for perimenopause clinical trials...')">Find Clinical Trials</button>
-        </div>
+      <div class="stagger dynamic-content" style="padding-top:16px;" id="briefing-content">
+        <!-- Briefing content injected by JS -->
       </div>
     </div>
   </div>
@@ -1471,94 +1076,8 @@
       <div><div class="topbar-title">Health Trends</div><div class="topbar-subtitle">Longitudinal biomarker tracking</div></div>
     </div>
     <div class="screen-scroll screen-pad-bottom">
-      <div class="stagger">
-        <div class="chart-container" id="chart-egfr">
-          <div class="chart-header"><div><div class="chart-label">eGFR (Kidney Function)</div><div class="chart-value">58 <span class="chart-unit">mL/min/1.73m&sup2;</span></div></div><span class="chart-change down">&#x2193; 12%</span></div>
-          <div class="svg-chart-wrap">
-            <svg viewBox="0 0 340 90" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="egfrGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#D4626F" stop-opacity="0.3"/>
-                  <stop offset="100%" stop-color="#D4626F" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path class="svg-chart-area" fill="url(#egfrGrad)" d="M10,18 C30,22 55,28 90,32 C125,36 155,40 180,44 C205,48 230,52 255,56 C280,58 305,62 330,66 L330,85 L10,85 Z"/>
-              <path class="svg-chart-path" stroke="#D4626F" d="M10,18 C30,22 55,28 90,32 C125,36 155,40 180,44 C205,48 230,52 255,56 C280,58 305,62 330,66" data-length="340"/>
-              <circle class="svg-chart-dot" cx="10" cy="18" r="4" fill="#7BAE8E"/>
-              <circle class="svg-chart-dot" cx="55" cy="25" r="4" fill="#7BAE8E"/>
-              <circle class="svg-chart-dot" cx="100" cy="33" r="4" fill="#E8A44A"/>
-              <circle class="svg-chart-dot" cx="150" cy="40" r="4" fill="#E8A44A"/>
-              <circle class="svg-chart-dot" cx="195" cy="46" r="4" fill="#E8A44A"/>
-              <circle class="svg-chart-dot" cx="240" cy="53" r="4" fill="#D4903A"/>
-              <circle class="svg-chart-dot" cx="285" cy="60" r="4" fill="#F09AA3"/>
-              <circle class="svg-chart-dot" cx="330" cy="66" r="4" fill="#D4626F"/>
-            </svg>
-          </div>
-          <div class="sparkline-labels"><span>Oct '24</span><span>Jan '25</span><span>Apr</span><span>Jul</span><span>Oct</span><span>Jan '26</span><span>Mar</span><span>Apr</span></div>
-          <div class="ref-range"><span>Low</span><div class="ref-range-bar"><div class="ref-range-normal" style="left:40%;width:50%;"></div><div class="ref-range-marker" style="left:32%;background:var(--amber-400);"></div></div><span>High</span></div>
-        </div>
-
-        <div class="alert-card alert-rose static">
-          <div class="alert-icon">&#x1F4C9;</div>
-          <div class="alert-text">
-            <div class="alert-title">Declining Trend Detected</div>
-            Your eGFR dropped from 66 to 58 over 18 months. At this rate, you may reach Stage 3b CKD within 2 years. <strong style="color:var(--brown-800);">This warrants a conversation about monitoring and treatment.</strong>
-          </div>
-        </div>
-
-        <div class="chart-container" id="chart-upcr">
-          <div class="chart-header"><div><div class="chart-label">Urine Protein/Creatinine</div><div class="chart-value">1.8 <span class="chart-unit">g/g</span></div></div><span class="chart-change" style="background:var(--amber-100);color:var(--amber-600);">&#x2191; Elevated</span></div>
-          <div class="svg-chart-wrap">
-            <svg viewBox="0 0 340 90" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="upcrGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#E8A44A" stop-opacity="0.3"/>
-                  <stop offset="100%" stop-color="#E8A44A" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path class="svg-chart-area" fill="url(#upcrGrad)" d="M10,62 C40,56 85,48 130,40 C175,35 220,28 265,22 C300,17 320,14 330,12 L330,85 L10,85 Z"/>
-              <path class="svg-chart-path" stroke="#E8A44A" d="M10,62 C40,56 85,48 130,40 C175,35 220,28 265,22 C300,17 320,14 330,12" data-length="340"/>
-              <circle class="svg-chart-dot" cx="10" cy="62" r="4" fill="#FFD06B"/>
-              <circle class="svg-chart-dot" cx="74" cy="52" r="4" fill="#E8A44A"/>
-              <circle class="svg-chart-dot" cx="138" cy="40" r="4" fill="#D4903A"/>
-              <circle class="svg-chart-dot" cx="202" cy="32" r="4" fill="#D4903A"/>
-              <circle class="svg-chart-dot" cx="266" cy="22" r="4" fill="#F09AA3"/>
-              <circle class="svg-chart-dot" cx="330" cy="12" r="4" fill="#D4626F"/>
-            </svg>
-          </div>
-          <div class="sparkline-labels"><span>Oct '24</span><span>Jan '25</span><span>Apr</span><span>Oct</span><span>Jan '26</span><span>Apr</span></div>
-        </div>
-
-        <div class="chart-container" id="chart-bp">
-          <div class="chart-header"><div><div class="chart-label">Blood Pressure</div><div class="chart-value">128/82 <span class="chart-unit">mmHg</span></div></div><span class="chart-change" style="background:var(--brown-100);color:var(--brown-500);">Stable</span></div>
-          <div class="svg-chart-wrap">
-            <svg viewBox="0 0 340 90" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="bpGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#9AC8AB" stop-opacity="0.25"/>
-                  <stop offset="100%" stop-color="#9AC8AB" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path class="svg-chart-area" fill="url(#bpGrad)" d="M10,34 C40,30 85,36 130,32 C175,28 220,34 265,30 C300,33 320,32 330,34 L330,85 L10,85 Z"/>
-              <path class="svg-chart-path" stroke="#9AC8AB" d="M10,34 C40,30 85,36 130,32 C175,28 220,34 265,30 C300,33 320,32 330,34" data-length="340"/>
-              <circle class="svg-chart-dot" cx="10" cy="34" r="4" fill="#9AC8AB"/>
-              <circle class="svg-chart-dot" cx="74" cy="31" r="4" fill="#9AC8AB"/>
-              <circle class="svg-chart-dot" cx="138" cy="35" r="4" fill="#9AC8AB"/>
-              <circle class="svg-chart-dot" cx="202" cy="30" r="4" fill="#9AC8AB"/>
-              <circle class="svg-chart-dot" cx="266" cy="33" r="4" fill="#9AC8AB"/>
-              <circle class="svg-chart-dot" cx="330" cy="34" r="4" fill="#9AC8AB"/>
-            </svg>
-          </div>
-          <div class="sparkline-labels"><span>Oct '24</span><span>Jan '25</span><span>Apr</span><span>Oct</span><span>Jan '26</span><span>Apr</span></div>
-        </div>
-
-        <div class="section-label">AI Interpretation</div>
-        <div class="card static" style="background:var(--terra-50);border-color:var(--terra-100);">
-          <div class="card-desc" style="color:var(--brown-700);font-size:13.5px;line-height:1.7;">
-            <strong style="color:var(--brown-800);">What your numbers mean together:</strong> Declining eGFR combined with rising proteinuria suggests FSGS is not well-controlled. Blood pressure is stable on Lisinopril (protective). The pattern supports discussing treatment modification &mdash; especially given possible genetic steroid resistance.
-            <div style="margin-top:10px;font-size:11px;color:var(--brown-400);">Source: KDIGO 2024 Glomerular Diseases Guideline</div>
-          </div>
-        </div>
+      <div class="stagger dynamic-content" id="labs-content">
+        <!-- Labs content injected by JS -->
       </div>
     </div>
     <div class="nav-bar" id="nav-labs"></div>
@@ -1570,74 +1089,12 @@
       <button class="topbar-back" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:40px;height:40px;border-radius:12px;background:var(--grad-terra);display:flex;align-items:center;justify-content:center;font-size:18px;color:white;box-shadow:0 3px 10px rgba(212,114,92,0.25);">&#x1F4CB;</div>
-        <div><div class="topbar-title">Visit Briefing</div><div class="topbar-subtitle">Dr. Patel &middot; Nephrology &middot; Apr 18</div></div>
+        <div><div class="topbar-title">Visit Briefing</div><div class="topbar-subtitle" id="visit-topbar-subtitle">Dr. Patel &middot; Nephrology &middot; Apr 18</div></div>
       </div>
     </div>
     <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger">
-        <div class="alert-card alert-terra static">
-          <div class="alert-icon">&#x2728;</div>
-          <div class="alert-text"><div class="alert-title">Personalized for you</div>Based on your FSGS diagnosis, declining eGFR, medications, and genetic profile.</div>
-        </div>
-        <div class="section-label">Priority Questions</div>
-        <div class="question-item" style="border-left:3px solid var(--rose-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--rose-500);">Critical</div>
-          <div class="question-head">
-            <div class="question-text">"My eGFR dropped from 66 to 58 in 18 months. Should we adjust monitoring or treatment?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">KDIGO recommends increased monitoring when decline exceeds 5 mL/min/year. Yours: ~6.4.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'My eGFR dropped from 66 to 58 in 18 months. Should we adjust monitoring or treatment?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--amber-500);">Important</div>
-          <div class="question-head">
-            <div class="question-text">"I've been on prednisone 4 months with no improvement. Should we pursue genetic testing?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">50% of genetic FSGS patients received unnecessary immunosuppression. Yield: 29% in adults.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'I have been on prednisone 4 months with no improvement. Should we pursue genetic testing?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="question-item" style="border-left:3px solid var(--sage-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--sage-500);">Discuss</div>
-          <div class="question-head">
-            <div class="question-text">"Are there clinical trials for non-immunosuppressive FSGS treatments?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">2 active trials within 50 miles studying sparsentan and endothelin receptor antagonists.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Are there clinical trials for non-immunosuppressive FSGS treatments?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div class="section-label" style="padding-top:6px;">Health Summary</div>
-        <div class="card static" style="background:var(--parchment);border-color:var(--brown-200);">
-          <div style="font-size:13px;color:var(--brown-600);line-height:1.9;">
-            <strong style="color:var(--brown-800);font-family:'Fraunces',serif;font-size:14px;">Patient Summary &mdash; Maya P.</strong><br>
-            <strong>Diagnosis:</strong> FSGS (Feb 2026)<br>
-            <strong>Treatment:</strong> Prednisone 20mg, Lisinopril 10mg, Omeprazole 20mg<br>
-            <strong>eGFR Trend:</strong> 66 &rarr; 58 over 18 months (Stage 3a CKD)<br>
-            <strong>Proteinuria:</strong> Rising (1.8 g/g, up from 0.8)<br>
-            <strong>Genetics:</strong> CYP2C19 poor metabolizer<br>
-            <strong>Steroid response:</strong> None after 4 months
-          </div>
-        </div>
-        <div style="padding:16px;">
-          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Visit briefing exported to your Files')">Export as PDF</button>
-          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F512;', 'Shared securely with Dr. Patel\'s office')">Share with Dr. Patel</button>
-        </div>
+      <div class="stagger dynamic-content" id="visit-content">
+        <!-- Visit content injected by JS -->
       </div>
     </div>
   </div>
@@ -1649,27 +1106,8 @@
       <div><div class="topbar-title">Clinical Trials</div><div class="topbar-subtitle">Matched to your health profile</div></div>
     </div>
     <div class="screen-scroll screen-pad-bottom">
-      <div class="stagger">
-        <div class="alert-card alert-sage static"><div class="alert-icon">&#x2705;</div><div class="alert-text"><div class="alert-title">2 trials match your profile</div>Based on your FSGS diagnosis, eGFR, age, and location. Updated daily.</div></div>
-        <div class="trial-card">
-          <div class="trial-phase">Phase 3</div>
-          <div class="trial-title">Sparsentan vs. Irbesartan in FSGS (DUPLEX Extension)</div>
-          <div class="trial-meta"><span>&#x1F4CD; Houston Methodist &mdash; 32 mi</span><span>&#x1F4C5; Enrolling</span></div>
-          <div class="trial-match"><span>&#x2705;</span><span>92% Profile Match &mdash; 11 of 12 criteria</span></div>
-          <div style="margin-top:14px;font-size:13px;color:var(--brown-500);line-height:1.65;">Dual endothelin/angiotensin receptor antagonist for reducing proteinuria. <strong style="color:var(--brown-700);">Non-immunosuppressive</strong> &mdash; relevant given potential steroid resistance.</div>
-          <div style="margin-top:14px;"><button class="btn btn-secondary btn-sm" onclick="showToast('&#x2728;', '3 questions generated for your visit')">Generate Questions for Dr. Patel</button></div>
-        </div>
-        <div class="trial-card">
-          <div class="trial-phase">Phase 2</div>
-          <div class="trial-title">Atrasentan for Primary Proteinuric Glomerulopathies</div>
-          <div class="trial-meta"><span>&#x1F4CD; Baylor College &mdash; 28 mi</span><span>&#x1F4C5; Enrolling</span></div>
-          <div class="trial-match"><span>&#x2705;</span><span>85% Profile Match &mdash; 9 of 11 criteria</span></div>
-          <div style="margin-top:14px;font-size:13px;color:var(--brown-500);line-height:1.65;">Selective endothelin A receptor antagonist. Includes FSGS with eGFR > 30. Non-immunosuppressive.</div>
-          <div style="margin-top:14px;"><button class="btn btn-secondary btn-sm" onclick="showToast('&#x2728;', '3 questions generated for your visit')">Generate Questions for Dr. Patel</button></div>
-        </div>
-        <div class="card static" style="background:var(--parchment);border-color:var(--brown-200);">
-          <div class="card-desc" style="font-size:13.5px;line-height:1.7;color:var(--brown-600);"><strong style="color:var(--brown-800);font-family:'Fraunces',serif;">Trials are an option, not an obligation.</strong> Fewer than 5% of patients participate, often because they don't know trials exist. Asking your specialist is a form of advocacy.</div>
-        </div>
+      <div class="stagger dynamic-content" id="trials-content">
+        <!-- Trials content injected by JS -->
       </div>
     </div>
     <div class="nav-bar" id="nav-trials"></div>
@@ -1679,43 +1117,11 @@
   <div class="screen" id="screen-genetics">
     <div class="topbar">
       <button class="topbar-back" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <div><div class="topbar-title">Genetic Insights</div><div class="topbar-subtitle">Pharmacogenomics &middot; 23andMe</div></div>
+      <div><div class="topbar-title">Genetic Insights</div><div class="topbar-subtitle" id="genetics-topbar-subtitle">Pharmacogenomics &middot; 23andMe</div></div>
     </div>
     <div class="screen-scroll screen-pad-bottom-solo">
-      <div class="stagger">
-        <div class="alert-card alert-amber static"><div class="alert-icon">&#x2728;</div><div class="alert-text"><div class="alert-title">1 medication may need attention</div>Your CYP2C19 genotype suggests you're a poor metabolizer. This affects how you process omeprazole.</div></div>
-        <div class="card static">
-          <div class="card-title" style="font-size:16px;margin-bottom:16px;">Your Metabolizer Profile</div>
-          <div class="gene-result"><div><div class="gene-name">CYP2D6</div><div class="gene-detail">Metabolizes SSRIs, opioids, beta-blockers</div></div><span class="gene-status gene-normal">Normal</span></div>
-          <div class="gene-result"><div><div class="gene-name">CYP2C19</div><div class="gene-detail">Metabolizes PPIs, clopidogrel, SSRIs</div></div><span class="gene-status gene-alert">Poor Metabolizer</span></div>
-          <div class="gene-result"><div><div class="gene-name">CYP3A4</div><div class="gene-detail">Metabolizes statins, calcium channel blockers</div></div><span class="gene-status gene-normal">Normal</span></div>
-          <div class="gene-result"><div><div class="gene-name">CYP2C9</div><div class="gene-detail">Metabolizes warfarin, NSAIDs</div></div><span class="gene-status gene-attention">Intermediate</span></div>
-        </div>
-        <div class="section-label">Medication Impact</div>
-        <div class="card static" style="border-color:var(--rose-100);background:linear-gradient(135deg,var(--rose-50) 0%,var(--warm-white) 100%);">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-            <div style="width:42px;height:42px;border-radius:12px;background:var(--rose-100);display:flex;align-items:center;justify-content:center;font-size:20px;">&#x1F48A;</div>
-            <div><div class="card-title" style="font-size:15px;color:var(--rose-500);">Omeprazole 20mg</div><div class="card-desc" style="font-size:12px;">Affected by CYP2C19 status</div></div>
-          </div>
-          <div style="font-size:13px;color:var(--brown-600);line-height:1.7;">As a poor metabolizer, omeprazole stays in your system longer, increasing effects and side effects. <strong style="color:var(--brown-800);">CPIC guidelines suggest a dose reduction may be appropriate.</strong></div>
-          <div style="margin-top:10px;font-size:11px;color:var(--brown-400);">Source: CPIC Guideline for PPIs and CYP2C19, 2023</div>
-        </div>
-        <div class="section-label">Question for Your Doctor</div>
-        <div class="question-item" style="border-left:3px solid var(--lav-400);" onclick="toggleQuestion(this)">
-          <div class="question-number" style="color:var(--lav-500);">Based on your genetics</div>
-          <div class="question-head">
-            <div class="question-text">"I'm a CYP2C19 poor metabolizer. Should my omeprazole dose be adjusted?"</div>
-            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="question-body">
-            <div class="question-evidence">CPIC recommends dose adjustment for poor metabolizers on PPIs.</div>
-            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'I am a CYP2C19 poor metabolizer. Should my omeprazole dose be adjusted?')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy to clipboard
-            </button>
-          </div>
-        </div>
-        <div style="padding:16px;"><button class="btn btn-outline" style="font-size:13px;">View Full Genetic Report</button></div>
+      <div class="stagger dynamic-content" id="genetics-content">
+        <!-- Genetics content injected by JS -->
       </div>
     </div>
   </div>
@@ -1765,90 +1171,9 @@
       </div>
     </div>
     <div class="chat-container">
-      <div class="chat-messages" id="chat-messages">
-        <!-- Greeting -->
-        <div style="text-align:center;padding:10px 0 18px;">
-          <div style="font-size:11px;color:var(--brown-300);font-weight:500;letter-spacing:0.5px;">TODAY</div>
-        </div>
-
-        <!-- User message 1 -->
-        <div class="chat-bubble user" style="animation-delay:0.05s;">
-          My nephrologist wants to start me on prednisone for FSGS. Should I be concerned?
-        </div>
-
-        <!-- AI response 1 -->
-        <div class="chat-bubble ai" style="animation-delay:0.1s;">
-          <div class="chat-ai-label"><span class="ai-dot"></span> Longitude AI</div>
-          <div style="margin-bottom:8px;">That's a thoughtful question, Maya. Prednisone is a standard first-line treatment for FSGS, but there are important considerations specific to your case.</div>
-          <div style="margin-bottom:8px;"><strong>Before starting steroids, genetic testing is worth discussing.</strong> Research shows that 8-35% of FSGS cases have a genetic cause, and genetic FSGS typically <strong>does not respond to immunosuppressive therapy</strong> like prednisone. In one study, 50% of patients with genetic variants received months of unnecessary immunosuppression with its side effects.</div>
-          <div>If your FSGS has a genetic basis, steroids would expose you to significant side effects (weight gain, bone loss, blood sugar changes, immune suppression) without therapeutic benefit.</div>
-
-          <button class="chat-sources-toggle" onclick="toggleChatSources(this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            2 Sources
-          </button>
-          <div class="chat-source-cards">
-            <div class="chat-source-card">
-              <strong>Kidney International, 2024</strong>
-              "Genetic testing in FSGS: Implications for treatment decisions" &mdash; Found 8-35% of adult FSGS cases are genetic, with 50% receiving unnecessary immunosuppression before diagnosis.
-            </div>
-            <div class="chat-source-card">
-              <strong>KDIGO Clinical Practice Guideline, 2024</strong>
-              Updated guidelines recommend considering genetic evaluation in FSGS patients before initiating prolonged immunosuppressive therapy.
-            </div>
-          </div>
-        </div>
-
-        <!-- User message 2 -->
-        <div class="chat-bubble user" style="animation-delay:0.15s;">
-          What specific genetic test should I ask for?
-        </div>
-
-        <!-- AI response 2 -->
-        <div class="chat-bubble ai" style="animation-delay:0.2s;">
-          <div class="chat-ai-label"><span class="ai-dot"></span> Longitude AI</div>
-          <div style="margin-bottom:8px;">Great follow-up. Here's what to discuss with your nephrologist:</div>
-          <div style="margin-bottom:10px;"><strong>1. Clinical exome sequencing for nephropathy genes</strong> &mdash; This is the most comprehensive single test. A 2023 study found diagnostic variants in <strong>29% of adults with FSGS</strong> using whole exome sequencing. It covers over 50 known monogenic causes of FSGS.</div>
-          <div style="margin-bottom:10px;"><strong>2. APOL1 genotyping</strong> &mdash; Particularly important as APOL1 high-risk variants are found in ~14% of African Americans and are a leading cause of FSGS in this population. This is a targeted, less expensive test.</div>
-          <div style="margin-bottom:10px;"><strong>3. Targeted nephropathy gene panel</strong> &mdash; If cost is a concern, a focused panel (NPHS1, NPHS2, WT1, TRPC6, INF2, ACTN4) covers the most common genetic causes.</div>
-
-          <div style="padding:14px 16px;border-radius:14px;background:var(--sage-50);border:1px solid var(--sage-100);margin-top:12px;margin-bottom:6px;">
-            <div style="font-size:12px;font-weight:700;color:var(--sage-600);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px;">Questions to bring to your visit</div>
-            <div style="font-size:13px;color:var(--brown-600);line-height:1.8;">
-              1. "Can we order exome sequencing before starting prednisone?"<br>
-              2. "Should I get APOL1 genotyping?"<br>
-              3. "If testing takes time, is a watch-and-wait approach safe?"
-            </div>
-            <div style="margin-top:10px;" onclick="go('visit')">
-              <span class="chat-visit-link">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                View in your Visit Briefing
-              </span>
-            </div>
-          </div>
-
-          <button class="chat-sources-toggle" onclick="toggleChatSources(this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            3 Sources
-          </button>
-          <div class="chat-source-cards">
-            <div class="chat-source-card">
-              <strong>JASN, 2023</strong>
-              "Exome sequencing in adult nephrotic syndrome" &mdash; Diagnostic yield of 29% in adults with FSGS, supporting routine genetic evaluation.
-            </div>
-            <div class="chat-source-card">
-              <strong>Kidney International, 2024</strong>
-              "APOL1-associated nephropathy" &mdash; Comprehensive review of APOL1 variant prevalence and clinical implications for FSGS management.
-            </div>
-            <div class="chat-source-card">
-              <strong>Nature Reviews Nephrology, 2024</strong>
-              "Monogenic FSGS: from genes to therapy" &mdash; Overview of 50+ genes implicated in genetic FSGS with treatment guidance.
-            </div>
-          </div>
-        </div>
+      <div class="chat-messages dynamic-content" id="chat-messages">
+        <!-- Chat content injected by JS -->
       </div>
-
-      <!-- Input bar -->
       <div class="chat-input-bar">
         <input type="text" class="chat-input" placeholder="Ask about your health..." readonly>
         <button class="chat-send-btn">
@@ -1865,14 +1190,12 @@
         <button class="topbar-back" onclick="go('dashboard')" style="background:rgba(61,44,46,0.08);color:var(--brown-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
         <div class="topbar-spacer"></div>
       </div>
-      <div class="profile-avatar">M</div>
-      <div class="profile-name">Maya Patel</div>
-      <div class="profile-meta"><strong>FSGS</strong> &middot; Member since Feb 2026</div>
+      <div class="profile-avatar" id="profile-avatar">M</div>
+      <div class="profile-name" id="profile-name">Maya Patel</div>
+      <div class="profile-meta" id="profile-meta"><strong>FSGS</strong> &middot; Member since Feb 2026</div>
     </div>
     <div class="screen-scroll screen-pad-bottom">
       <div class="stagger" style="padding-top:10px;">
-
-        <!-- Advocacy Score -->
         <div class="advocacy-ring-section">
           <div class="advocacy-ring-wrap">
             <svg viewBox="0 0 100 100">
@@ -1894,82 +1217,23 @@
             <div class="advocacy-desc">Your advocacy score measures how actively you're managing your health journey.</div>
           </div>
         </div>
-
-        <!-- Connected Summary -->
         <div class="connected-summary">
-          <div class="connected-stat">
-            <div class="connected-stat-num">4</div>
-            <div class="connected-stat-label">Sources connected</div>
-          </div>
-          <div class="connected-stat">
-            <div class="connected-stat-num">23</div>
-            <div class="connected-stat-label">Lab results tracked</div>
-          </div>
-          <div class="connected-stat">
-            <div class="connected-stat-num">3</div>
-            <div class="connected-stat-label">Medications monitored</div>
-          </div>
-          <div class="connected-stat">
-            <div class="connected-stat-num">1</div>
-            <div class="connected-stat-label">Genetic profile</div>
-          </div>
+          <div class="connected-stat"><div class="connected-stat-num">4</div><div class="connected-stat-label">Sources connected</div></div>
+          <div class="connected-stat"><div class="connected-stat-num">23</div><div class="connected-stat-label">Lab results tracked</div></div>
+          <div class="connected-stat"><div class="connected-stat-num">3</div><div class="connected-stat-label">Medications monitored</div></div>
+          <div class="connected-stat"><div class="connected-stat-num">1</div><div class="connected-stat-label">Genetic profile</div></div>
         </div>
-
-        <!-- Conditions -->
         <div class="section-label">Conditions</div>
-        <div class="condition-badge" onclick="go('condition')">
+        <div class="condition-badge" id="profile-condition-badge" onclick="go('condition')">
           <div class="condition-severity" style="background:var(--grad-terra);"></div>
           <div>
-            <div class="condition-label">Focal Segmental Glomerulosclerosis</div>
-            <div class="condition-sub">Diagnosed Feb 2026 &middot; Active monitoring</div>
+            <div class="condition-label" id="profile-condition-label">Focal Segmental Glomerulosclerosis</div>
+            <div class="condition-sub" id="profile-condition-sub">Diagnosed Feb 2026 &middot; Active monitoring</div>
           </div>
         </div>
-
-        <!-- Health Timeline -->
         <div class="section-label" style="padding-top:8px;">Health Timeline</div>
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-dot" style="background:var(--rose-400);box-shadow:0 0 0 2px var(--rose-200);"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">Apr 2026</div>
-              <div class="timeline-desc">Lab results received &mdash; <strong>eGFR 58</strong> mL/min/1.73m&sup2;</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot" style="background:var(--lav-400);box-shadow:0 0 0 2px var(--lav-200);"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">Mar 2026</div>
-              <div class="timeline-desc">23andMe genetics imported &mdash; CYP2C19 poor metabolizer identified</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot" style="background:var(--amber-400);box-shadow:0 0 0 2px var(--amber-200);"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">Feb 2026</div>
-              <div class="timeline-desc"><strong>FSGS diagnosed</strong> by Dr. Patel, Nephrology</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot" style="background:var(--terra-500);box-shadow:0 0 0 2px var(--terra-200);"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">Jan 2026</div>
-              <div class="timeline-desc">Started <strong>Prednisone 20mg</strong> daily</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot" style="background:var(--amber-400);box-shadow:0 0 0 2px var(--amber-200);"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">Oct 2025</div>
-              <div class="timeline-desc">Lab results &mdash; <strong>eGFR 62</strong> mL/min/1.73m&sup2;</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot" style="background:var(--sage-400);box-shadow:0 0 0 2px var(--sage-200);"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">Jun 2025</div>
-              <div class="timeline-desc">Apple Health connected &mdash; vitals sync started</div>
-            </div>
-          </div>
+        <div class="timeline" id="profile-timeline">
+          <!-- Timeline injected by JS -->
         </div>
       </div>
     </div>
@@ -1986,30 +1250,949 @@
 </div>
 
 <script>
-// Navigation state
-const navScreens = ['dashboard', 'labs', 'ask', 'trials', 'profile'];
+// ===== CONDITION DATA =====
+const conditions = {
+  fsgs: {
+    name: 'FSGS',
+    fullName: 'Focal Segmental Glomerulosclerosis',
+    patient: 'Maya',
+    lastName: 'Patel',
+    age: 34,
+    emoji: '\u{1FAB7}',
+    color: 'terra',
+    avatarInitial: 'M',
+    greeting: 'Hi, Maya',
+    subtitle: 'Your health advocacy dashboard',
+    briefingGradient: 'var(--grad-terra)',
+    dashAlert: {
+      icon: '\u2728',
+      alertClass: 'alert-amber',
+      title: 'Advocacy Action Needed',
+      text: 'Your FSGS diagnosis may have a genetic component (8-35% of cases). Genetic testing could change your treatment. <strong style="color:var(--brown-800);">Tap to learn what to ask.</strong>'
+    },
+    cards: [
+      { icon: '\u{1F4CB}', iconBg: 'var(--terra-50)', iconColor: 'var(--terra-500)', title: 'Visit Briefing Ready', desc: 'Dr. Patel \u2014 Nephrology \u2014 Apr 18', body: '3 evidence-based questions prepared for your upcoming appointment.', tag: '3 Questions Ready', tagClass: 'tag-terra', target: 'visit' },
+      { icon: '\u{1F9EA}', iconBg: 'var(--rose-50)', iconColor: 'var(--rose-400)', title: 'Lab Trend Alert', desc: 'eGFR declining over 18 months', body: 'Your kidney function has decreased 12% since Oct 2024. This may warrant a conversation with your nephrologist.', tag: 'Declining Trend', tagClass: 'tag-rose', target: 'labs' },
+      { icon: 'chat', iconBg: 'var(--grad-terra)', iconColor: 'white', title: 'Ask Longitude', desc: 'AI-powered health intelligence', body: 'Get personalized, evidence-based answers about your conditions, medications, and treatment options.', tag: 'Ask anything', tagClass: 'tag-terra', target: 'ask' },
+      { icon: '\u{1F3AF}', iconBg: 'var(--sage-50)', iconColor: 'var(--sage-500)', title: '2 Clinical Trials Found', desc: 'Matching your FSGS profile', body: 'New trials studying non-immunosuppressive approaches. One enrolling within 50 miles.', tag: 'High Match', tagClass: 'tag-sage', target: 'trials' },
+      { icon: '\u{1F9EC}', iconBg: 'var(--lav-50)', iconColor: 'var(--lav-400)', title: 'Genetic Insight', desc: 'CYP2C19 needs attention', body: 'Your pharmacogenomics profile shows you may be a poor metabolizer for one of your medications.', tag: 'Action Recommended', tagClass: 'tag-amber', target: 'genetics' }
+    ],
+    meds: [
+      { name: 'Prednisone', dose: '20mg daily', iconBg: 'var(--amber-50)', warning: true, id: 'prednisone' },
+      { name: 'Lisinopril', dose: '10mg daily', iconBg: 'var(--sage-50)', warning: false, id: 'lisinopril' },
+      { name: 'Omeprazole', dose: '20mg daily', iconBg: 'var(--lav-50)', warning: true, id: 'omeprazole' }
+    ],
+    medData: {
+      prednisone: { name: 'Prednisone', dose: '20mg', schedule: 'Once daily, morning with food', icon: '\u{1F48A}', iconBg: 'var(--amber-50)', food: 'Take with food to reduce stomach irritation. Avoid grapefruit juice. Limit sodium intake as prednisone causes fluid retention.', genetic: null, status: { type: 'amber', title: 'Currently under review', text: 'Your lack of response after 4 months may indicate genetic steroid resistance. 8-35% of FSGS cases are genetic and do not respond to immunosuppressive therapy like prednisone.' }, questions: ['Should we consider tapering prednisone given the lack of response?', 'Is genetic testing warranted before continuing immunosuppression?', 'What are the alternatives if I have steroid-resistant FSGS?'] },
+      lisinopril: { name: 'Lisinopril', dose: '10mg', schedule: 'Once daily, any time', icon: '\u{1F48A}', iconBg: 'var(--sage-50)', food: 'Can be taken with or without food. Avoid potassium supplements and potassium-rich salt substitutes. Stay well hydrated.', genetic: null, status: { type: 'sage', title: 'Working as expected', text: 'Your blood pressure has remained stable at 128/82 mmHg. Lisinopril also provides kidney-protective effects by reducing proteinuria in FSGS.' }, questions: ['Is 10mg providing optimal kidney protection for my level of proteinuria?', 'Should we consider increasing the dose for better proteinuria control?'] },
+      omeprazole: { name: 'Omeprazole', dose: '20mg', schedule: 'Once daily, 30 min before breakfast', icon: '\u{1F48A}', iconBg: 'var(--lav-50)', food: 'Take 30 minutes before eating for best absorption. Avoid taking with calcium supplements at the same time.', genetic: { gene: 'CYP2C19', status: 'Poor Metabolizer', text: 'Your CYP2C19 poor metabolizer status means omeprazole stays in your system longer, leading to increased drug levels and effects. CPIC guidelines recommend considering a 50% dose reduction.' }, status: { type: 'lav', title: 'Genetic impact detected', text: 'Your CYP2C19 poor metabolizer status affects this medication. Standard dosing may lead to higher-than-expected drug exposure.' }, questions: ['Should my omeprazole dose be reduced given my CYP2C19 status?', 'Are there alternative PPIs less affected by CYP2C19?'] }
+    },
+    briefing: {
+      conditionLabel: 'Condition Briefing',
+      title: 'Focal Segmental Glomerulosclerosis (FSGS)',
+      meta: 'Diagnosed Feb 2026 \u00b7 Updated today',
+      alert: { icon: '\u{1F9EC}', alertClass: 'alert-amber', title: 'Genetic Testing May Change Your Treatment', text: '8-35% of FSGS cases have a genetic cause. Genetic FSGS generally <strong>does not respond to steroids</strong>. In one study, 50% of patients with genetic variants received unnecessary immunosuppression.<div style="margin-top:8px;font-size:11px;color:var(--brown-400);">Source: Kidney International, 2024</div>' },
+      facts: [
+        'FSGS accounts for <strong>40% of adult nephrotic syndrome</strong>',
+        'Over <strong>50 monogenic causes</strong> of steroid-resistant FSGS identified',
+        'Genetic testing can prevent months of unnecessary treatment',
+        'APOL1 high-risk variants found in <strong>~14% of African Americans</strong>'
+      ],
+      questions: [
+        { priority: 'Priority 1', color: 'var(--terra-500)', borderColor: 'var(--terra-400)', text: '"Should I get genetic testing before starting immunosuppressive therapy?"', evidence: '8-35% of FSGS is genetic and steroid-resistant. Testing can prevent ineffective treatment. (Kidney International, 2024)' },
+        { priority: 'Priority 2', color: 'var(--terra-400)', borderColor: 'var(--terra-300)', text: '"What specific genetic panel should be ordered for FSGS?"', evidence: 'Exome sequencing found diagnostic variants in 29% of adults with FSGS. (JASN, 2023)' },
+        { priority: 'Priority 3', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"If I have genetic FSGS, what are the treatment alternatives?"', evidence: 'Genetic FSGS requires targeted management. (Nature Reviews Nephrology, 2024)' },
+        { priority: 'Also Ask', color: 'var(--brown-400)', borderColor: 'var(--brown-200)', text: '"Should my family members be tested for hereditary implications?"', evidence: 'Genetic counseling recommended for all confirmed genetic FSGS cases. (KDIGO, 2025)' }
+      ]
+    },
+    labs: {
+      charts: [
+        { id: 'chart1', label: 'eGFR (Kidney Function)', value: '58', unit: 'mL/min/1.73m\u00b2', change: '\u2193 12%', changeClass: 'down', changeStyle: '', gradId: 'egfrGrad', gradColor: '#D4626F', strokeColor: '#D4626F', areaPath: 'M10,18 C30,22 55,28 90,32 C125,36 155,40 180,44 C205,48 230,52 255,56 C280,58 305,62 330,66 L330,85 L10,85 Z', linePath: 'M10,18 C30,22 55,28 90,32 C125,36 155,40 180,44 C205,48 230,52 255,56 C280,58 305,62 330,66', dots: [{x:10,y:18,c:'#7BAE8E'},{x:55,y:25,c:'#7BAE8E'},{x:100,y:33,c:'#E8A44A'},{x:150,y:40,c:'#E8A44A'},{x:195,y:46,c:'#E8A44A'},{x:240,y:53,c:'#D4903A'},{x:285,y:60,c:'#F09AA3'},{x:330,y:66,c:'#D4626F'}], labels: ["Oct '24","Jan '25","Apr","Jul","Oct","Jan '26","Mar","Apr"], refRange: { normalLeft: '40%', normalWidth: '50%', markerLeft: '32%', markerColor: 'var(--amber-400)' } },
+        { id: 'chart2', label: 'Urine Protein/Creatinine', value: '1.8', unit: 'g/g', change: '\u2191 Elevated', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'upcrGrad', gradColor: '#E8A44A', strokeColor: '#E8A44A', areaPath: 'M10,62 C40,56 85,48 130,40 C175,35 220,28 265,22 C300,17 320,14 330,12 L330,85 L10,85 Z', linePath: 'M10,62 C40,56 85,48 130,40 C175,35 220,28 265,22 C300,17 320,14 330,12', dots: [{x:10,y:62,c:'#FFD06B'},{x:74,y:52,c:'#E8A44A'},{x:138,y:40,c:'#D4903A'},{x:202,y:32,c:'#D4903A'},{x:266,y:22,c:'#F09AA3'},{x:330,y:12,c:'#D4626F'}], labels: ["Oct '24","Jan '25","Apr","Oct","Jan '26","Apr"], refRange: null },
+        { id: 'chart3', label: 'Blood Pressure', value: '128/82', unit: 'mmHg', change: 'Stable', changeClass: '', changeStyle: 'background:var(--brown-100);color:var(--brown-500);', gradId: 'bpGrad', gradColor: '#9AC8AB', strokeColor: '#9AC8AB', areaPath: 'M10,34 C40,30 85,36 130,32 C175,28 220,34 265,30 C300,33 320,32 330,34 L330,85 L10,85 Z', linePath: 'M10,34 C40,30 85,36 130,32 C175,28 220,34 265,30 C300,33 320,32 330,34', dots: [{x:10,y:34,c:'#9AC8AB'},{x:74,y:31,c:'#9AC8AB'},{x:138,y:35,c:'#9AC8AB'},{x:202,y:30,c:'#9AC8AB'},{x:266,y:33,c:'#9AC8AB'},{x:330,y:34,c:'#9AC8AB'}], labels: ["Oct '24","Jan '25","Apr","Oct","Jan '26","Apr"], refRange: null }
+      ],
+      alert: { icon: '\u{1F4C9}', alertClass: 'alert-rose', title: 'Declining Trend Detected', text: 'Your eGFR dropped from 66 to 58 over 18 months. At this rate, you may reach Stage 3b CKD within 2 years. <strong style="color:var(--brown-800);">This warrants a conversation about monitoring and treatment.</strong>' },
+      interpretation: '<strong style="color:var(--brown-800);">What your numbers mean together:</strong> Declining eGFR combined with rising proteinuria suggests FSGS is not well-controlled. Blood pressure is stable on Lisinopril (protective). The pattern supports discussing treatment modification \u2014 especially given possible genetic steroid resistance.<div style="margin-top:10px;font-size:11px;color:var(--brown-400);">Source: KDIGO 2024 Glomerular Diseases Guideline</div>'
+    },
+    visit: {
+      doctor: 'Dr. Patel',
+      specialty: 'Nephrology',
+      date: 'Apr 18',
+      summary: 'Based on your FSGS diagnosis, declining eGFR, medications, and genetic profile.',
+      questions: [
+        { priority: 'Critical', color: 'var(--rose-500)', borderColor: 'var(--rose-400)', text: '"My eGFR dropped from 66 to 58 in 18 months. Should we adjust monitoring or treatment?"', evidence: 'KDIGO recommends increased monitoring when decline exceeds 5 mL/min/year. Yours: ~6.4.' },
+        { priority: 'Important', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"I\'ve been on prednisone 4 months with no improvement. Should we pursue genetic testing?"', evidence: '50% of genetic FSGS patients received unnecessary immunosuppression. Yield: 29% in adults.' },
+        { priority: 'Discuss', color: 'var(--sage-500)', borderColor: 'var(--sage-400)', text: '"Are there clinical trials for non-immunosuppressive FSGS treatments?"', evidence: '2 active trials within 50 miles studying sparsentan and endothelin receptor antagonists.' }
+      ],
+      patientSummary: '<strong style="color:var(--brown-800);font-family:\'Fraunces\',serif;font-size:14px;">Patient Summary \u2014 Maya P.</strong><br><strong>Diagnosis:</strong> FSGS (Feb 2026)<br><strong>Treatment:</strong> Prednisone 20mg, Lisinopril 10mg, Omeprazole 20mg<br><strong>eGFR Trend:</strong> 66 \u2192 58 over 18 months (Stage 3a CKD)<br><strong>Proteinuria:</strong> Rising (1.8 g/g, up from 0.8)<br><strong>Genetics:</strong> CYP2C19 poor metabolizer<br><strong>Steroid response:</strong> None after 4 months'
+    },
+    trials: {
+      count: 2,
+      alert: { icon: '\u2705', alertClass: 'alert-sage', title: '2 trials match your profile', text: 'Based on your FSGS diagnosis, eGFR, age, and location. Updated daily.' },
+      items: [
+        { phase: 'Phase 3', title: 'Sparsentan vs. Irbesartan in FSGS (DUPLEX Extension)', location: 'Houston Methodist \u2014 32 mi', status: 'Enrolling', match: '92% Profile Match \u2014 11 of 12 criteria', desc: 'Dual endothelin/angiotensin receptor antagonist for reducing proteinuria. <strong style="color:var(--brown-700);">Non-immunosuppressive</strong> \u2014 relevant given potential steroid resistance.', doctor: 'Dr. Patel' },
+        { phase: 'Phase 2', title: 'Atrasentan for Primary Proteinuric Glomerulopathies', location: 'Baylor College \u2014 28 mi', status: 'Enrolling', match: '85% Profile Match \u2014 9 of 11 criteria', desc: 'Selective endothelin A receptor antagonist. Includes FSGS with eGFR > 30. Non-immunosuppressive.', doctor: 'Dr. Patel' }
+      ]
+    },
+    genetics: {
+      subtitle: 'Pharmacogenomics \u00b7 23andMe',
+      alert: { icon: '\u2728', alertClass: 'alert-amber', title: '1 medication may need attention', text: 'Your CYP2C19 genotype suggests you\'re a poor metabolizer. This affects how you process omeprazole.' },
+      genes: [
+        { name: 'CYP2D6', detail: 'Metabolizes SSRIs, opioids, beta-blockers', status: 'Normal', statusClass: 'gene-normal' },
+        { name: 'CYP2C19', detail: 'Metabolizes PPIs, clopidogrel, SSRIs', status: 'Poor Metabolizer', statusClass: 'gene-alert' },
+        { name: 'CYP3A4', detail: 'Metabolizes statins, calcium channel blockers', status: 'Normal', statusClass: 'gene-normal' },
+        { name: 'CYP2C9', detail: 'Metabolizes warfarin, NSAIDs', status: 'Intermediate', statusClass: 'gene-attention' }
+      ],
+      medicationImpact: { name: 'Omeprazole 20mg', gene: 'CYP2C19', desc: 'As a poor metabolizer, omeprazole stays in your system longer, increasing effects and side effects. <strong style="color:var(--brown-800);">CPIC guidelines suggest a dose reduction may be appropriate.</strong>', source: 'Source: CPIC Guideline for PPIs and CYP2C19, 2023' },
+      question: { label: 'Based on your genetics', color: 'var(--lav-500)', borderColor: 'var(--lav-400)', text: '"I\'m a CYP2C19 poor metabolizer. Should my omeprazole dose be adjusted?"', evidence: 'CPIC recommends dose adjustment for poor metabolizers on PPIs.' }
+    },
+    chat: [
+      { role: 'user', text: 'My nephrologist wants to start me on prednisone for FSGS. Should I be concerned?' },
+      { role: 'ai', text: '<div style="margin-bottom:8px;">That\'s a thoughtful question, Maya. Prednisone is a standard first-line treatment for FSGS, but there are important considerations specific to your case.</div><div style="margin-bottom:8px;"><strong>Before starting steroids, genetic testing is worth discussing.</strong> Research shows that 8-35% of FSGS cases have a genetic cause, and genetic FSGS typically <strong>does not respond to immunosuppressive therapy</strong> like prednisone. In one study, 50% of patients with genetic variants received months of unnecessary immunosuppression with its side effects.</div><div>If your FSGS has a genetic basis, steroids would expose you to significant side effects (weight gain, bone loss, blood sugar changes, immune suppression) without therapeutic benefit.</div>', sources: [{title:'Kidney International, 2024', text:'"Genetic testing in FSGS: Implications for treatment decisions" \u2014 Found 8-35% of adult FSGS cases are genetic, with 50% receiving unnecessary immunosuppression before diagnosis.'},{title:'KDIGO Clinical Practice Guideline, 2024', text:'Updated guidelines recommend considering genetic evaluation in FSGS patients before initiating prolonged immunosuppressive therapy.'}] },
+      { role: 'user', text: 'What specific genetic test should I ask for?' },
+      { role: 'ai', text: '<div style="margin-bottom:8px;">Great follow-up. Here\'s what to discuss with your nephrologist:</div><div style="margin-bottom:10px;"><strong>1. Clinical exome sequencing for nephropathy genes</strong> \u2014 This is the most comprehensive single test. A 2023 study found diagnostic variants in <strong>29% of adults with FSGS</strong> using whole exome sequencing. It covers over 50 known monogenic causes of FSGS.</div><div style="margin-bottom:10px;"><strong>2. APOL1 genotyping</strong> \u2014 Particularly important as APOL1 high-risk variants are found in ~14% of African Americans and are a leading cause of FSGS in this population. This is a targeted, less expensive test.</div><div style="margin-bottom:10px;"><strong>3. Targeted nephropathy gene panel</strong> \u2014 If cost is a concern, a focused panel (NPHS1, NPHS2, WT1, TRPC6, INF2, ACTN4) covers the most common genetic causes.</div><div style="padding:14px 16px;border-radius:14px;background:var(--sage-50);border:1px solid var(--sage-100);margin-top:12px;margin-bottom:6px;"><div style="font-size:12px;font-weight:700;color:var(--sage-600);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px;">Questions to bring to your visit</div><div style="font-size:13px;color:var(--brown-600);line-height:1.8;">1. "Can we order exome sequencing before starting prednisone?"<br>2. "Should I get APOL1 genotyping?"<br>3. "If testing takes time, is a watch-and-wait approach safe?"</div><div style="margin-top:10px;" onclick="go(\'visit\')"><span class="chat-visit-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>View in your Visit Briefing</span></div></div>', sources: [{title:'JASN, 2023', text:'"Exome sequencing in adult nephrotic syndrome" \u2014 Diagnostic yield of 29% in adults with FSGS, supporting routine genetic evaluation.'},{title:'Kidney International, 2024', text:'"APOL1-associated nephropathy" \u2014 Comprehensive review of APOL1 variant prevalence and clinical implications for FSGS management.'},{title:'Nature Reviews Nephrology, 2024', text:'"Monogenic FSGS: from genes to therapy" \u2014 Overview of 50+ genes implicated in genetic FSGS with treatment guidance.'}] }
+    ],
+    profile: {
+      fullName: 'Maya Patel',
+      conditionFull: 'Focal Segmental Glomerulosclerosis',
+      conditionSub: 'Diagnosed Feb 2026 \u00b7 Active monitoring',
+      memberSince: 'Member since Feb 2026',
+      timeline: [
+        { date: 'Apr 2026', desc: 'Lab results received \u2014 <strong>eGFR 58</strong> mL/min/1.73m\u00b2', dotColor: 'var(--rose-400)', dotShadow: 'var(--rose-200)' },
+        { date: 'Mar 2026', desc: '23andMe genetics imported \u2014 CYP2C19 poor metabolizer identified', dotColor: 'var(--lav-400)', dotShadow: 'var(--lav-200)' },
+        { date: 'Feb 2026', desc: '<strong>FSGS diagnosed</strong> by Dr. Patel, Nephrology', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' },
+        { date: 'Jan 2026', desc: 'Started <strong>Prednisone 20mg</strong> daily', dotColor: 'var(--terra-500)', dotShadow: 'var(--terra-200)' },
+        { date: 'Oct 2025', desc: 'Lab results \u2014 <strong>eGFR 62</strong> mL/min/1.73m\u00b2', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' },
+        { date: 'Jun 2025', desc: 'Apple Health connected \u2014 vitals sync started', dotColor: 'var(--sage-400)', dotShadow: 'var(--sage-200)' }
+      ]
+    }
+  },
+
+  crc: {
+    name: 'Stage 4 CRC',
+    fullName: 'Stage 4 Colorectal Cancer',
+    patient: 'David',
+    lastName: 'Chen',
+    age: 58,
+    emoji: '\u{1F397}',
+    color: 'terra',
+    avatarInitial: 'D',
+    greeting: 'Hi, David',
+    subtitle: 'Your health advocacy dashboard',
+    briefingGradient: 'var(--grad-terra)',
+    dashAlert: {
+      icon: '\u26A0\uFE0F',
+      alertClass: 'alert-amber',
+      title: 'Molecular Profiling Is Critical',
+      text: 'Molecular profiling determines whether you qualify for immunotherapy, targeted therapy, or clinical trials. <strong style="color:var(--brown-800);">Tap to learn what to ask.</strong>'
+    },
+    cards: [
+      { icon: '\u{1F9EA}', iconBg: 'var(--rose-50)', iconColor: 'var(--rose-400)', title: 'Lab Trend Alert', desc: 'CEA rising over 3 months', body: 'Your tumor marker CEA has been trending upward from 2.8 to 8.9. This needs discussion with your oncologist.', tag: 'Rising Trend', tagClass: 'tag-rose', target: 'labs' },
+      { icon: '\u{1F4CB}', iconBg: 'var(--terra-50)', iconColor: 'var(--terra-500)', title: 'Visit Briefing Ready', desc: 'Dr. Chen \u2014 Oncology \u2014 Apr 22', body: '3 critical questions for your upcoming oncology appointment.', tag: '3 Questions Ready', tagClass: 'tag-terra', target: 'visit' },
+      { icon: '\u{1F3AF}', iconBg: 'var(--sage-50)', iconColor: 'var(--sage-500)', title: '2 Clinical Trials Found', desc: 'Matching your CRC profile', body: 'Including a Phase III HAIP study at MD Anderson and a novel immunotherapy combination trial.', tag: 'High Match', tagClass: 'tag-sage', target: 'trials' },
+      { icon: '\u{1F9EC}', iconBg: 'var(--lav-50)', iconColor: 'var(--lav-400)', title: 'Genetic Insight', desc: 'DPYD testing needed', body: 'DPYD testing before 5-FU is critical. 3-8% of patients carry variants causing potentially fatal toxicity.', tag: 'Critical Action', tagClass: 'tag-rose', target: 'genetics' }
+    ],
+    meds: [
+      { name: 'FOLFOX (5-FU + Oxaliplatin + Leucovorin)', dose: 'Biweekly infusion', iconBg: 'var(--rose-50)', warning: true, id: 'folfox' },
+      { name: 'Ondansetron', dose: '8mg as needed', iconBg: 'var(--sage-50)', warning: false, id: 'ondansetron' },
+      { name: 'Dexamethasone', dose: '4mg pre-chemo', iconBg: 'var(--amber-50)', warning: false, id: 'dexamethasone' }
+    ],
+    medData: {
+      folfox: { name: 'FOLFOX Regimen', dose: '5-FU + Oxaliplatin + Leucovorin', schedule: 'Biweekly infusion cycles', icon: '\u{1F48A}', iconBg: 'var(--rose-50)', food: 'Avoid cold foods/drinks during and 3-5 days after oxaliplatin (cold sensitivity). Stay well hydrated. Small frequent meals for nausea.', genetic: { gene: 'DPYD', status: 'Needs Testing', text: 'DPYD testing is critical before 5-FU. 3-8% of patients carry variants causing potentially fatal fluoropyrimidine toxicity. The EMA mandates pre-treatment testing.' }, status: { type: 'amber', title: 'DPYD testing recommended', text: 'Before continuing 5-FU, ensure DPYD genotyping has been completed. Fatal toxicity is preventable with pre-treatment testing.' }, questions: ['Has my DPYD status been tested before starting 5-FU?', 'What are the signs of fluoropyrimidine toxicity I should watch for?', 'Should my oxaliplatin dose be adjusted based on my neuropathy symptoms?'] },
+      ondansetron: { name: 'Ondansetron', dose: '8mg', schedule: 'As needed for nausea, up to 3x daily', icon: '\u{1F48A}', iconBg: 'var(--sage-50)', food: 'Can be taken with or without food. Dissolve ODT form on tongue if unable to keep liquids down.', genetic: null, status: { type: 'sage', title: 'Working as expected', text: 'Standard anti-emetic for chemotherapy-induced nausea. No genetic interactions detected.' }, questions: ['Is my anti-nausea regimen adequate for FOLFOX-induced nausea?'] },
+      dexamethasone: { name: 'Dexamethasone', dose: '4mg', schedule: 'Pre-chemo, day of infusion', icon: '\u{1F48A}', iconBg: 'var(--amber-50)', food: 'Take with food. Monitor blood sugar levels as dexamethasone can cause glucose spikes.', genetic: null, status: { type: 'sage', title: 'Pre-medication protocol', text: 'Standard pre-medication to prevent infusion reactions and reduce nausea during chemotherapy.' }, questions: ['Could the dexamethasone be affecting my sleep and blood sugar?'] }
+    },
+    briefing: {
+      conditionLabel: 'Condition Briefing',
+      title: 'Stage 4 Colorectal Cancer',
+      meta: 'Metastatic CRC \u00b7 Updated today',
+      alert: { icon: '\u26A0\uFE0F', alertClass: 'alert-amber', title: 'Molecular Profiling Is Not Optional', text: 'Molecular profiling determines whether you qualify for immunotherapy, targeted therapy, or clinical trials that could change your outcome.' },
+      facts: [
+        '<strong>~50% of mCRC tumors</strong> have KRAS mutations, excluding anti-EGFR therapy',
+        'Only <strong>~5% of mCRC is MSI-H</strong>, but for those patients immunotherapy is transformative',
+        'Up to <strong>30% of mCRC patients</strong> may not receive comprehensive biomarker testing',
+        '<strong>DPYD testing</strong> can prevent fatal 5-FU toxicity in 3-8% of patients'
+      ],
+      questions: [
+        { priority: 'Priority 1', color: 'var(--terra-500)', borderColor: 'var(--terra-400)', text: '"Has comprehensive molecular profiling been done \u2014 KRAS, NRAS, BRAF, HER2, NTRK, TMB?"', evidence: 'NCCN 2025 guidelines mandate comprehensive biomarker testing for all mCRC patients. ~50% are KRAS mutant, excluding anti-EGFR therapy.' },
+        { priority: 'Priority 2', color: 'var(--terra-400)', borderColor: 'var(--terra-300)', text: '"Should I be tested for DPD deficiency before 5-FU?"', evidence: 'The EMA mandates DPYD testing before fluoropyrimidine therapy. 3-8% carry DPYD variants causing potentially fatal toxicity.' },
+        { priority: 'Priority 3', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Am I a candidate for liver-directed HAIP therapy?"', evidence: 'HAIP (hepatic arterial infusion pump) achieves higher response rates for liver-dominant mCRC. Phase III trial at MD Anderson ongoing.' },
+        { priority: 'Also Ask', color: 'var(--brown-400)', borderColor: 'var(--brown-200)', text: '"Has my tumor been tested for MSI/MMR status for immunotherapy eligibility?"', evidence: 'KEYNOTE-177 showed pembrolizumab achieved 16.5-month PFS in MSI-H mCRC patients.' }
+      ]
+    },
+    labs: {
+      charts: [
+        { id: 'chart1', label: 'CEA (Tumor Marker)', value: '8.9', unit: 'ng/mL', change: '\u2191 Rising', changeClass: '', changeStyle: 'background:var(--rose-100);color:var(--rose-500);', gradId: 'ceaGrad', gradColor: '#D4626F', strokeColor: '#D4626F', areaPath: 'M10,68 C50,62 100,52 160,40 C220,28 270,18 330,10 L330,85 L10,85 Z', linePath: 'M10,68 C50,62 100,52 160,40 C220,28 270,18 330,10', dots: [{x:10,y:68,c:'#9AC8AB'},{x:120,y:50,c:'#E8A44A'},{x:225,y:30,c:'#F09AA3'},{x:330,y:10,c:'#D4626F'}], labels: ["Jan '26","Feb","Mar","Apr"], refRange: { normalLeft: '0%', normalWidth: '25%', markerLeft: '72%', markerColor: 'var(--rose-400)' } },
+        { id: 'chart2', label: 'ANC (Neutrophils)', value: '2,400', unit: '/\u00b5L', change: 'Fluctuating', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'ancGrad', gradColor: '#E8A44A', strokeColor: '#E8A44A', areaPath: 'M10,25 C50,30 110,38 170,48 C230,30 280,25 330,35 L330,85 L10,85 Z', linePath: 'M10,25 C50,30 110,38 170,48 C230,30 280,25 330,35', dots: [{x:10,y:25,c:'#9AC8AB'},{x:120,y:36,c:'#9AC8AB'},{x:225,y:48,c:'#E8A44A'},{x:330,y:35,c:'#9AC8AB'}], labels: ["Jan '26","Feb","Mar","Apr"], refRange: null },
+        { id: 'chart3', label: 'ALT (Liver Function)', value: '42', unit: 'U/L', change: 'Stable', changeClass: '', changeStyle: 'background:var(--brown-100);color:var(--brown-500);', gradId: 'altGrad', gradColor: '#9AC8AB', strokeColor: '#9AC8AB', areaPath: 'M10,38 C50,36 110,40 170,38 C230,36 280,38 330,37 L330,85 L10,85 Z', linePath: 'M10,38 C50,36 110,40 170,38 C230,36 280,38 330,37', dots: [{x:10,y:38,c:'#9AC8AB'},{x:120,y:39,c:'#9AC8AB'},{x:225,y:37,c:'#9AC8AB'},{x:330,y:37,c:'#9AC8AB'}], labels: ["Jan '26","Feb","Mar","Apr"], refRange: null }
+      ],
+      alert: { icon: '\u{1F4C8}', alertClass: 'alert-rose', title: 'CEA Rising Rapidly', text: 'Your CEA has risen from 2.8 to 8.9 over 3 months. A rising CEA in mCRC often indicates disease progression. <strong style="color:var(--brown-800);">Discuss restaging scans and treatment modification.</strong>' },
+      interpretation: '<strong style="color:var(--brown-800);">What your numbers mean together:</strong> Rising CEA with fluctuating ANC suggests active disease under chemotherapy stress. Liver function remains stable, which is positive for liver-directed therapy eligibility. The CEA trend warrants restaging imaging.<div style="margin-top:10px;font-size:11px;color:var(--brown-400);">Source: NCCN Clinical Practice Guidelines in Oncology: Colon Cancer, 2025</div>'
+    },
+    visit: {
+      doctor: 'Dr. Chen',
+      specialty: 'Oncology',
+      date: 'Apr 22',
+      summary: 'Based on your Stage 4 CRC, rising CEA, KRAS mutation status, and FOLFOX regimen.',
+      questions: [
+        { priority: 'Critical', color: 'var(--rose-500)', borderColor: 'var(--rose-400)', text: '"Has comprehensive molecular profiling been done?"', evidence: 'NCCN mandates KRAS, NRAS, BRAF, HER2, NTRK, MSI, and TMB testing for all mCRC patients.' },
+        { priority: 'Important', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Should I be tested for DPD deficiency before 5-FU?"', evidence: 'The EMA mandates DPYD testing. 3-8% carry variants causing potentially fatal toxicity. This is entirely preventable.' },
+        { priority: 'Discuss', color: 'var(--sage-500)', borderColor: 'var(--sage-400)', text: '"Am I a candidate for liver-directed HAIP therapy?"', evidence: 'HAIP achieves higher response rates for liver-dominant mCRC. Phase III trial ongoing at MD Anderson.' }
+      ],
+      patientSummary: '<strong style="color:var(--brown-800);font-family:\'Fraunces\',serif;font-size:14px;">Patient Summary \u2014 David C.</strong><br><strong>Diagnosis:</strong> Stage 4 CRC, liver metastases<br><strong>Treatment:</strong> FOLFOX (biweekly), Ondansetron, Dexamethasone<br><strong>CEA Trend:</strong> 2.8 \u2192 8.9 (rising)<br><strong>Molecular:</strong> KRAS exon 2 mutation detected<br><strong>DPYD:</strong> Not yet tested<br><strong>ANC:</strong> Fluctuating, lowest 1,900'
+    },
+    trials: {
+      count: 2,
+      alert: { icon: '\u2705', alertClass: 'alert-sage', title: '2 trials match your profile', text: 'Based on your Stage 4 CRC, KRAS status, liver metastases, and location. Updated daily.' },
+      items: [
+        { phase: 'Phase 3', title: 'EA2222/PUMP \u2014 HAIP + Systemic Chemo for Liver-Dominant mCRC', location: 'MD Anderson \u2014 18 mi', status: 'Enrolling', match: '88% Profile Match \u2014 10 of 12 criteria', desc: 'Hepatic arterial infusion pump combined with systemic chemotherapy for unresectable colorectal liver metastases. <strong style="color:var(--brown-700);">Higher response rates than systemic chemo alone.</strong>', doctor: 'Dr. Chen' },
+        { phase: 'Phase 1/2', title: 'Botensilimab + Balstilimab for MSS mCRC', location: 'Baylor \u2014 32 mi', status: 'Enrolling', match: '79% Profile Match \u2014 8 of 10 criteria', desc: 'Novel immunotherapy combination for microsatellite stable CRC. Early data showing unprecedented responses in MSS patients.', doctor: 'Dr. Chen' }
+      ]
+    },
+    genetics: {
+      subtitle: 'Pharmacogenomics \u00b7 Tumor profiling',
+      alert: { icon: '\u{1F6A8}', alertClass: 'alert-rose', title: 'DPYD testing needed before 5-FU', text: 'DPYD genotyping has not been completed. 3-8% of patients carry variants causing potentially fatal fluoropyrimidine toxicity.' },
+      genes: [
+        { name: 'DPYD', detail: 'Metabolizes 5-FU (fluoropyrimidines)', status: 'Needs Testing', statusClass: 'gene-alert' },
+        { name: 'UGT1A1*28', detail: 'Metabolizes irinotecan', status: 'Heterozygote', statusClass: 'gene-attention' },
+        { name: 'KRAS Exon 2', detail: 'Tumor biomarker for anti-EGFR therapy', status: 'Mutation Detected', statusClass: 'gene-alert' }
+      ],
+      medicationImpact: { name: 'FOLFOX (5-FU component)', gene: 'DPYD', desc: 'Without DPYD testing, you may be at risk for severe or fatal 5-FU toxicity. The EMA mandates pre-treatment DPYD genotyping. <strong style="color:var(--brown-800);">This test should be done before any further fluoropyrimidine administration.</strong>', source: 'Source: EMA Safety Communication, CPIC Guideline for Fluoropyrimidines and DPYD, 2024' },
+      question: { label: 'Critical safety question', color: 'var(--rose-500)', borderColor: 'var(--rose-400)', text: '"Has my DPYD genotype been tested before starting 5-FU chemotherapy?"', evidence: 'CPIC and EMA recommend pre-treatment DPYD testing. Fatal toxicity is entirely preventable.' }
+    },
+    chat: [
+      { role: 'user', text: 'My oncologist mentioned molecular testing. What should I make sure they\'ve tested?' },
+      { role: 'ai', text: '<div style="margin-bottom:8px;">David, this is a critical question. Comprehensive molecular profiling can determine your eligibility for targeted therapies, immunotherapy, and clinical trials.</div><div style="margin-bottom:8px;"><strong>Essential biomarkers for mCRC:</strong></div><div style="margin-bottom:6px;">\u2022 <strong>KRAS/NRAS/BRAF</strong> \u2014 Your KRAS exon 2 mutation means anti-EGFR therapy (cetuximab, panitumumab) won\'t work for you. But it also means you should explore other targeted options.</div><div style="margin-bottom:6px;">\u2022 <strong>MSI/MMR status</strong> \u2014 If MSI-high (~5% of mCRC), immunotherapy could be transformative.</div><div style="margin-bottom:6px;">\u2022 <strong>HER2, NTRK, TMB</strong> \u2014 Additional targets for therapy.</div><div style="margin-bottom:6px;">\u2022 <strong>DPYD genotype</strong> \u2014 Before any more 5-FU. 3-8% of patients have variants causing potentially fatal toxicity.</div><div style="padding:14px 16px;border-radius:14px;background:var(--rose-50);border:1px solid var(--rose-100);margin-top:12px;margin-bottom:6px;"><div style="font-size:12px;font-weight:700;color:var(--rose-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px;">Priority questions for Dr. Chen</div><div style="font-size:13px;color:var(--brown-600);line-height:1.8;">1. "Has comprehensive molecular profiling been completed?"<br>2. "Has my DPYD been tested before continuing 5-FU?"<br>3. "Am I a candidate for the HAIP trial at MD Anderson?"</div></div>', sources: [{title:'NCCN Guidelines, 2025', text:'Mandate comprehensive biomarker testing for all mCRC patients including KRAS, NRAS, BRAF, MSI, HER2, NTRK.'},{title:'CPIC Guideline for DPYD, 2024', text:'Pre-treatment DPYD genotyping recommended. Fatal fluoropyrimidine toxicity is preventable.'}] }
+    ],
+    profile: {
+      fullName: 'David Chen',
+      conditionFull: 'Stage 4 Colorectal Cancer',
+      conditionSub: 'Diagnosed Dec 2025 \u00b7 Active treatment',
+      memberSince: 'Member since Jan 2026',
+      timeline: [
+        { date: 'Apr 2026', desc: 'CEA rising to <strong>8.9 ng/mL</strong> \u2014 restaging needed', dotColor: 'var(--rose-400)', dotShadow: 'var(--rose-200)' },
+        { date: 'Mar 2026', desc: 'FOLFOX cycle 6 completed \u2014 ANC dipped to 1,900', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' },
+        { date: 'Jan 2026', desc: 'Started <strong>FOLFOX regimen</strong>', dotColor: 'var(--terra-500)', dotShadow: 'var(--terra-200)' },
+        { date: 'Dec 2025', desc: '<strong>Stage 4 CRC diagnosed</strong> \u2014 liver metastases', dotColor: 'var(--rose-400)', dotShadow: 'var(--rose-200)' }
+      ]
+    }
+  },
+
+  gallstones: {
+    name: 'Gallstones',
+    fullName: 'Gallstones (Cholelithiasis)',
+    patient: 'Priya',
+    lastName: 'Sharma',
+    age: 45,
+    emoji: '\u{1FAC1}',
+    color: 'amber',
+    avatarInitial: 'P',
+    greeting: 'Hi, Priya',
+    subtitle: 'Your health advocacy dashboard',
+    briefingGradient: 'linear-gradient(135deg, var(--amber-500) 0%, var(--amber-300) 100%)',
+    dashAlert: {
+      icon: '\u26A0\uFE0F',
+      alertClass: 'alert-amber',
+      title: 'Elevated Lab Values',
+      text: 'Your lab values suggest possible bile duct involvement. Know the warning signs. <strong style="color:var(--brown-800);">Tap to learn what to ask.</strong>'
+    },
+    cards: [
+      { icon: '\u{1F9EA}', iconBg: 'var(--amber-50)', iconColor: 'var(--amber-500)', title: 'Lab Results', desc: 'Bilirubin elevated', body: 'Total bilirubin trending up and ALP elevated. These may indicate bile duct involvement requiring further workup.', tag: 'Elevated', tagClass: 'tag-amber', target: 'labs' },
+      { icon: '\u{1F4CB}', iconBg: 'var(--terra-50)', iconColor: 'var(--terra-500)', title: 'Visit Briefing Ready', desc: 'Dr. Ramirez \u2014 GI Surgery \u2014 Apr 20', body: '3 evidence-based questions prepared for your surgical consultation.', tag: '3 Questions Ready', tagClass: 'tag-terra', target: 'visit' },
+      { icon: '\u{1F957}', iconBg: 'var(--sage-50)', iconColor: 'var(--sage-500)', title: 'Diet Guidance', desc: 'Gallbladder-friendly eating', body: 'Low-fat diet guidance to reduce biliary colic episodes. Focus on fiber, lean proteins, and avoiding trigger foods.', tag: 'Lifestyle', tagClass: 'tag-sage', target: 'condition' }
+    ],
+    meds: [
+      { name: 'Ursodiol', dose: '300mg twice daily', iconBg: 'var(--amber-50)', warning: false, id: 'ursodiol' },
+      { name: 'Omeprazole', dose: '20mg daily', iconBg: 'var(--lav-50)', warning: false, id: 'omeprazole_gs' }
+    ],
+    medData: {
+      ursodiol: { name: 'Ursodiol', dose: '300mg', schedule: 'Twice daily with meals', icon: '\u{1F48A}', iconBg: 'var(--amber-50)', food: 'Take with food for better absorption. Ursodiol works by dissolving cholesterol in bile to help dissolve small gallstones.', genetic: null, status: { type: 'sage', title: 'Dissolution therapy', text: 'Ursodiol may help dissolve small cholesterol gallstones. Effectiveness depends on stone size and composition. Typically requires 6-12 months.' }, questions: ['Is dissolution therapy appropriate for my stone size and type?', 'How long should I continue ursodiol before reassessing?'] },
+      omeprazole_gs: { name: 'Omeprazole', dose: '20mg', schedule: 'Once daily, 30 min before breakfast', icon: '\u{1F48A}', iconBg: 'var(--lav-50)', food: 'Take 30 minutes before eating for best absorption. Helps with acid reflux symptoms that can mimic gallbladder pain.', genetic: null, status: { type: 'sage', title: 'Symptom management', text: 'Prescribed for acid reflux that may coexist with gallstone symptoms. Helps differentiate between biliary and acid-related pain.' }, questions: ['Is my reflux related to my gallstones or a separate issue?'] }
+    },
+    briefing: {
+      conditionLabel: 'Condition Briefing',
+      title: 'Gallstones (Cholelithiasis)',
+      meta: 'Cholelithiasis \u00b7 Updated today',
+      alert: { icon: '\u{1F4A1}', alertClass: 'alert-amber', title: 'Most Gallstones Don\'t Need Treatment', text: 'Most gallstones (80%) are asymptomatic and don\'t need treatment \u2014 but knowing the warning signs of cholangitis or pancreatitis could save your life.' },
+      facts: [
+        '<strong>80% of gallstones</strong> are asymptomatic and found incidentally',
+        'Only <strong>1-2% per year</strong> of asymptomatic stones become symptomatic',
+        'Cholecystectomy is one of the <strong>most common surgeries</strong> in the US',
+        '<strong>Charcot\'s triad</strong> (fever + RUQ pain + jaundice) = emergency'
+      ],
+      questions: [
+        { priority: 'Priority 1', color: 'var(--amber-600)', borderColor: 'var(--amber-500)', text: '"Is watchful waiting appropriate, or do I need surgery?"', evidence: 'Only 1-2% of asymptomatic gallstone patients develop symptoms per year. NIH and SAGES guidelines support watchful waiting for silent stones.' },
+        { priority: 'Priority 2', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Should I get an MRCP to check for bile duct stones?"', evidence: 'MRCP has near-100% negative predictive value for common bile duct stones. Non-invasive alternative to ERCP (5-10% complication risk).' },
+        { priority: 'Priority 3', color: 'var(--rose-500)', borderColor: 'var(--rose-400)', text: '"What are the emergency warning signs I should watch for?"', evidence: 'Charcot\'s triad (fever + RUQ pain + jaundice) indicates cholangitis requiring emergency intervention. Do not wait for a scheduled appointment.' }
+      ]
+    },
+    labs: {
+      charts: [
+        { id: 'chart1', label: 'Total Bilirubin', value: '1.8', unit: 'mg/dL', change: '\u2191 Elevated', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'biliGrad', gradColor: '#E8A44A', strokeColor: '#E8A44A', areaPath: 'M10,58 C50,52 110,42 170,30 C230,20 280,26 330,22 L330,85 L10,85 Z', linePath: 'M10,58 C50,52 110,42 170,30 C230,20 280,26 330,22', dots: [{x:10,y:58,c:'#9AC8AB'},{x:120,y:44,c:'#E8A44A'},{x:225,y:20,c:'#D4626F'},{x:330,y:26,c:'#E8A44A'}], labels: ["Jan '26","Feb","Mar","Apr"], refRange: { normalLeft: '0%', normalWidth: '30%', markerLeft: '52%', markerColor: 'var(--amber-500)' } },
+        { id: 'chart2', label: 'ALP (Alkaline Phosphatase)', value: '142', unit: 'U/L', change: '\u2191 Elevated', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'alpGrad', gradColor: '#E8A44A', strokeColor: '#D4903A', areaPath: 'M10,56 C50,48 110,35 170,22 C230,28 280,24 330,30 L330,85 L10,85 Z', linePath: 'M10,56 C50,48 110,35 170,22 C230,28 280,24 330,30', dots: [{x:10,y:56,c:'#9AC8AB'},{x:120,y:38,c:'#E8A44A'},{x:225,y:22,c:'#D4903A'},{x:330,y:30,c:'#E8A44A'}], labels: ["Jan '26","Feb","Mar","Apr"], refRange: null },
+        { id: 'chart3', label: 'GGT', value: '55', unit: 'U/L', change: '\u2191 Trending up', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'ggtGrad', gradColor: '#D4903A', strokeColor: '#D4903A', areaPath: 'M10,62 C50,54 110,42 170,30 C230,34 280,32 330,36 L330,85 L10,85 Z', linePath: 'M10,62 C50,54 110,42 170,30 C230,34 280,32 330,36', dots: [{x:10,y:62,c:'#9AC8AB'},{x:120,y:42,c:'#E8A44A'},{x:225,y:30,c:'#D4903A'},{x:330,y:36,c:'#D4903A'}], labels: ["Jan '26","Feb","Mar","Apr"], refRange: null }
+      ],
+      alert: { icon: '\u26A0\uFE0F', alertClass: 'alert-amber', title: 'Biliary Obstruction Pattern', text: 'Elevated bilirubin + ALP + GGT together suggest possible bile duct obstruction. <strong style="color:var(--brown-800);">An MRCP may be warranted to rule out choledocholithiasis.</strong>' },
+      interpretation: '<strong style="color:var(--brown-800);">What your numbers mean together:</strong> The combination of elevated bilirubin, ALP, and GGT forms a cholestatic pattern suggesting possible bile duct involvement. While bilirubin improved slightly in April, the overall pattern warrants imaging (MRCP) to check for bile duct stones.<div style="margin-top:10px;font-size:11px;color:var(--brown-400);">Source: AASLD Practice Guidelines for Gallstone Disease, 2024</div>'
+    },
+    visit: {
+      doctor: 'Dr. Ramirez',
+      specialty: 'GI Surgery',
+      date: 'Apr 20',
+      summary: 'Based on your gallstone diagnosis, elevated bilirubin/ALP pattern, and symptoms.',
+      questions: [
+        { priority: 'Critical', color: 'var(--rose-500)', borderColor: 'var(--rose-400)', text: '"Is watchful waiting appropriate, or do I need surgery?"', evidence: 'Only 1-2% of asymptomatic gallstone patients develop symptoms per year. Surgery indicated for biliary colic, not silent stones.' },
+        { priority: 'Important', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Should I get an MRCP to check for bile duct stones?"', evidence: 'Your elevated bilirubin and ALP suggest possible choledocholithiasis. MRCP has near-100% negative predictive value.' },
+        { priority: 'Discuss', color: 'var(--sage-500)', borderColor: 'var(--sage-400)', text: '"What are the emergency warning signs I should watch for?"', evidence: 'Charcot\'s triad = cholangitis. Reynolds\' pentad adds confusion and hypotension = septic cholangitis with high mortality.' }
+      ],
+      patientSummary: '<strong style="color:var(--brown-800);font-family:\'Fraunces\',serif;font-size:14px;">Patient Summary \u2014 Priya S.</strong><br><strong>Diagnosis:</strong> Gallstones (cholelithiasis)<br><strong>Treatment:</strong> Ursodiol 300mg BID, Omeprazole 20mg<br><strong>Bilirubin Trend:</strong> 1.2 \u2192 2.1 \u2192 1.8 (fluctuating/elevated)<br><strong>ALP:</strong> 142 U/L (elevated)<br><strong>GGT:</strong> 55 U/L (trending up)<br><strong>Imaging:</strong> MRCP recommended'
+    },
+    trials: {
+      count: 1,
+      alert: { icon: '\u{1F50D}', alertClass: 'alert-sage', title: '1 trial may match your profile', text: 'Based on your gallstone diagnosis and current treatment approach.' },
+      items: [
+        { phase: 'Phase 3', title: 'Ursodeoxycholic Acid Dissolution Study for Cholesterol Gallstones', location: 'Memorial Hermann \u2014 22 mi', status: 'Enrolling', match: '74% Profile Match \u2014 7 of 10 criteria', desc: 'Optimized dissolution protocol using higher-dose ursodiol with dietary intervention. Comparing dissolution rates vs. standard dosing for small cholesterol stones.', doctor: 'Dr. Ramirez' }
+      ]
+    },
+    genetics: {
+      subtitle: 'Genetic risk factors',
+      alert: { icon: '\u{1F9EC}', alertClass: 'alert-amber', title: 'Genetic risk factor identified', text: 'Your ABCG8 D19H variant is associated with increased cholesterol gallstone risk. This may influence treatment decisions.' },
+      genes: [
+        { name: 'ABCG8 D19H', detail: 'Cholesterol gallstone risk gene', status: 'Variant Detected', statusClass: 'gene-attention' },
+        { name: 'CYP7A1', detail: 'Bile acid synthesis', status: 'Normal', statusClass: 'gene-normal' },
+        { name: 'UGT1A1', detail: 'Bilirubin metabolism', status: 'Normal', statusClass: 'gene-normal' }
+      ],
+      medicationImpact: { name: 'Estrogen Therapy Risk', gene: 'ABCG8 D19H', desc: 'Your ABCG8 variant combined with potential estrogen therapy increases gallstone formation risk. <strong style="color:var(--brown-800);">If considering HRT or oral contraceptives, discuss gallstone risk with your doctor.</strong>', source: 'Source: Hepatology, 2023 \u2014 ABCG8 variants and gallstone risk in women' },
+      question: { label: 'Based on your genetics', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"My ABCG8 variant increases gallstone risk. Does this affect my treatment plan?"', evidence: 'ABCG8 D19H is one of the strongest genetic risk factors for cholesterol gallstones.' }
+    },
+    chat: [
+      { role: 'user', text: 'My doctor found gallstones on an ultrasound. Do I definitely need surgery?' },
+      { role: 'ai', text: '<div style="margin-bottom:8px;">Priya, that\'s a great question and the answer is: <strong>not necessarily</strong>. It depends on whether your stones are causing symptoms.</div><div style="margin-bottom:8px;">Here\'s what the evidence says:</div><div style="margin-bottom:6px;">\u2022 <strong>80% of gallstones are asymptomatic</strong> \u2014 found incidentally on imaging</div><div style="margin-bottom:6px;">\u2022 Only <strong>1-2% per year</strong> of asymptomatic stones become symptomatic</div><div style="margin-bottom:6px;">\u2022 Surgery (cholecystectomy) is recommended only for <strong>symptomatic stones</strong> \u2014 biliary colic, complications</div><div style="margin-bottom:8px;">However, your elevated bilirubin and ALP values suggest possible bile duct involvement, which changes the calculus. <strong>An MRCP (non-invasive imaging) can check for bile duct stones</strong> without the 5-10% complication risk of ERCP.</div><div style="padding:14px 16px;border-radius:14px;background:var(--amber-50);border:1px solid var(--amber-100);margin-top:12px;"><div style="font-size:12px;font-weight:700;color:var(--amber-600);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px;">Questions for Dr. Ramirez</div><div style="font-size:13px;color:var(--brown-600);line-height:1.8;">1. "Are my stones symptomatic enough for surgery?"<br>2. "Should I get an MRCP given my elevated bilirubin?"<br>3. "What emergency signs should I watch for?"</div></div>', sources: [{title:'AASLD Practice Guidelines, 2024', text:'Watchful waiting recommended for asymptomatic gallstones. Surgery indicated for symptomatic disease.'},{title:'ACG Clinical Guideline, 2024', text:'MRCP preferred over ERCP for diagnosis of choledocholithiasis due to lower complication risk.'}] }
+    ],
+    profile: {
+      fullName: 'Priya Sharma',
+      conditionFull: 'Gallstones (Cholelithiasis)',
+      conditionSub: 'Diagnosed Jan 2026 \u00b7 Under evaluation',
+      memberSince: 'Member since Jan 2026',
+      timeline: [
+        { date: 'Apr 2026', desc: 'Lab results \u2014 <strong>Bilirubin 1.8</strong>, ALP 142', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' },
+        { date: 'Mar 2026', desc: 'Bilirubin peaked at <strong>2.1 mg/dL</strong>', dotColor: 'var(--rose-400)', dotShadow: 'var(--rose-200)' },
+        { date: 'Feb 2026', desc: 'Started <strong>Ursodiol 300mg</strong> twice daily', dotColor: 'var(--terra-500)', dotShadow: 'var(--terra-200)' },
+        { date: 'Jan 2026', desc: '<strong>Gallstones diagnosed</strong> on ultrasound', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' }
+      ]
+    }
+  },
+
+  kidneystones: {
+    name: 'Kidney Stones',
+    fullName: 'Kidney Stones (Nephrolithiasis)',
+    patient: 'Marcus',
+    lastName: 'Williams',
+    age: 38,
+    emoji: '\u{1F48E}',
+    color: 'sage',
+    avatarInitial: 'M',
+    greeting: 'Hi, Marcus',
+    subtitle: 'Your health advocacy dashboard',
+    briefingGradient: 'linear-gradient(135deg, var(--amber-600) 0%, var(--sage-400) 100%)',
+    dashAlert: {
+      icon: '\u26A0\uFE0F',
+      alertClass: 'alert-amber',
+      title: 'Prevention Gap Identified',
+      text: 'You\'ve had 3 stone episodes but no metabolic workup. 93% of recurrent formers are treated reactively. <strong style="color:var(--brown-800);">Tap to learn what to ask.</strong>'
+    },
+    cards: [
+      { icon: '\u{1F9EA}', iconBg: 'var(--amber-50)', iconColor: 'var(--amber-500)', title: 'Lab Results', desc: '24hr urine pending', body: 'Your metabolic workup results are expected soon. These will determine your specific stone prevention strategy.', tag: 'Pending', tagClass: 'tag-amber', target: 'labs' },
+      { icon: '\u{1F4CB}', iconBg: 'var(--terra-50)', iconColor: 'var(--terra-500)', title: 'Visit Briefing Ready', desc: 'Dr. Kim \u2014 Urology \u2014 Apr 25', body: '3 critical questions about stone prevention and metabolic workup.', tag: '3 Questions Ready', tagClass: 'tag-terra', target: 'visit' },
+      { icon: '\u{1F4A7}', iconBg: 'var(--sage-50)', iconColor: 'var(--sage-500)', title: 'Prevention Plan', desc: 'Hydration & dietary targets', body: 'Personalized fluid intake and dietary modification targets based on your stone type.', tag: 'Lifestyle', tagClass: 'tag-sage', target: 'condition' },
+      { icon: '\u{1F9EC}', iconBg: 'var(--lav-50)', iconColor: 'var(--lav-400)', title: 'Genetic Insight', desc: 'Familial pattern suspected', body: 'Your family history suggests hereditary hypercalciuria. PTH testing recommended.', tag: 'Action Needed', tagClass: 'tag-amber', target: 'genetics' }
+    ],
+    meds: [
+      { name: 'Potassium Citrate', dose: '20mEq twice daily', iconBg: 'var(--sage-50)', warning: false, id: 'kcitrate' },
+      { name: 'Hydrochlorothiazide', dose: '25mg daily', iconBg: 'var(--amber-50)', warning: false, id: 'hctz' },
+      { name: 'Tamsulosin', dose: '0.4mg as needed', iconBg: 'var(--lav-50)', warning: false, id: 'tamsulosin' }
+    ],
+    medData: {
+      kcitrate: { name: 'Potassium Citrate', dose: '20mEq', schedule: 'Twice daily with meals', icon: '\u{1F48A}', iconBg: 'var(--sage-50)', food: 'Take with meals to minimize GI upset. Drink plenty of water. Avoid potassium-rich salt substitutes.', genetic: null, status: { type: 'sage', title: 'Stone prevention', text: 'Potassium citrate raises urine citrate levels and alkalinizes urine, both of which inhibit calcium stone formation.' }, questions: ['Is my urine citrate improving on this dose?', 'Should we check a follow-up 24-hour urine to assess effectiveness?'] },
+      hctz: { name: 'Hydrochlorothiazide', dose: '25mg', schedule: 'Once daily, morning', icon: '\u{1F48A}', iconBg: 'var(--amber-50)', food: 'Take in the morning to avoid nighttime urination. Stay hydrated. Monitor for dehydration in hot weather.', genetic: null, status: { type: 'sage', title: 'Calcium reduction', text: 'HCTZ reduces urinary calcium excretion by increasing calcium reabsorption in the kidneys. Key therapy for hypercalciuria.' }, questions: ['Is my urine calcium coming down on HCTZ?', 'Should I be concerned about electrolyte imbalances?'] },
+      tamsulosin: { name: 'Tamsulosin', dose: '0.4mg', schedule: 'As needed for active stone passage', icon: '\u{1F48A}', iconBg: 'var(--lav-50)', food: 'Take 30 minutes after the same meal each day when actively passing a stone. May cause dizziness \u2014 avoid driving initially.', genetic: null, status: { type: 'amber', title: 'Rescue medication', text: 'Alpha-blocker that relaxes the ureter to help pass stones < 10mm. Used during active stone episodes only.' }, questions: ['When should I start tamsulosin for a new stone episode?'] }
+    },
+    briefing: {
+      conditionLabel: 'Condition Briefing',
+      title: 'Kidney Stones (Nephrolithiasis)',
+      meta: 'Nephrolithiasis \u00b7 Updated today',
+      alert: { icon: '\u26A0\uFE0F', alertClass: 'alert-amber', title: 'Prevention Is Undertreated', text: 'Only 7% of high-risk stone patients receive the metabolic workup that could prevent their next stone. Stone composition determines everything.' },
+      facts: [
+        'Only <strong>7% of recurrent stone formers</strong> get a metabolic workup',
+        'Stone composition determines <strong>entirely different</strong> prevention strategies',
+        '<strong>Calcium oxalate</strong> accounts for 70-80% of stones',
+        'Primary hyperparathyroidism causes <strong>~5% of stones</strong> and is curable'
+      ],
+      questions: [
+        { priority: 'Priority 1', color: 'var(--amber-600)', borderColor: 'var(--amber-600)', text: '"Was my stone sent for composition analysis?"', evidence: 'AUA/EAU guidelines recommend composition analysis for all retrieved stones. Treatment differs dramatically by type.' },
+        { priority: 'Priority 2', color: 'var(--sage-500)', borderColor: 'var(--sage-400)', text: '"Should I get a 24-hour urine metabolic workup?"', evidence: 'Only 7% of recurrent stone formers receive this test. Identifies hypercalciuria, hyperoxaluria, hypocitraturia.' },
+        { priority: 'Priority 3', color: 'var(--lav-500)', borderColor: 'var(--lav-400)', text: '"My serum calcium is 10.2 \u2014 should we check my PTH for hyperparathyroidism?"', evidence: 'Primary hyperparathyroidism causes ~5% of kidney stones. A simple blood test for calcium and PTH can identify this curable cause.' }
+      ]
+    },
+    labs: {
+      charts: [
+        { id: 'chart1', label: 'Urine Calcium (24hr)', value: '320', unit: 'mg/day', change: '\u2191 High', changeClass: '', changeStyle: 'background:var(--rose-100);color:var(--rose-500);', gradId: 'ucaGrad', gradColor: '#D4626F', strokeColor: '#D4626F', areaPath: 'M10,30 C80,28 160,26 250,22 C300,20 320,18 330,16 L330,85 L10,85 Z', linePath: 'M10,30 C80,28 160,26 250,22 C300,20 320,18 330,16', dots: [{x:170,y:24,c:'#D4626F'},{x:330,y:16,c:'#D4626F'}], labels: ["Previous","Current"], refRange: { normalLeft: '0%', normalWidth: '60%', markerLeft: '72%', markerColor: 'var(--rose-400)' } },
+        { id: 'chart2', label: 'Urine Citrate (24hr)', value: '280', unit: 'mg/day', change: '\u2193 Low', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'ucitGrad', gradColor: '#E8A44A', strokeColor: '#E8A44A', areaPath: 'M10,40 C80,42 160,44 250,46 C300,48 320,48 330,50 L330,85 L10,85 Z', linePath: 'M10,40 C80,42 160,44 250,46 C300,48 320,48 330,50', dots: [{x:170,y:44,c:'#E8A44A'},{x:330,y:50,c:'#E8A44A'}], labels: ["Previous","Current"], refRange: null },
+        { id: 'chart3', label: 'Urine Volume (24hr)', value: '1.8', unit: 'L/day', change: '\u2193 Below target', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'uvolGrad', gradColor: '#E8A44A', strokeColor: '#7BAE8E', areaPath: 'M10,36 C80,38 160,40 250,38 C300,40 320,42 330,42 L330,85 L10,85 Z', linePath: 'M10,36 C80,38 160,40 250,38 C300,40 320,42 330,42', dots: [{x:170,y:39,c:'#E8A44A'},{x:330,y:42,c:'#E8A44A'}], labels: ["Previous","Current"], refRange: null }
+      ],
+      alert: { icon: '\u{1F4CA}', alertClass: 'alert-amber', title: 'Metabolic Risk Factors Found', text: 'High urine calcium (>300 mg/day), low urine citrate (<320 mg/day), and low urine volume (<2.5L) \u2014 <strong style="color:var(--brown-800);">all three are modifiable with the right treatment plan.</strong>' },
+      interpretation: '<strong style="color:var(--brown-800);">What your numbers mean together:</strong> You have hypercalciuria (urine calcium 320, above 300 threshold), hypocitraturia (citrate 280, below 320), and low urine volume (1.8L, target >2.5L). This is a classic calcium stone-forming metabolic profile. Your serum calcium of 10.2 is borderline and warrants PTH testing to rule out hyperparathyroidism.<div style="margin-top:10px;font-size:11px;color:var(--brown-400);">Source: AUA/EAU Guidelines for Medical Management of Kidney Stones, 2024</div>'
+    },
+    visit: {
+      doctor: 'Dr. Kim',
+      specialty: 'Urology',
+      date: 'Apr 25',
+      summary: 'Based on your 3 stone episodes, metabolic workup results, and borderline serum calcium.',
+      questions: [
+        { priority: 'Critical', color: 'var(--rose-500)', borderColor: 'var(--rose-400)', text: '"Was my stone sent for composition analysis?"', evidence: 'Stone type determines prevention: calcium oxalate (thiazides), uric acid (alkalinization), cystine (tiopronin). Without this, treatment is guesswork.' },
+        { priority: 'Important', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Should I get a 24-hour urine metabolic workup?"', evidence: 'Only 7% of recurrent formers get this test. Identifies specific treatable abnormalities.' },
+        { priority: 'Discuss', color: 'var(--sage-500)', borderColor: 'var(--sage-400)', text: '"My serum calcium is 10.2 \u2014 should we check my PTH for hyperparathyroidism?"', evidence: 'Primary hyperparathyroidism causes ~5% of kidney stones and is completely treatable with parathyroidectomy.' }
+      ],
+      patientSummary: '<strong style="color:var(--brown-800);font-family:\'Fraunces\',serif;font-size:14px;">Patient Summary \u2014 Marcus W.</strong><br><strong>History:</strong> 3 stone episodes (2022, 2024, 2026)<br><strong>Treatment:</strong> K-citrate 20mEq BID, HCTZ 25mg, Tamsulosin PRN<br><strong>Urine Calcium:</strong> 320 mg/day (high, >300)<br><strong>Urine Citrate:</strong> 280 mg/day (low, <320)<br><strong>Urine Volume:</strong> 1.8L (low, target >2.5L)<br><strong>Serum Calcium:</strong> 10.2 (borderline high)'
+    },
+    trials: {
+      count: 2,
+      alert: { icon: '\u2705', alertClass: 'alert-sage', title: '2 trials may match your profile', text: 'Based on your recurrent stone history and metabolic profile.' },
+      items: [
+        { phase: 'Phase 3', title: 'PUSH Trial \u2014 Hydration Intervention for Stone Prevention', location: 'University of Texas \u2014 15 mi', status: 'Enrolling', match: '82% Profile Match \u2014 9 of 11 criteria', desc: 'Smart water bottle + coaching intervention to achieve >2.5L daily urine output. Studying whether coached hydration reduces recurrence vs. standard advice.', doctor: 'Dr. Kim' },
+        { phase: 'Phase 2', title: 'Optimized Metabolic Prevention Protocol for Recurrent Stone Formers', location: 'Baylor Scott & White \u2014 28 mi', status: 'Enrolling', match: '76% Profile Match \u2014 7 of 10 criteria', desc: 'Personalized dietary and pharmacologic intervention based on 24-hour urine metabolic profiling. Comparing protocolized prevention vs. standard care.', doctor: 'Dr. Kim' }
+      ]
+    },
+    genetics: {
+      subtitle: 'Genetic risk assessment',
+      alert: { icon: '\u{1F9EC}', alertClass: 'alert-amber', title: 'Familial pattern suspected', text: 'No cystinuria detected (good). However, your family history and recurrent stones suggest familial hypercalciuria. PTH testing recommended.' },
+      genes: [
+        { name: 'SLC3A1/SLC7A9', detail: 'Cystinuria genes', status: 'No Mutation', statusClass: 'gene-normal' },
+        { name: 'Familial Hypercalciuria', detail: 'Hereditary calcium excretion pattern', status: 'Suspected', statusClass: 'gene-attention' },
+        { name: 'CYP24A1', detail: 'Vitamin D metabolism', status: 'Normal', statusClass: 'gene-normal' }
+      ],
+      medicationImpact: { name: 'Hydrochlorothiazide 25mg', gene: 'Familial Hypercalciuria', desc: 'HCTZ is the correct first-line therapy for familial hypercalciuria. <strong style="color:var(--brown-800);">However, if hyperparathyroidism is the underlying cause (PTH not yet checked), parathyroidectomy may be curative.</strong>', source: 'Source: AUA Guidelines for Medical Management of Kidney Stones, 2024' },
+      question: { label: 'Based on your pattern', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Should I get PTH tested to rule out hyperparathyroidism as the cause of my recurrent stones?"', evidence: 'Primary hyperparathyroidism causes ~5% of kidney stones. Serum calcium 10.2 is borderline. A simple blood test can identify this curable cause.' }
+    },
+    chat: [
+      { role: 'user', text: 'I keep getting kidney stones. What can I actually do to prevent them?' },
+      { role: 'ai', text: '<div style="margin-bottom:8px;">Marcus, great question \u2014 and the answer starts with a critical step that <strong>93% of recurrent stone formers never get</strong>: a proper metabolic workup.</div><div style="margin-bottom:8px;">Here\'s the issue: most patients get treated for each stone episode (pain management, surgery) without ever figuring out <strong>why</strong> they\'re forming stones. That\'s like mopping the floor without fixing the leak.</div><div style="margin-bottom:8px;"><strong>What you need:</strong></div><div style="margin-bottom:6px;">\u2022 <strong>Stone composition analysis</strong> \u2014 Was your stone sent to a lab? Prevention differs completely by type.</div><div style="margin-bottom:6px;">\u2022 <strong>24-hour urine collection</strong> \u2014 This identifies your specific metabolic abnormalities (high calcium, low citrate, low volume).</div><div style="margin-bottom:6px;">\u2022 <strong>Serum calcium + PTH</strong> \u2014 Your serum calcium of 10.2 is borderline. Hyperparathyroidism causes ~5% of stones and is <strong>completely curable</strong>.</div><div style="padding:14px 16px;border-radius:14px;background:var(--sage-50);border:1px solid var(--sage-100);margin-top:12px;"><div style="font-size:12px;font-weight:700;color:var(--sage-600);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px;">Your prevention targets</div><div style="font-size:13px;color:var(--brown-600);line-height:1.8;">1. Urine volume: \u2265 2.5L/day (you\'re at 1.8L)<br>2. Urine calcium: < 300 mg/day (you\'re at 320)<br>3. Urine citrate: > 320 mg/day (you\'re at 280)</div></div>', sources: [{title:'AUA/EAU Guidelines, 2024', text:'Recommend 24-hour urine collection and stone composition analysis for all recurrent stone formers.'},{title:'NEJM Review: Kidney Stones, 2024', text:'Only 7% of high-risk patients receive metabolic workup. Prevention is possible but undertreated.'}] }
+    ],
+    profile: {
+      fullName: 'Marcus Williams',
+      conditionFull: 'Kidney Stones (Nephrolithiasis)',
+      conditionSub: 'Recurrent \u00b7 3 episodes since 2022',
+      memberSince: 'Member since Feb 2026',
+      timeline: [
+        { date: 'Apr 2026', desc: '24-hour urine results \u2014 <strong>hypercalciuria</strong> confirmed', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' },
+        { date: 'Mar 2026', desc: 'Started <strong>K-citrate and HCTZ</strong>', dotColor: 'var(--sage-400)', dotShadow: 'var(--sage-200)' },
+        { date: 'Feb 2026', desc: '<strong>3rd stone episode</strong> \u2014 passed 4mm stone', dotColor: 'var(--rose-400)', dotShadow: 'var(--rose-200)' },
+        { date: 'Aug 2024', desc: '2nd stone episode \u2014 lithotripsy performed', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' },
+        { date: 'Mar 2022', desc: '1st stone episode \u2014 ER visit, passed spontaneously', dotColor: 'var(--terra-500)', dotShadow: 'var(--terra-200)' }
+      ]
+    }
+  },
+
+  perimenopause: {
+    name: 'Perimenopause',
+    fullName: 'Perimenopause',
+    patient: 'Sarah',
+    lastName: 'Mitchell',
+    age: 47,
+    emoji: '\u{1F469}',
+    color: 'lav',
+    avatarInitial: 'S',
+    greeting: 'Hi, Sarah',
+    subtitle: 'Your health advocacy dashboard',
+    briefingGradient: 'linear-gradient(135deg, var(--lav-400) 0%, var(--rose-300) 100%)',
+    dashAlert: {
+      icon: '\u{1F4A1}',
+      alertClass: 'alert-rose',
+      title: 'Your Symptoms Are Real',
+      text: 'Your symptoms match perimenopause, but you were diagnosed with anxiety. 50%+ of perimenopausal women receive a psychiatric diagnosis first. <strong style="color:var(--brown-800);">Tap to learn what to ask.</strong>'
+    },
+    cards: [
+      { icon: '\u{1F9EA}', iconBg: 'var(--lav-50)', iconColor: 'var(--lav-400)', title: 'Hormone Trends', desc: 'FSH fluctuating erratically', body: 'Your FSH is swinging between 8 and 32, and estradiol is wildly unstable. This pattern is classic perimenopause.', tag: 'Erratic', tagClass: 'tag-lav', target: 'labs' },
+      { icon: '\u{1F4CB}', iconBg: 'var(--terra-50)', iconColor: 'var(--terra-500)', title: 'Visit Briefing Ready', desc: 'Dr. Walsh \u2014 OB-GYN \u2014 Apr 15', body: '3 critical questions about perimenopause recognition and HRT candidacy.', tag: '3 Questions Ready', tagClass: 'tag-terra', target: 'visit' },
+      { icon: '\u{1F48A}', iconBg: 'var(--rose-50)', iconColor: 'var(--rose-400)', title: 'HRT Evaluation', desc: 'Are you a candidate?', body: 'In 2025, the FDA removed misleading HRT warnings. Transdermal estradiol started in perimenopause has a favorable risk-benefit profile.', tag: 'Evidence Update', tagClass: 'tag-rose', target: 'condition' },
+      { icon: '\u{1F9B4}', iconBg: 'var(--amber-50)', iconColor: 'var(--amber-500)', title: 'Bone Density Due', desc: 'DEXA scan recommended', body: 'Women lose up to 10% of bone mass in the first 5 post-menopausal years. Early screening is crucial with family history.', tag: 'Schedule', tagClass: 'tag-amber', target: 'condition' }
+    ],
+    meds: [
+      { name: 'Sertraline', dose: '50mg daily (for "anxiety")', iconBg: 'var(--lav-50)', warning: true, id: 'sertraline' },
+      { name: 'Calcium + D3 Supplement', dose: '600mg/1000IU daily', iconBg: 'var(--amber-50)', warning: false, id: 'calciumd3' },
+      { name: 'Melatonin', dose: '3mg at bedtime', iconBg: 'var(--sage-50)', warning: false, id: 'melatonin' }
+    ],
+    medData: {
+      sertraline: { name: 'Sertraline', dose: '50mg', schedule: 'Once daily, morning', icon: '\u{1F48A}', iconBg: 'var(--lav-50)', food: 'Can be taken with or without food. Avoid alcohol. May take 4-6 weeks for full effect.', genetic: { gene: 'CYP2D6', status: 'Normal Metabolizer', text: 'You metabolize sertraline normally. However, the question is whether this medication is treating the right condition. Your symptoms may be perimenopausal rather than psychiatric.' }, status: { type: 'amber', title: 'Diagnosis under question', text: 'Sertraline was prescribed for anxiety, but your symptom pattern (insomnia, mood changes, hot flashes, brain fog) strongly matches perimenopause. Over 50% of perimenopausal women receive a psychiatric diagnosis first.' }, questions: ['Could my anxiety symptoms actually be perimenopause?', 'If I start HRT, could I taper off sertraline?', 'Is there a role for both SSRI and HRT together?'] },
+      calciumd3: { name: 'Calcium + D3', dose: '600mg/1000IU', schedule: 'Once daily with a meal', icon: '\u{1F48A}', iconBg: 'var(--amber-50)', food: 'Take with a meal containing fat for better vitamin D absorption. Space from thyroid medication by 4 hours.', genetic: null, status: { type: 'sage', title: 'Bone protection', text: 'Important during perimenopause when bone loss accelerates. Your vitamin D is low at 22 ng/mL (target >30).' }, questions: ['Should I increase my vitamin D dose given my level of 22?', 'When should I get a DEXA scan?'] },
+      melatonin: { name: 'Melatonin', dose: '3mg', schedule: 'At bedtime, 30 min before sleep', icon: '\u{1F48A}', iconBg: 'var(--sage-50)', food: 'Take 30 minutes before desired sleep time. Avoid screens after taking. May be less effective if perimenopausal insomnia is estrogen-related.', genetic: null, status: { type: 'sage', title: 'Sleep support', text: 'Perimenopausal insomnia is often driven by declining estrogen rather than melatonin deficiency. HRT may address the root cause more effectively.' }, questions: ['Would HRT help my insomnia better than melatonin?'] }
+    },
+    briefing: {
+      conditionLabel: 'Condition Briefing',
+      title: 'Perimenopause',
+      meta: 'Hormonal Transition \u00b7 Updated today',
+      alert: { icon: '\u{1F4A1}', alertClass: 'alert-rose', title: 'Your Symptoms Are Real', text: 'Nearly 40% of perimenopausal women report feeling misdiagnosed. Over 50% receive a psychiatric diagnosis before perimenopause is considered. Your symptoms are real.' },
+      facts: [
+        '<strong>50%+ of perimenopausal women</strong> receive a psychiatric diagnosis first',
+        'Only <strong>42% of clinicians</strong> initiate discussion about menopause symptoms',
+        'In 2025, <strong>FDA removed misleading HRT warnings</strong> based on flawed 2002 WHI study',
+        'Women lose up to <strong>10% of bone mass</strong> in first 5 post-menopausal years'
+      ],
+      questions: [
+        { priority: 'Priority 1', color: 'var(--lav-500)', borderColor: 'var(--lav-400)', text: '"Could my anxiety and insomnia be perimenopause rather than a psychiatric condition?"', evidence: 'Over 50% of perimenopausal women receive a psychiatric diagnosis before perimenopause is considered. Only 42% of clinicians initiate discussion about menopause symptoms.' },
+        { priority: 'Priority 2', color: 'var(--rose-400)', borderColor: 'var(--rose-300)', text: '"Am I a candidate for HRT \u2014 specifically transdermal estradiol?"', evidence: 'In 2025, FDA removed misleading black box warnings. Transdermal estradiol is safer than oral (no VTE risk increase). Maximum benefit when started within 10 years of menopause onset.' },
+        { priority: 'Priority 3', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Should I get a DEXA scan now given my family history?"', evidence: 'Women lose up to 10% of bone mass in the first 5 post-menopausal years. Early DEXA scanning can identify women at highest risk before fractures occur.' }
+      ]
+    },
+    labs: {
+      charts: [
+        { id: 'chart1', label: 'FSH (Follicle Stimulating Hormone)', value: '32', unit: 'mIU/mL', change: 'Erratic', changeClass: '', changeStyle: 'background:var(--lav-100);color:var(--lav-500);', gradId: 'fshGrad', gradColor: '#9B89B8', strokeColor: '#9B89B8', areaPath: 'M10,62 C40,58 85,50 130,38 C175,55 220,20 265,60 C300,15 320,12 330,14 L330,85 L10,85 Z', linePath: 'M10,62 C40,58 85,50 130,38 C175,55 220,20 265,60 C300,15 320,12 330,14', dots: [{x:10,y:62,c:'#9AC8AB'},{x:85,y:48,c:'#E8A44A'},{x:175,y:20,c:'#9B89B8'},{x:250,y:58,c:'#E8A44A'},{x:330,y:14,c:'#9B89B8'}], labels: ["Dec '25","Jan '26","Feb","Mar","Apr"], refRange: null },
+        { id: 'chart2', label: 'Estradiol', value: '65', unit: 'pg/mL', change: 'Wild swings', changeClass: '', changeStyle: 'background:var(--rose-100);color:var(--rose-500);', gradId: 'e2Grad', gradColor: '#D4626F', strokeColor: '#F09AA3', areaPath: 'M10,30 C40,45 85,58 130,18 C175,60 220,10 265,55 C300,68 320,70 330,68 L330,85 L10,85 Z', linePath: 'M10,30 C40,45 85,58 130,18 C175,60 220,10 265,55 C300,68 320,70 330,68', dots: [{x:10,y:30,c:'#9AC8AB'},{x:85,y:55,c:'#E8A44A'},{x:175,y:14,c:'#D4626F'},{x:250,y:58,c:'#E8A44A'},{x:330,y:68,c:'#D4626F'}], labels: ["Dec '25","Jan '26","Feb","Mar","Apr"], refRange: null },
+        { id: 'chart3', label: 'LDL Cholesterol', value: '125', unit: 'mg/dL', change: '\u2191 Rising', changeClass: '', changeStyle: 'background:var(--amber-100);color:var(--amber-600);', gradId: 'ldlGrad', gradColor: '#E8A44A', strokeColor: '#E8A44A', areaPath: 'M10,56 C80,48 170,38 260,28 C300,24 320,22 330,20 L330,85 L10,85 Z', linePath: 'M10,56 C80,48 170,38 260,28 C300,24 320,22 330,20', dots: [{x:10,y:56,c:'#9AC8AB'},{x:170,y:38,c:'#E8A44A'},{x:330,y:20,c:'#E8A44A'}], labels: ["Oct '25","Jan '26","Apr"], refRange: null }
+      ],
+      alert: { icon: '\u{1F4CA}', alertClass: 'alert-lav', title: 'Classic Perimenopausal Pattern', text: 'Erratic FSH (8\u219232), wildly fluctuating estradiol (65\u2192320\u219265), rising LDL, and low vitamin D (22). <strong style="color:var(--brown-800);">This hormonal chaos is the hallmark of perimenopause.</strong>' },
+      interpretation: '<strong style="color:var(--brown-800);">What your numbers mean together:</strong> The erratic FSH and estradiol pattern is classic perimenopause \u2014 not anxiety. Rising LDL is a cardiovascular risk that often emerges with declining estrogen. Your vitamin D at 22 is below the 30 ng/mL threshold. Together, these support a hormonal evaluation rather than psychiatric treatment alone.<div style="margin-top:10px;font-size:11px;color:var(--brown-400);">Source: NAMS 2024 Position Statement on Hormone Therapy</div>'
+    },
+    visit: {
+      doctor: 'Dr. Walsh',
+      specialty: 'OB-GYN',
+      date: 'Apr 15',
+      summary: 'Based on your erratic hormone levels, psychiatric misdiagnosis pattern, and rising cardiovascular risk markers.',
+      questions: [
+        { priority: 'Critical', color: 'var(--rose-500)', borderColor: 'var(--rose-400)', text: '"Could my anxiety and insomnia be perimenopause rather than a psychiatric condition?"', evidence: '50%+ of perimenopausal women receive psychiatric diagnosis first. Your erratic FSH/estradiol pattern is classic perimenopause.' },
+        { priority: 'Important', color: 'var(--lav-500)', borderColor: 'var(--lav-400)', text: '"Am I a candidate for HRT \u2014 specifically transdermal estradiol?"', evidence: 'FDA removed misleading HRT warnings in 2025. Transdermal estradiol has no VTE risk increase. Timing hypothesis shows max benefit within 10 years of menopause.' },
+        { priority: 'Discuss', color: 'var(--amber-500)', borderColor: 'var(--amber-400)', text: '"Should I get a DEXA scan now given my family history?"', evidence: 'Women lose up to 10% of bone mass in the first 5 post-menopausal years. Fastest loss occurs 2-3 years around final menstrual period.' }
+      ],
+      patientSummary: '<strong style="color:var(--brown-800);font-family:\'Fraunces\',serif;font-size:14px;">Patient Summary \u2014 Sarah M.</strong><br><strong>Current Dx:</strong> Anxiety (but symptoms match perimenopause)<br><strong>Treatment:</strong> Sertraline 50mg, Calcium+D3, Melatonin 3mg<br><strong>FSH:</strong> 8\u219214\u219228\u219212\u219232 (erratic)<br><strong>Estradiol:</strong> 180\u219295\u2192320\u219265 (wild swings)<br><strong>LDL:</strong> 98\u2192112\u2192125 (rising)<br><strong>Vitamin D:</strong> 22 ng/mL (low)'
+    },
+    trials: {
+      count: 2,
+      alert: { icon: '\u2705', alertClass: 'alert-sage', title: '2 trials may match your profile', text: 'Based on your perimenopausal symptoms, age, and current treatment approach.' },
+      items: [
+        { phase: 'Phase 3', title: 'HRT Timing Study \u2014 Early vs. Standard Initiation in Perimenopause', location: "Women's Health Center \u2014 20 mi", status: 'Enrolling', match: '84% Profile Match \u2014 9 of 11 criteria', desc: 'Comparing cardiovascular and bone outcomes of starting transdermal estradiol in perimenopause vs. waiting until menopause. <strong style="color:var(--brown-700);">Addresses the timing hypothesis.</strong>', doctor: 'Dr. Walsh' },
+        { phase: 'Phase 2', title: 'Integrated Menopause Symptom Management Protocol', location: 'University Women\'s Clinic \u2014 35 mi', status: 'Enrolling', match: '72% Profile Match \u2014 7 of 10 criteria', desc: 'Multi-modal symptom management combining low-dose HRT, CBT-I for sleep, and cardiovascular risk reduction in perimenopausal women.', doctor: 'Dr. Walsh' }
+      ]
+    },
+    genetics: {
+      subtitle: 'Pharmacogenomics \u00b7 Hormone metabolism',
+      alert: { icon: '\u{1F9EC}', alertClass: 'alert-amber', title: 'Hormone metabolism insights', text: 'Your CYP1A2 slow metabolizer status means caffeine sensitivity may worsen on HRT. COMT Met/Met suggests slow estrogen metabolism.' },
+      genes: [
+        { name: 'CYP2D6', detail: 'Metabolizes SSRIs (sertraline)', status: 'Normal', statusClass: 'gene-normal' },
+        { name: 'CYP1A2', detail: 'Metabolizes caffeine, estrogen', status: 'Slow Metabolizer', statusClass: 'gene-attention' },
+        { name: 'COMT Met/Met', detail: 'Estrogen metabolism pathway', status: 'Slow Metabolism', statusClass: 'gene-attention' }
+      ],
+      medicationImpact: { name: 'Sertraline 50mg / Potential HRT', gene: 'CYP1A2 + COMT', desc: 'Your CYP1A2 slow metabolizer status means caffeine sensitivity may increase on HRT. Your COMT Met/Met genotype means slower estrogen metabolism \u2014 <strong style="color:var(--brown-800);">transdermal estradiol may be preferable to oral forms to avoid first-pass liver metabolism.</strong>', source: 'Source: Pharmacogenomics Journal, 2023 \u2014 COMT variants and HRT response' },
+      question: { label: 'Based on your genetics', color: 'var(--lav-500)', borderColor: 'var(--lav-400)', text: '"Given my COMT genotype, should transdermal HRT be preferred over oral?"', evidence: 'COMT Met/Met carriers have slower estrogen metabolism. Transdermal delivery bypasses hepatic first-pass and may be better tolerated.' }
+    },
+    chat: [
+      { role: 'user', text: 'My doctor gave me sertraline for anxiety but I think it might be perimenopause. Am I wrong?' },
+      { role: 'ai', text: '<div style="margin-bottom:8px;">Sarah, you are <strong>not wrong to question this</strong>. In fact, the evidence strongly supports your instinct.</div><div style="margin-bottom:8px;">Here\'s what the research shows:</div><div style="margin-bottom:6px;">\u2022 <strong>Over 50% of perimenopausal women</strong> receive a psychiatric diagnosis (anxiety, depression) before perimenopause is even considered</div><div style="margin-bottom:6px;">\u2022 Only <strong>42% of clinicians</strong> initiate discussion about menopause symptoms</div><div style="margin-bottom:6px;">\u2022 Your symptoms \u2014 anxiety, insomnia, mood changes, brain fog \u2014 <strong>overlap almost completely</strong> with perimenopause</div><div style="margin-bottom:8px;">And your lab values tell the story: <strong>FSH swinging from 8 to 32, estradiol fluctuating wildly from 65 to 320</strong> \u2014 this is the hormonal signature of perimenopause, not primary anxiety disorder.</div><div style="margin-bottom:8px;">The sertraline may be <strong>treating a symptom of hormone fluctuation rather than a primary psychiatric condition</strong>.</div><div style="padding:14px 16px;border-radius:14px;background:var(--lav-50);border:1px solid var(--lav-100);margin-top:12px;"><div style="font-size:12px;font-weight:700;color:var(--lav-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px;">Questions for Dr. Walsh</div><div style="font-size:13px;color:var(--brown-600);line-height:1.8;">1. "Could my symptoms be perimenopause, not anxiety?"<br>2. "Am I a candidate for transdermal estradiol?"<br>3. "Should I get a DEXA scan given my family history?"</div></div>', sources: [{title:'NAMS Position Statement, 2024', text:'Recommends considering perimenopause in women 40-55 presenting with new-onset anxiety, insomnia, or mood disturbance.'},{title:'Lancet, 2025', text:'"Perimenopause misdiagnosis" \u2014 Over 50% of perimenopausal women receive psychiatric diagnosis before hormonal evaluation.'}] }
+    ],
+    profile: {
+      fullName: 'Sarah Mitchell',
+      conditionFull: 'Perimenopause',
+      conditionSub: 'Recognized Mar 2026 \u00b7 Hormonal transition',
+      memberSince: 'Member since Feb 2026',
+      timeline: [
+        { date: 'Apr 2026', desc: 'FSH <strong>32 mIU/mL</strong> \u2014 erratic fluctuation continues', dotColor: 'var(--lav-400)', dotShadow: 'var(--lav-200)' },
+        { date: 'Mar 2026', desc: 'Estradiol <strong>wildly fluctuating</strong> \u2014 perimenopause confirmed', dotColor: 'var(--rose-400)', dotShadow: 'var(--rose-200)' },
+        { date: 'Feb 2026', desc: 'LDL rising to <strong>125 mg/dL</strong>', dotColor: 'var(--amber-400)', dotShadow: 'var(--amber-200)' },
+        { date: 'Oct 2025', desc: 'Prescribed <strong>Sertraline 50mg</strong> for "anxiety"', dotColor: 'var(--lav-400)', dotShadow: 'var(--lav-200)' },
+        { date: 'Aug 2025', desc: 'Symptoms began: insomnia, anxiety, hot flashes, brain fog', dotColor: 'var(--terra-500)', dotShadow: 'var(--terra-200)' }
+      ]
+    }
+  }
+};
+
+// ===== STATE =====
+let currentCondition = 'fsgs';
 let currentScreen = 'onboarding';
 let previousScreen = null;
+const navScreens = ['dashboard', 'labs', 'ask', 'trials', 'profile'];
 
+// ===== HELPER: Build card icon =====
+function cardIconHTML(card) {
+  if (card.icon === 'chat') {
+    return `<div class="card-icon" style="background:${card.iconBg};color:${card.iconColor};font-size:18px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>`;
+  }
+  return `<div class="card-icon" style="background:${card.iconBg};color:${card.iconColor};">${card.icon}</div>`;
+}
+
+// ===== HELPER: Build question item =====
+function questionHTML(q, idx) {
+  const cleanText = q.text.replace(/"/g, '&quot;').replace(/^"|"$/g, '');
+  return `<div class="question-item" style="border-left:3px solid ${q.borderColor};" onclick="toggleQuestion(this)">
+    <div class="question-number" style="color:${q.color};">${q.priority}</div>
+    <div class="question-head">
+      <div class="question-text">${q.text}</div>
+      <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="question-body">
+      <div class="question-evidence">${q.evidence}</div>
+      <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, '${q.text.replace(/'/g, "\\'")}')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy to clipboard
+      </button>
+    </div>
+  </div>`;
+}
+
+// ===== HELPER: Build chart =====
+function chartHTML(chart) {
+  let html = `<div class="chart-container" id="${chart.id}">
+    <div class="chart-header"><div><div class="chart-label">${chart.label}</div><div class="chart-value">${chart.value} <span class="chart-unit">${chart.unit}</span></div></div><span class="chart-change ${chart.changeClass}" style="${chart.changeStyle}">${chart.change}</span></div>
+    <div class="svg-chart-wrap">
+      <svg viewBox="0 0 340 90" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="${chart.gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${chart.gradColor}" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="${chart.gradColor}" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path class="svg-chart-area" fill="url(#${chart.gradId})" d="${chart.areaPath}"/>
+        <path class="svg-chart-path" stroke="${chart.strokeColor}" d="${chart.linePath}" data-length="340"/>
+        ${chart.dots.map(d => `<circle class="svg-chart-dot" cx="${d.x}" cy="${d.y}" r="4" fill="${d.c}"/>`).join('')}
+      </svg>
+    </div>
+    <div class="sparkline-labels">${chart.labels.map(l => `<span>${l}</span>`).join('')}</div>`;
+  if (chart.refRange) {
+    html += `<div class="ref-range"><span>Low</span><div class="ref-range-bar"><div class="ref-range-normal" style="left:${chart.refRange.normalLeft};width:${chart.refRange.normalWidth};"></div><div class="ref-range-marker" style="left:${chart.refRange.markerLeft};background:${chart.refRange.markerColor};"></div></div><span>High</span></div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+// ===== RENDER FUNCTIONS =====
+function renderDashboard() {
+  const c = conditions[currentCondition];
+  document.getElementById('dash-greeting').textContent = c.greeting;
+  document.getElementById('dash-subtitle').textContent = c.subtitle;
+  document.getElementById('dash-avatar').textContent = c.avatarInitial;
+  document.getElementById('dd-current-emoji').innerHTML = c.emoji;
+  document.getElementById('dd-current-name').textContent = c.name;
+
+  // Update dropdown active state
+  document.querySelectorAll('.dd-option').forEach(o => {
+    o.classList.toggle('active', o.dataset.condition === currentCondition);
+  });
+
+  let html = '';
+  // Alert
+  html += `<div class="alert-card ${c.dashAlert.alertClass}" onclick="go('condition')">
+    <div class="alert-icon">${c.dashAlert.icon}</div>
+    <div class="alert-text"><div class="alert-title">${c.dashAlert.title}</div>${c.dashAlert.text}</div>
+  </div>`;
+
+  // Cards
+  c.cards.forEach(card => {
+    html += `<div class="card" onclick="go('${card.target}')">
+      <div class="card-header">
+        ${cardIconHTML(card)}
+        <div><div class="card-title">${card.title}</div><div class="card-desc">${card.desc}</div></div>
+      </div>
+      <div class="card-desc">${card.body}</div>
+      <span class="tag ${card.tagClass}">${card.tag}</span>
+    </div>`;
+  });
+
+  // Medications
+  html += `<div class="section-label">Your Medications</div>`;
+  c.meds.forEach(med => {
+    html += `<div class="med-item" onclick="openMedSheet('${med.id}')">
+      <div class="med-icon" style="background:${med.iconBg};">\u{1F48A}</div>
+      <div><div class="med-name">${med.name}</div><div class="med-dose">${med.dose}</div></div>
+      <div class="med-warning">${med.warning ? '\u26A0\uFE0F' : '<span style="opacity:.3">\u2705</span>'}</div>
+    </div>`;
+  });
+
+  document.getElementById('dash-content').innerHTML = html;
+}
+
+function renderBriefing() {
+  const c = conditions[currentCondition];
+  const b = c.briefing;
+
+  document.getElementById('briefing-header').style.background = c.briefingGradient;
+  document.getElementById('briefing-title').textContent = b.title;
+  document.getElementById('briefing-meta').textContent = b.meta;
+
+  let html = '';
+  // Alert
+  html += `<div class="alert-card ${b.alert.alertClass} static">
+    <div class="alert-icon">${b.alert.icon}</div>
+    <div class="alert-text"><div class="alert-title">${b.alert.title}</div>${b.alert.text}</div>
+  </div>`;
+
+  // Facts
+  html += `<div class="section-label" style="padding-top:4px;">Key Facts</div>`;
+  html += `<div class="card static"><ul style="font-size:13px;color:var(--brown-600);padding-left:18px;line-height:2.2;">`;
+  b.facts.forEach(f => { html += `<li>${f}</li>`; });
+  html += `</ul></div>`;
+
+  // Questions
+  html += `<div class="section-label">Questions for Your Doctor</div>`;
+  b.questions.forEach((q, i) => { html += questionHTML(q, i); });
+
+  // Actions
+  html += `<div style="padding:16px;">
+    <button class="btn btn-primary" onclick="showToast('\u{1F4C4}', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
+    <button class="btn btn-secondary" style="margin-top:10px;" onclick="go('trials')">View Related Clinical Trials</button>
+  </div>`;
+
+  document.getElementById('briefing-content').innerHTML = html;
+}
+
+function renderLabs() {
+  const c = conditions[currentCondition];
+  const l = c.labs;
+
+  let html = '';
+  l.charts.forEach(chart => { html += chartHTML(chart); });
+
+  // Alert
+  html += `<div class="alert-card ${l.alert.alertClass} static">
+    <div class="alert-icon">${l.alert.icon}</div>
+    <div class="alert-text"><div class="alert-title">${l.alert.title}</div>${l.alert.text}</div>
+  </div>`;
+
+  // Interpretation
+  html += `<div class="section-label">AI Interpretation</div>`;
+  html += `<div class="card static" style="background:var(--terra-50);border-color:var(--terra-100);">
+    <div class="card-desc" style="color:var(--brown-700);font-size:13.5px;line-height:1.7;">${l.interpretation}</div>
+  </div>`;
+
+  document.getElementById('labs-content').innerHTML = html;
+}
+
+function renderVisit() {
+  const c = conditions[currentCondition];
+  const v = c.visit;
+
+  document.getElementById('visit-topbar-subtitle').innerHTML = `${v.doctor} &middot; ${v.specialty} &middot; ${v.date}`;
+
+  let html = '';
+  html += `<div class="alert-card alert-terra static">
+    <div class="alert-icon">\u2728</div>
+    <div class="alert-text"><div class="alert-title">Personalized for you</div>${v.summary}</div>
+  </div>`;
+
+  html += `<div class="section-label">Priority Questions</div>`;
+  v.questions.forEach((q, i) => { html += questionHTML(q, i); });
+
+  // Patient summary
+  html += `<div class="section-label" style="padding-top:6px;">Health Summary</div>`;
+  html += `<div class="card static" style="background:var(--parchment);border-color:var(--brown-200);">
+    <div style="font-size:13px;color:var(--brown-600);line-height:1.9;">${v.patientSummary}</div>
+  </div>`;
+
+  html += `<div style="padding:16px;">
+    <button class="btn btn-primary" onclick="showToast('\u{1F4C4}', 'Visit briefing exported to your Files')">Export as PDF</button>
+    <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('\u{1F512}', 'Shared securely with ${v.doctor}\\'s office')">Share with ${v.doctor}</button>
+  </div>`;
+
+  document.getElementById('visit-content').innerHTML = html;
+}
+
+function renderTrials() {
+  const c = conditions[currentCondition];
+  const t = c.trials;
+
+  let html = '';
+  html += `<div class="alert-card ${t.alert.alertClass} static"><div class="alert-icon">${t.alert.icon}</div><div class="alert-text"><div class="alert-title">${t.alert.title}</div>${t.alert.text}</div></div>`;
+
+  t.items.forEach(trial => {
+    html += `<div class="trial-card">
+      <div class="trial-phase">${trial.phase}</div>
+      <div class="trial-title">${trial.title}</div>
+      <div class="trial-meta"><span>\u{1F4CD} ${trial.location}</span><span>\u{1F4C5} ${trial.status}</span></div>
+      <div class="trial-match"><span>\u2705</span><span>${trial.match}</span></div>
+      <div style="margin-top:14px;font-size:13px;color:var(--brown-500);line-height:1.65;">${trial.desc}</div>
+      <div style="margin-top:14px;"><button class="btn btn-secondary btn-sm" onclick="showToast('\u2728', '3 questions generated for your visit')">Generate Questions for ${trial.doctor}</button></div>
+    </div>`;
+  });
+
+  html += `<div class="card static" style="background:var(--parchment);border-color:var(--brown-200);">
+    <div class="card-desc" style="font-size:13.5px;line-height:1.7;color:var(--brown-600);"><strong style="color:var(--brown-800);font-family:'Fraunces',serif;">Trials are an option, not an obligation.</strong> Fewer than 5% of patients participate, often because they don't know trials exist. Asking your specialist is a form of advocacy.</div>
+  </div>`;
+
+  document.getElementById('trials-content').innerHTML = html;
+}
+
+function renderGenetics() {
+  const c = conditions[currentCondition];
+  const g = c.genetics;
+
+  document.getElementById('genetics-topbar-subtitle').textContent = g.subtitle;
+
+  let html = '';
+  html += `<div class="alert-card ${g.alert.alertClass} static"><div class="alert-icon">${g.alert.icon}</div><div class="alert-text"><div class="alert-title">${g.alert.title}</div>${g.alert.text}</div></div>`;
+
+  html += `<div class="card static"><div class="card-title" style="font-size:16px;margin-bottom:16px;">Your Metabolizer Profile</div>`;
+  g.genes.forEach(gene => {
+    html += `<div class="gene-result"><div><div class="gene-name">${gene.name}</div><div class="gene-detail">${gene.detail}</div></div><span class="gene-status ${gene.statusClass}">${gene.status}</span></div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="section-label">Medication Impact</div>`;
+  html += `<div class="card static" style="border-color:var(--rose-100);background:linear-gradient(135deg,var(--rose-50) 0%,var(--warm-white) 100%);">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+      <div style="width:42px;height:42px;border-radius:12px;background:var(--rose-100);display:flex;align-items:center;justify-content:center;font-size:20px;">\u{1F48A}</div>
+      <div><div class="card-title" style="font-size:15px;color:var(--rose-500);">${g.medicationImpact.name}</div><div class="card-desc" style="font-size:12px;">Affected by ${g.medicationImpact.gene} status</div></div>
+    </div>
+    <div style="font-size:13px;color:var(--brown-600);line-height:1.7;">${g.medicationImpact.desc}</div>
+    <div style="margin-top:10px;font-size:11px;color:var(--brown-400);">${g.medicationImpact.source}</div>
+  </div>`;
+
+  html += `<div class="section-label">Question for Your Doctor</div>`;
+  html += questionHTML(g.question, 0);
+
+  html += `<div style="padding:16px;"><button class="btn btn-outline" style="font-size:13px;">View Full Genetic Report</button></div>`;
+
+  document.getElementById('genetics-content').innerHTML = html;
+}
+
+function renderChat() {
+  const c = conditions[currentCondition];
+
+  let html = `<div style="text-align:center;padding:10px 0 18px;">
+    <div style="font-size:11px;color:var(--brown-300);font-weight:500;letter-spacing:0.5px;">TODAY</div>
+  </div>`;
+
+  c.chat.forEach((msg, i) => {
+    if (msg.role === 'user') {
+      html += `<div class="chat-bubble user" style="animation-delay:${0.05 + i * 0.05}s;">${msg.text}</div>`;
+    } else {
+      html += `<div class="chat-bubble ai" style="animation-delay:${0.05 + i * 0.05}s;">
+        <div class="chat-ai-label"><span class="ai-dot"></span> Longitude AI</div>
+        ${msg.text}`;
+      if (msg.sources && msg.sources.length) {
+        html += `<button class="chat-sources-toggle" onclick="toggleChatSources(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          ${msg.sources.length} Source${msg.sources.length > 1 ? 's' : ''}
+        </button>
+        <div class="chat-source-cards">`;
+        msg.sources.forEach(s => {
+          html += `<div class="chat-source-card"><strong>${s.title}</strong>${s.text}</div>`;
+        });
+        html += `</div>`;
+      }
+      html += `</div>`;
+    }
+  });
+
+  document.getElementById('chat-messages').innerHTML = html;
+  // Scroll to bottom
+  setTimeout(() => {
+    const el = document.getElementById('chat-messages');
+    if (el) el.scrollTop = el.scrollHeight;
+  }, 50);
+}
+
+function renderProfile() {
+  const c = conditions[currentCondition];
+  const p = c.profile;
+
+  document.getElementById('profile-avatar').textContent = c.avatarInitial;
+  document.getElementById('profile-name').textContent = p.fullName;
+  document.getElementById('profile-meta').innerHTML = `<strong>${c.name}</strong> &middot; ${p.memberSince}`;
+  document.getElementById('profile-condition-label').textContent = p.conditionFull;
+  document.getElementById('profile-condition-sub').textContent = p.conditionSub;
+
+  let html = '';
+  p.timeline.forEach(t => {
+    html += `<div class="timeline-item">
+      <div class="timeline-dot" style="background:${t.dotColor};box-shadow:0 0 0 2px ${t.dotShadow};"></div>
+      <div class="timeline-content">
+        <div class="timeline-date">${t.date}</div>
+        <div class="timeline-desc">${t.desc}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('profile-timeline').innerHTML = html;
+}
+
+// ===== RENDER ALL =====
+function renderAll() {
+  renderDashboard();
+  renderBriefing();
+  renderLabs();
+  renderVisit();
+  renderTrials();
+  renderGenetics();
+  renderChat();
+  renderProfile();
+}
+
+// ===== CONDITION SWITCHING =====
+function switchCondition(id) {
+  if (id === currentCondition) return;
+  currentCondition = id;
+
+  // Fade out dynamic content
+  document.querySelectorAll('.dynamic-content').forEach(el => el.classList.add('fading'));
+
+  setTimeout(() => {
+    renderAll();
+    chartsAnimated = false;
+    ringAnimated = false;
+
+    // Fade back in
+    document.querySelectorAll('.dynamic-content').forEach(el => el.classList.remove('fading'));
+
+    // Re-trigger animations if on relevant screen
+    if (currentScreen === 'labs') animateCharts();
+    if (currentScreen === 'profile') animateAdvocacyRing();
+  }, 200);
+}
+
+// ===== DROPDOWN =====
+function toggleDropdown() {
+  const btn = document.getElementById('condition-dropdown-btn');
+  const menu = document.getElementById('condition-dropdown-menu');
+  const isOpen = menu.classList.contains('open');
+  if (isOpen) {
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+  } else {
+    menu.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+
+function selectCondition(id) {
+  const menu = document.getElementById('condition-dropdown-menu');
+  const btn = document.getElementById('condition-dropdown-btn');
+  menu.classList.remove('open');
+  btn.classList.remove('open');
+  switchCondition(id);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('condition-dropdown-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('condition-dropdown-menu').classList.remove('open');
+    document.getElementById('condition-dropdown-btn').classList.remove('open');
+  }
+});
+
+// ===== NAVIGATION =====
 function go(target) {
   if (target === currentScreen) return;
   const old = document.getElementById('screen-' + currentScreen);
   const next = document.getElementById('screen-' + target);
   if (!next) return;
 
-  // Determine direction
   const oldIdx = navScreens.indexOf(currentScreen);
   const newIdx = navScreens.indexOf(target);
   const goingForward = newIdx === -1 || oldIdx === -1 || newIdx >= oldIdx;
 
-  // Animate out
   old.style.transition = 'opacity 0.3s, transform 0.3s';
   old.style.transform = goingForward ? 'translateX(-30px)' : 'translateX(30px)';
   old.style.opacity = '0';
   old.style.pointerEvents = 'none';
   old.style.zIndex = '1';
 
-  // Animate in
   next.style.transition = 'none';
   next.style.transform = goingForward ? 'translateX(30px)' : 'translateX(-30px)';
   next.style.opacity = '0';
@@ -2029,16 +2212,14 @@ function go(target) {
   currentScreen = target;
   updateNavBars();
 
-  // Scroll to top
   const scroller = next.querySelector('.screen-scroll') || next.querySelector('.chat-messages');
   if (scroller) scroller.scrollTop = scroller.scrollHeight || 0;
 
-  // Trigger screen-specific animations
   if (target === 'profile') animateAdvocacyRing();
   if (target === 'labs') animateCharts();
 }
 
-// Build nav bars dynamically (5 items now)
+// ===== NAV BARS =====
 const navConfig = [
   { id: 'dashboard', label: 'Home', icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>', center: false },
   { id: 'labs', label: 'Health', icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>', center: false },
@@ -2072,11 +2253,10 @@ function updateNavBars() {
   });
 }
 
-// Init all nav bars
 ['nav-dashboard', 'nav-labs', 'nav-trials', 'nav-sources', 'nav-profile'].forEach(buildNav);
 updateNavBars();
 
-// ===== TOAST SYSTEM =====
+// ===== TOAST =====
 function showToast(icon, message) {
   const container = document.getElementById('toast-container');
   const toast = document.createElement('div');
@@ -2098,25 +2278,26 @@ function toggleQuestion(el) {
   el.classList.toggle('expanded');
 }
 
-// ===== COPY TO CLIPBOARD =====
+// ===== COPY =====
 function copyQuestion(btn, text) {
+  const cleanText = text.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/^"|"$/g, '');
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
-      showToast('&#x2705;', 'Question copied to clipboard');
+    navigator.clipboard.writeText(cleanText).then(() => {
+      showToast('\u2705', 'Question copied to clipboard');
     });
   } else {
-    showToast('&#x2705;', 'Question copied to clipboard');
+    showToast('\u2705', 'Question copied to clipboard');
   }
 }
 
-// ===== CHAT SOURCES TOGGLE =====
+// ===== CHAT SOURCES =====
 function toggleChatSources(btn) {
   btn.classList.toggle('open');
   const cards = btn.nextElementSibling;
   cards.classList.toggle('open');
 }
 
-// ===== ADVOCACY RING ANIMATION =====
+// ===== ADVOCACY RING =====
 let ringAnimated = false;
 function animateAdvocacyRing() {
   if (ringAnimated) return;
@@ -2127,12 +2308,8 @@ function animateAdvocacyRing() {
   const targetScore = 72;
   const targetOffset = circumference - (circumference * targetScore / 100);
 
-  // Animate ring
-  setTimeout(() => {
-    ring.style.strokeDashoffset = targetOffset;
-  }, 200);
+  setTimeout(() => { ring.style.strokeDashoffset = targetOffset; }, 200);
 
-  // Animate number
   let current = 0;
   const step = () => {
     current += 1;
@@ -2143,7 +2320,7 @@ function animateAdvocacyRing() {
   setTimeout(step, 300);
 }
 
-// ===== SVG CHART ANIMATIONS =====
+// ===== CHART ANIMATIONS =====
 let chartsAnimated = false;
 function animateCharts() {
   if (chartsAnimated) return;
@@ -2163,71 +2340,10 @@ function animateCharts() {
   });
 }
 
-// ===== MEDICATION BOTTOM SHEET =====
-const medData = {
-  prednisone: {
-    name: 'Prednisone',
-    dose: '20mg',
-    schedule: 'Once daily, morning with food',
-    icon: '&#x1F48A;',
-    iconBg: 'var(--amber-50)',
-    food: 'Take with food to reduce stomach irritation. Avoid grapefruit juice. Limit sodium intake as prednisone causes fluid retention.',
-    genetic: null,
-    status: {
-      type: 'amber',
-      title: 'Currently under review',
-      text: 'Your lack of response after 4 months may indicate genetic steroid resistance. 8-35% of FSGS cases are genetic and do not respond to immunosuppressive therapy like prednisone.'
-    },
-    questions: [
-      'Should we consider tapering prednisone given the lack of response?',
-      'Is genetic testing warranted before continuing immunosuppression?',
-      'What are the alternatives if I have steroid-resistant FSGS?'
-    ]
-  },
-  lisinopril: {
-    name: 'Lisinopril',
-    dose: '10mg',
-    schedule: 'Once daily, any time',
-    icon: '&#x1F48A;',
-    iconBg: 'var(--sage-50)',
-    food: 'Can be taken with or without food. Avoid potassium supplements and potassium-rich salt substitutes. Stay well hydrated.',
-    genetic: null,
-    status: {
-      type: 'sage',
-      title: 'Working as expected',
-      text: 'Your blood pressure has remained stable at 128/82 mmHg. Lisinopril also provides kidney-protective effects by reducing proteinuria in FSGS.'
-    },
-    questions: [
-      'Is 10mg providing optimal kidney protection for my level of proteinuria?',
-      'Should we consider increasing the dose for better proteinuria control?'
-    ]
-  },
-  omeprazole: {
-    name: 'Omeprazole',
-    dose: '20mg',
-    schedule: 'Once daily, 30 min before breakfast',
-    icon: '&#x1F48A;',
-    iconBg: 'var(--lav-50)',
-    food: 'Take 30 minutes before eating for best absorption. Avoid taking with calcium supplements at the same time.',
-    genetic: {
-      gene: 'CYP2C19',
-      status: 'Poor Metabolizer',
-      text: 'Your CYP2C19 poor metabolizer status means omeprazole stays in your system longer, leading to increased drug levels and effects. CPIC guidelines recommend considering a 50% dose reduction.'
-    },
-    status: {
-      type: 'lav',
-      title: 'Genetic impact detected',
-      text: 'Your CYP2C19 poor metabolizer status affects this medication. Standard dosing may lead to higher-than-expected drug exposure.'
-    },
-    questions: [
-      'Should my omeprazole dose be reduced given my CYP2C19 status?',
-      'Are there alternative PPIs less affected by CYP2C19?'
-    ]
-  }
-};
-
+// ===== MEDICATION SHEET =====
 function openMedSheet(medId) {
-  const med = medData[medId];
+  const c = conditions[currentCondition];
+  const med = c.medData[medId];
   if (!med) return;
 
   const overlay = document.getElementById('med-sheet-overlay');
@@ -2249,12 +2365,10 @@ function openMedSheet(medId) {
         <div class="sheet-subtitle">${med.dose} &middot; ${med.schedule}</div>
       </div>
     </div>
-
     <div class="sheet-alert" style="background:${sc.bg};border:1px solid ${sc.border};border-radius:14px;margin-bottom:4px;">
       <div style="font-size:12px;font-weight:700;color:${sc.color};margin-bottom:4px;">${med.status.title}</div>
       <div style="font-size:13px;color:var(--brown-600);line-height:1.6;">${med.status.text}</div>
     </div>
-
     <div class="sheet-section">
       <div class="sheet-section-title">Food &amp; Timing</div>
       <div style="font-size:13px;color:var(--brown-600);line-height:1.6;">${med.food}</div>
@@ -2327,11 +2441,8 @@ function closeMedSheet() {
   });
 })();
 
-// Scroll chat to bottom on load
-setTimeout(() => {
-  const chatMessages = document.getElementById('chat-messages');
-  if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
-}, 100);
+// ===== INITIAL RENDER =====
+renderAll();
 </script>
 
 </body>
