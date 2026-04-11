@@ -2136,6 +2136,9 @@ function switchCondition(id) {
     chartsAnimated = false;
     ringAnimated = false;
 
+    // Reset all scroll positions to top
+    document.querySelectorAll('.screen-scroll').forEach(s => s.scrollTop = 0);
+
     // Fade back in
     document.querySelectorAll('.dynamic-content').forEach(el => el.classList.remove('fading'));
 
@@ -2213,13 +2216,16 @@ function go(target) {
   updateNavBars();
 
   // Scroll to top for all screens except chat (which scrolls to bottom)
-  if (target === 'ask') {
-    const chatEl = next.querySelector('.chat-messages') || next.querySelector('.screen-scroll');
-    if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
-  } else {
-    const scroller = next.querySelector('.screen-scroll');
-    if (scroller) scroller.scrollTop = 0;
-  }
+  // Use setTimeout to ensure content is rendered before scrolling
+  setTimeout(() => {
+    if (target === 'ask') {
+      const chatEl = next.querySelector('.chat-messages') || next.querySelector('.screen-scroll');
+      if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
+    } else {
+      // Reset ALL scrollable areas in the target screen
+      next.querySelectorAll('.screen-scroll').forEach(s => s.scrollTop = 0);
+    }
+  }, 10);
 
   if (target === 'profile') animateAdvocacyRing();
   if (target === 'labs') animateCharts();
@@ -2449,6 +2455,11 @@ function closeMedSheet() {
 
 // ===== INITIAL RENDER =====
 renderAll();
+
+// Reset all scroll positions after initial render
+setTimeout(() => {
+  document.querySelectorAll('.screen-scroll').forEach(s => s.scrollTop = 0);
+}, 50);
 </script>
 
 </body>
