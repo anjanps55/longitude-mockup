@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Longitude — Patient Health Advocacy Platform</title>
+<style>
+  :root {
+    --teal-50: #f0fdfa;
+    --teal-100: #ccfbf1;
+    --teal-200: #99f6e4;
+    --teal-400: #2dd4bf;
+    --teal-500: #14b8a6;
+    --teal-600: #0d9488;
+    --teal-700: #0f766e;
+    --teal-800: #115e59;
+    --teal-900: #134e4a;
+    --amber-50: #fffbeb;
+    --amber-100: #fef3c7;
+    --amber-400: #fbbf24;
+    --amber-500: #f59e0b;
+    --amber-600: #d97706;
+    --rose-50: #fff1f2;
+    --rose-100: #ffe4e6;
+    --rose-500: #f43f5e;
+    --rose-600: #e11d48;
+    --emerald-50: #ecfdf5;
+    --emerald-100: #d1fae5;
+    --emerald-400: #34d399;
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --ivory: #fffbeb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8fafb;
+    color: var(--gray-800);
+    line-height: 1.5;
+  }
+
+  /* Phone frame */
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.15), 0 0 0 2px var(--gray-200);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .phone-notch {
+    width: 160px;
+    height: 34px;
+    background: black;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+  }
+
+  .screen {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: none;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+  }
+  .screen.active { display: flex; }
+
+  .screen-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 54px;
+    padding: 34px 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-800);
+    flex-shrink: 0;
+  }
+
+  /* Navigation */
+  .nav-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: 16px;
+    z-index: 50;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 12px;
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+  .nav-item:hover { background: var(--teal-50); }
+  .nav-item.active { color: var(--teal-600); }
+  .nav-item:not(.active) { color: var(--gray-400); }
+  .nav-label { font-size: 10px; font-weight: 500; }
+  .nav-icon { width: 24px; height: 24px; }
+
+  /* Screen header */
+  .screen-header {
+    padding: 12px 24px 16px;
+    background: white;
+    flex-shrink: 0;
+  }
+  .screen-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.5px;
+  }
+  .screen-subtitle {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 0 16px 12px;
+    border: 1px solid var(--gray-100);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .card-title { font-size: 16px; font-weight: 600; color: var(--gray-900); }
+  .card-desc { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-top: 8px;
+  }
+  .tag-teal { background: var(--teal-50); color: var(--teal-700); }
+  .tag-amber { background: var(--amber-50); color: var(--amber-600); }
+  .tag-rose { background: var(--rose-50); color: var(--rose-600); }
+  .tag-emerald { background: var(--emerald-50); color: var(--emerald-600); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    width: 100%;
+  }
+  .btn-primary { background: var(--teal-600); color: white; }
+  .btn-primary:hover { background: var(--teal-700); }
+  .btn-secondary { background: var(--teal-50); color: var(--teal-700); }
+  .btn-secondary:hover { background: var(--teal-100); }
+  .btn-outline { background: white; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
+  .btn-outline:hover { border-color: var(--gray-300); background: var(--gray-50); }
+
+  /* Alert card */
+  .alert-card {
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin: 0 16px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .alert-amber { background: var(--amber-50); border: 1px solid var(--amber-100); }
+  .alert-rose { background: var(--rose-50); border: 1px solid var(--rose-100); }
+  .alert-emerald { background: var(--emerald-50); border: 1px solid var(--emerald-100); }
+  .alert-teal { background: var(--teal-50); border: 1px solid var(--teal-100); }
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; line-height: 1.5; }
+  .alert-title { font-weight: 600; color: var(--gray-900); margin-bottom: 2px; }
+
+  /* Biomarker chart */
+  .chart-container {
+    padding: 16px;
+    margin: 0 16px 12px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--gray-100);
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .chart-label { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .chart-value { font-size: 24px; font-weight: 700; color: var(--teal-600); }
+  .chart-unit { font-size: 12px; color: var(--gray-500); font-weight: 400; }
+  .chart-change { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 8px; }
+  .chart-change.down { background: var(--rose-50); color: var(--rose-600); }
+  .chart-change.up { background: var(--emerald-50); color: var(--emerald-600); }
+
+  .sparkline {
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding: 8px 0;
+  }
+  .sparkline-bar {
+    flex: 1;
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: all 0.3s;
+  }
+  .sparkline-bar:hover { opacity: 0.8; }
+  .sparkline-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--gray-400);
+    padding-top: 4px;
+  }
+
+  /* Reference range */
+  .ref-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--gray-100);
+    font-size: 11px;
+    color: var(--gray-500);
+  }
+  .ref-range-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 3px;
+    position: relative;
+  }
+  .ref-range-normal {
+    position: absolute;
+    height: 100%;
+    background: var(--emerald-100);
+    border-radius: 3px;
+  }
+  .ref-range-marker {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: -2px;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* Question list */
+  .question-item {
+    padding: 16px 20px;
+    margin: 0 16px 8px;
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--gray-100);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .question-item:hover { border-color: var(--teal-200); background: var(--teal-50); }
+  .question-number {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .question-text { font-size: 14px; font-weight: 500; color: var(--gray-800); margin-bottom: 6px; }
+  .question-evidence { font-size: 11px; color: var(--gray-400); font-style: italic; }
+
+  /* Trial card */
+  .trial-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 0 16px 12px;
+    border: 1px solid var(--gray-100);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .trial-phase {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--teal-50);
+    color: var(--teal-700);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .trial-title { font-size: 15px; font-weight: 600; color: var(--gray-900); margin: 10px 0 6px; }
+  .trial-meta { font-size: 12px; color: var(--gray-500); display: flex; gap: 12px; margin-bottom: 12px; }
+  .trial-match {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--emerald-50);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--emerald-600);
+    font-weight: 600;
+  }
+
+  /* Genetics card */
+  .gene-result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .gene-result:last-child { border-bottom: none; }
+  .gene-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .gene-detail { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+  .gene-status {
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .gene-normal { background: var(--emerald-50); color: var(--emerald-600); }
+  .gene-attention { background: var(--amber-50); color: var(--amber-600); }
+  .gene-alert { background: var(--rose-50); color: var(--rose-600); }
+
+  /* Onboarding */
+  .onboard-hero {
+    padding: 80px 32px 40px;
+    text-align: center;
+    background: linear-gradient(180deg, var(--teal-50) 0%, white 100%);
+  }
+  .onboard-logo {
+    font-size: 42px;
+    margin-bottom: 16px;
+  }
+  .onboard-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .onboard-desc {
+    font-size: 15px;
+    color: var(--gray-500);
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .onboard-features {
+    padding: 24px 24px 32px;
+  }
+  .onboard-feature {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    align-items: flex-start;
+  }
+  .onboard-feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--teal-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .onboard-feature-title { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .onboard-feature-desc { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+
+  .onboard-actions { padding: 0 24px 40px; display: flex; flex-direction: column; gap: 10px; }
+
+  /* Section divider */
+  .section-label {
+    padding: 8px 24px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* Data source connector */
+  .connector {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    margin: 0 16px 8px;
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--gray-100);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .connector:hover { border-color: var(--teal-200); }
+  .connector-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: var(--gray-50);
+  }
+  .connector-info { flex: 1; }
+  .connector-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .connector-desc { font-size: 12px; color: var(--gray-500); }
+  .connector-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+  .connector-connected { background: var(--emerald-50); color: var(--emerald-600); }
+  .connector-available { background: var(--gray-100); color: var(--gray-500); }
+
+  /* Condition briefing */
+  .briefing-header {
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--teal-600) 0%, var(--teal-800) 100%);
+    color: white;
+  }
+  .briefing-condition { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+  .briefing-title { font-size: 22px; font-weight: 700; margin-top: 4px; }
+  .briefing-meta { font-size: 12px; opacity: 0.7; margin-top: 4px; }
+
+  /* Medication list */
+  .med-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    margin: 0 16px 6px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--gray-100);
+  }
+  .med-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--teal-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .med-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .med-dose { font-size: 12px; color: var(--gray-500); }
+  .med-warning {
+    margin-left: auto;
+    font-size: 16px;
+  }
+
+  /* Screen navigation strip */
+  .screen-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--gray-900);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 16px;
+    z-index: 200;
+    flex-wrap: wrap;
+  }
+  .screen-nav-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--gray-700);
+    background: transparent;
+    color: var(--gray-300);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .screen-nav-btn:hover { background: var(--gray-800); color: white; }
+  .screen-nav-btn.active { background: var(--teal-600); border-color: var(--teal-600); color: white; }
+
+  .screen-nav-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--teal-400);
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+
+  body { padding-top: 60px; }
+
+  /* Scrollbar */
+  .screen-content::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<!-- Screen Navigation Strip -->
+<div class="screen-nav">
+  <span class="screen-nav-title">Longitude Mockup</span>
+  <button class="screen-nav-btn active" onclick="showScreen('onboarding')">Onboarding</button>
+  <button class="screen-nav-btn" onclick="showScreen('dashboard')">Dashboard</button>
+  <button class="screen-nav-btn" onclick="showScreen('condition')">Condition</button>
+  <button class="screen-nav-btn" onclick="showScreen('labs')">Labs</button>
+  <button class="screen-nav-btn" onclick="showScreen('visit')">Visit Prep</button>
+  <button class="screen-nav-btn" onclick="showScreen('trials')">Trials</button>
+  <button class="screen-nav-btn" onclick="showScreen('genetics')">Genetics</button>
+  <button class="screen-nav-btn" onclick="showScreen('sources')">Data Sources</button>
+</div>
+
+<!-- Phone Frame -->
+<div class="phone-frame">
+  <div class="phone-notch"></div>
+
+  <!-- ========== SCREEN: ONBOARDING ========== -->
+  <div class="screen active" id="screen-onboarding">
+    <div class="screen-content">
+      <div class="onboard-hero">
+        <div class="onboard-logo">&#x1F9ED;</div>
+        <div class="onboard-title">Know what to ask.<br>Know what to test.</div>
+        <div class="onboard-desc">Longitude turns your health data into advocacy intelligence — so you can make better decisions with your doctors.</div>
+      </div>
+
+      <div class="onboard-features">
+        <div class="onboard-feature">
+          <div class="onboard-feature-icon">&#x1F50D;</div>
+          <div>
+            <div class="onboard-feature-title">Understand Your Conditions</div>
+            <div class="onboard-feature-desc">AI briefings on what matters, what to test, and what questions to ask your doctors</div>
+          </div>
+        </div>
+        <div class="onboard-feature">
+          <div class="onboard-feature-icon">&#x1F4CA;</div>
+          <div>
+            <div class="onboard-feature-title">Track Trends, Not Just Numbers</div>
+            <div class="onboard-feature-desc">See your labs, biometrics, and health data as a trajectory — not isolated snapshots</div>
+          </div>
+        </div>
+        <div class="onboard-feature">
+          <div class="onboard-feature-icon">&#x1F9EC;</div>
+          <div>
+            <div class="onboard-feature-title">Unlock Your Genetics</div>
+            <div class="onboard-feature-desc">Import 23andMe data to see which medications may need adjustment based on your DNA</div>
+          </div>
+        </div>
+        <div class="onboard-feature">
+          <div class="onboard-feature-icon">&#x1F3AF;</div>
+          <div>
+            <div class="onboard-feature-title">Find Clinical Trials</div>
+            <div class="onboard-feature-desc">AI matches you to relevant trials based on your full health profile — not just your diagnosis</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="onboard-actions">
+        <button class="btn btn-primary" onclick="showScreen('dashboard')">Start My Health Profile</button>
+        <button class="btn btn-outline" onclick="showScreen('dashboard')">I Already Have an Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: DASHBOARD ========== -->
+  <div class="screen" id="screen-dashboard">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>&#x1F50B; 87%</span>
+    </div>
+
+    <div class="screen-header">
+      <div class="screen-title">Hi, Maya</div>
+      <div class="screen-subtitle">Your health advocacy dashboard</div>
+    </div>
+
+    <div class="screen-content">
+      <!-- Urgent Alert -->
+      <div class="alert-card alert-amber" onclick="showScreen('condition')">
+        <div class="alert-icon">&#x26A0;&#xFE0F;</div>
+        <div class="alert-text">
+          <div class="alert-title">Advocacy Action Needed</div>
+          Your FSGS diagnosis may have a genetic component (8-35% of cases). Genetic testing could change your treatment plan. <strong>Tap to learn what to ask.</strong>
+        </div>
+      </div>
+
+      <!-- Visit Prep -->
+      <div class="card" onclick="showScreen('visit')">
+        <div class="card-header">
+          <div class="card-icon" style="background: var(--teal-50);">&#x1F4CB;</div>
+          <div>
+            <div class="card-title">Visit Briefing Ready</div>
+            <div class="card-desc">Dr. Patel — Nephrology — Apr 18</div>
+          </div>
+        </div>
+        <div class="card-desc">3 evidence-based questions prepared for your appointment based on your latest labs and condition profile.</div>
+        <span class="tag tag-teal">3 Questions Ready</span>
+      </div>
+
+      <!-- Lab Alert -->
+      <div class="card" onclick="showScreen('labs')">
+        <div class="card-header">
+          <div class="card-icon" style="background: var(--rose-50);">&#x1F9EA;</div>
+          <div>
+            <div class="card-title">Lab Trend Alert</div>
+            <div class="card-desc">eGFR declining over 18 months</div>
+          </div>
+        </div>
+        <div class="card-desc">Your kidney function has decreased 12% since Oct 2024. This rate of decline may warrant a conversation with your nephrologist.</div>
+        <span class="tag tag-rose">Declining Trend</span>
+        <span class="tag tag-teal">Questions Available</span>
+      </div>
+
+      <!-- Trial Match -->
+      <div class="card" onclick="showScreen('trials')">
+        <div class="card-header">
+          <div class="card-icon" style="background: var(--emerald-50);">&#x1F3AF;</div>
+          <div>
+            <div class="card-title">2 Clinical Trials Found</div>
+            <div class="card-desc">Matching your FSGS profile</div>
+          </div>
+        </div>
+        <div class="card-desc">New trials studying non-immunosuppressive approaches for genetic FSGS. One is enrolling within 50 miles of you.</div>
+        <span class="tag tag-emerald">High Match</span>
+      </div>
+
+      <!-- Genetics -->
+      <div class="card" onclick="showScreen('genetics')">
+        <div class="card-header">
+          <div class="card-icon" style="background: var(--amber-50);">&#x1F9EC;</div>
+          <div>
+            <div class="card-title">Genetic Insight</div>
+            <div class="card-desc">CYP2C19 result needs attention</div>
+          </div>
+        </div>
+        <div class="card-desc">Your pharmacogenomics profile shows you may be a poor metabolizer for one of your current medications.</div>
+        <span class="tag tag-amber">Action Recommended</span>
+      </div>
+
+      <!-- Medications -->
+      <div class="section-label">Your Medications</div>
+
+      <div class="med-item">
+        <div class="med-icon">&#x1F48A;</div>
+        <div>
+          <div class="med-name">Prednisone</div>
+          <div class="med-dose">20mg daily</div>
+        </div>
+        <div class="med-warning">&#x26A0;&#xFE0F;</div>
+      </div>
+
+      <div class="med-item">
+        <div class="med-icon">&#x1F48A;</div>
+        <div>
+          <div class="med-name">Lisinopril</div>
+          <div class="med-dose">10mg daily</div>
+        </div>
+        <div class="med-warning" style="opacity:0.3;">&#x2705;</div>
+      </div>
+
+      <div class="med-item">
+        <div class="med-icon">&#x1F48A;</div>
+        <div>
+          <div class="med-name">Omeprazole</div>
+          <div class="med-dose">20mg daily</div>
+        </div>
+        <div class="med-warning">&#x26A0;&#xFE0F;</div>
+      </div>
+    </div>
+
+    <!-- Nav Bar -->
+    <div class="nav-bar">
+      <button class="nav-item active" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('labs')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span class="nav-label">Health</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('trials')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span class="nav-label">Discover</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('sources')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span class="nav-label">Settings</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: CONDITION BRIEFING ========== -->
+  <div class="screen" id="screen-condition">
+    <div class="status-bar" style="color:white; background: var(--teal-700);">
+      <span>9:41</span>
+      <span>&#x1F50B; 87%</span>
+    </div>
+
+    <div class="briefing-header">
+      <div class="briefing-condition">Condition Briefing</div>
+      <div class="briefing-title">Focal Segmental Glomerulosclerosis (FSGS)</div>
+      <div class="briefing-meta">Diagnosed Feb 2026 &middot; Updated today</div>
+    </div>
+
+    <div class="screen-content" style="padding-top: 16px;">
+      <div class="alert-card alert-amber">
+        <div class="alert-icon">&#x1F9EC;</div>
+        <div class="alert-text">
+          <div class="alert-title">Genetic Testing May Change Your Treatment</div>
+          8-35% of FSGS cases have a genetic cause. Genetic FSGS generally <strong>does not respond to steroids</strong>. In one study, 50% of patients with genetic variants received unnecessary immunosuppression.
+          <div style="margin-top: 6px; font-size: 11px; color: var(--gray-400);">Source: Kidney International, 2024 &middot; APOL1 Research Consortium</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="padding-top: 8px;">Key Facts About Your Condition</div>
+
+      <div class="card" style="cursor: default;">
+        <div class="card-title" style="font-size: 14px; margin-bottom: 8px;">What You Should Know</div>
+        <ul style="font-size: 13px; color: var(--gray-600); padding-left: 18px; line-height: 2;">
+          <li>FSGS accounts for <strong>40% of adult nephrotic syndrome</strong> cases</li>
+          <li>Over <strong>50 monogenic causes</strong> of steroid-resistant FSGS identified</li>
+          <li>Genetic testing can prevent months of unnecessary steroid treatment</li>
+          <li>APOL1 high-risk variants are found in <strong>~14% of African Americans</strong></li>
+          <li>Genetic FSGS has different transplant recurrence risk than immune-mediated</li>
+        </ul>
+      </div>
+
+      <div class="section-label">Questions to Ask Your Nephrologist</div>
+
+      <div class="question-item" style="border-left: 3px solid var(--teal-500);">
+        <div class="question-number">Priority 1</div>
+        <div class="question-text">"Should I get genetic testing before starting immunosuppressive therapy?"</div>
+        <div class="question-evidence">8-35% of FSGS is genetic and steroid-resistant. Testing can prevent ineffective treatment. (Kidney International, 2024)</div>
+      </div>
+
+      <div class="question-item" style="border-left: 3px solid var(--teal-500);">
+        <div class="question-number">Priority 2</div>
+        <div class="question-text">"What is the specific genetic panel that should be ordered for FSGS?"</div>
+        <div class="question-evidence">Exome sequencing found diagnostic variants in 29% of adults with FSGS. (JASN, 2023)</div>
+      </div>
+
+      <div class="question-item" style="border-left: 3px solid var(--amber-500);">
+        <div class="question-number">Priority 3</div>
+        <div class="question-text">"If I do have genetic FSGS, what are the treatment alternatives to steroids?"</div>
+        <div class="question-evidence">Genetic FSGS requires targeted management based on the specific mutation. (Nature Reviews Nephrology, 2024)</div>
+      </div>
+
+      <div class="question-item" style="border-left: 3px solid var(--gray-300);">
+        <div class="question-number">Also Ask</div>
+        <div class="question-text">"Should my family members be tested? What are the hereditary implications?"</div>
+        <div class="question-evidence">Genetic counseling recommended for all confirmed genetic FSGS cases. (KDIGO, 2025)</div>
+      </div>
+
+      <div style="padding: 16px;">
+        <button class="btn btn-primary">Export Visit Briefing (PDF)</button>
+        <button class="btn btn-secondary" style="margin-top: 8px;" onclick="showScreen('trials')">View Related Clinical Trials</button>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-item" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        <span class="nav-label">Back</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: LABS ========== -->
+  <div class="screen" id="screen-labs">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>&#x1F50B; 87%</span>
+    </div>
+
+    <div class="screen-header">
+      <div class="screen-title">Health Trends</div>
+      <div class="screen-subtitle">Your longitudinal biomarker tracking</div>
+    </div>
+
+    <div class="screen-content">
+      <!-- eGFR Chart -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <div>
+            <div class="chart-label">eGFR (Kidney Function)</div>
+            <div class="chart-value">58 <span class="chart-unit">mL/min/1.73m&sup2;</span></div>
+          </div>
+          <span class="chart-change down">&#x2193; 12%</span>
+        </div>
+        <div class="sparkline">
+          <div class="sparkline-bar" style="height:85%; background: var(--emerald-400);"></div>
+          <div class="sparkline-bar" style="height:80%; background: var(--emerald-400);"></div>
+          <div class="sparkline-bar" style="height:75%; background: var(--amber-400);"></div>
+          <div class="sparkline-bar" style="height:72%; background: var(--amber-400);"></div>
+          <div class="sparkline-bar" style="height:68%; background: var(--amber-400);"></div>
+          <div class="sparkline-bar" style="height:65%; background: var(--amber-500);"></div>
+          <div class="sparkline-bar" style="height:62%; background: var(--amber-500);"></div>
+          <div class="sparkline-bar" style="height:60%; background: var(--rose-500);"></div>
+        </div>
+        <div class="sparkline-labels">
+          <span>Oct '24</span>
+          <span>Jan '25</span>
+          <span>Apr '25</span>
+          <span>Jul '25</span>
+          <span>Oct '25</span>
+          <span>Jan '26</span>
+          <span>Mar '26</span>
+          <span>Apr '26</span>
+        </div>
+        <div class="ref-range">
+          <span>Low</span>
+          <div class="ref-range-bar">
+            <div class="ref-range-normal" style="left: 40%; width: 50%;"></div>
+            <div class="ref-range-marker" style="left: 32%; background: var(--amber-500);"></div>
+          </div>
+          <span>High</span>
+        </div>
+      </div>
+
+      <div class="alert-card alert-rose">
+        <div class="alert-icon">&#x1F4C9;</div>
+        <div class="alert-text">
+          <div class="alert-title">Declining Trend Detected</div>
+          Your eGFR has dropped from 66 to 58 over 18 months. At this rate, you may reach Stage 3b CKD within 2 years. <strong>This warrants a conversation with your nephrologist about monitoring frequency and treatment adjustment.</strong>
+        </div>
+      </div>
+
+      <!-- Protein/Creatinine -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <div>
+            <div class="chart-label">Urine Protein/Creatinine</div>
+            <div class="chart-value">1.8 <span class="chart-unit">g/g</span></div>
+          </div>
+          <span class="chart-change down" style="background: var(--amber-50); color: var(--amber-600);">&#x2191; Elevated</span>
+        </div>
+        <div class="sparkline">
+          <div class="sparkline-bar" style="height:35%; background: var(--amber-400);"></div>
+          <div class="sparkline-bar" style="height:40%; background: var(--amber-400);"></div>
+          <div class="sparkline-bar" style="height:50%; background: var(--amber-500);"></div>
+          <div class="sparkline-bar" style="height:55%; background: var(--amber-500);"></div>
+          <div class="sparkline-bar" style="height:60%; background: var(--rose-400);"></div>
+          <div class="sparkline-bar" style="height:65%; background: var(--rose-500);"></div>
+        </div>
+        <div class="sparkline-labels">
+          <span>Oct '24</span>
+          <span>Jan '25</span>
+          <span>Apr '25</span>
+          <span>Oct '25</span>
+          <span>Jan '26</span>
+          <span>Apr '26</span>
+        </div>
+      </div>
+
+      <!-- Blood Pressure -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <div>
+            <div class="chart-label">Blood Pressure</div>
+            <div class="chart-value">128/82 <span class="chart-unit">mmHg</span></div>
+          </div>
+          <span class="chart-change" style="background: var(--gray-100); color: var(--gray-600);">Stable</span>
+        </div>
+        <div class="sparkline">
+          <div class="sparkline-bar" style="height:70%; background: var(--teal-400);"></div>
+          <div class="sparkline-bar" style="height:72%; background: var(--teal-400);"></div>
+          <div class="sparkline-bar" style="height:68%; background: var(--teal-400);"></div>
+          <div class="sparkline-bar" style="height:73%; background: var(--teal-400);"></div>
+          <div class="sparkline-bar" style="height:70%; background: var(--teal-400);"></div>
+          <div class="sparkline-bar" style="height:71%; background: var(--teal-400);"></div>
+        </div>
+        <div class="sparkline-labels">
+          <span>Oct '24</span>
+          <span>Jan '25</span>
+          <span>Apr '25</span>
+          <span>Oct '25</span>
+          <span>Jan '26</span>
+          <span>Apr '26</span>
+        </div>
+      </div>
+
+      <div class="section-label">AI Interpretation</div>
+      <div class="card" style="cursor:default; background: var(--teal-50); border-color: var(--teal-100);">
+        <div class="card-desc" style="color: var(--teal-800); font-size: 13px;">
+          <strong>What your numbers mean together:</strong> Your declining eGFR combined with rising proteinuria suggests your FSGS is not well-controlled on current therapy. Blood pressure is stable on Lisinopril, which is protective for kidneys. The pattern supports discussing treatment modification — especially given the possibility of genetic steroid resistance.
+          <div style="margin-top: 8px; font-size: 11px; color: var(--teal-600);">Source: KDIGO 2024 Glomerular Diseases Guideline</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-item" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span class="nav-label">Health</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('trials')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span class="nav-label">Discover</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('sources')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span class="nav-label">Settings</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: VISIT PREPARATION ========== -->
+  <div class="screen" id="screen-visit">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>&#x1F50B; 87%</span>
+    </div>
+
+    <div class="screen-header">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom: 8px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:var(--teal-50); display:flex; align-items:center; justify-content:center; font-size:22px;">&#x1F4CB;</div>
+        <div>
+          <div class="screen-title" style="font-size:20px;">Visit Briefing</div>
+          <div class="screen-subtitle">Dr. Sanjay Patel &middot; Nephrology &middot; Apr 18</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-content">
+      <div class="alert-card alert-teal">
+        <div class="alert-icon">&#x1F4A1;</div>
+        <div class="alert-text">
+          <div class="alert-title">Your visit briefing is personalized</div>
+          Based on your FSGS diagnosis, declining eGFR trend, current medications, and genetic profile, here are the most important topics for this appointment.
+        </div>
+      </div>
+
+      <div class="section-label">Priority Questions</div>
+
+      <div class="question-item" style="border-left: 3px solid var(--rose-500);">
+        <div class="question-number" style="color: var(--rose-600);">Critical</div>
+        <div class="question-text">"My eGFR has dropped from 66 to 58 in 18 months. Should we adjust my monitoring frequency or treatment approach?"</div>
+        <div class="question-evidence">KDIGO recommends increased monitoring when eGFR decline exceeds 5 mL/min/year. Your decline rate: ~6.4 mL/min/year.</div>
+      </div>
+
+      <div class="question-item" style="border-left: 3px solid var(--amber-500);">
+        <div class="question-number" style="color: var(--amber-600);">Important</div>
+        <div class="question-text">"I've been on prednisone for 4 months with no improvement in proteinuria. Should we pursue genetic testing for steroid-resistant FSGS?"</div>
+        <div class="question-evidence">50% of patients with genetic FSGS variants received unnecessary immunosuppression. Testing yield: 29% in adult-onset FSGS.</div>
+      </div>
+
+      <div class="question-item" style="border-left: 3px solid var(--teal-500);">
+        <div class="question-number" style="color: var(--teal-600);">Discuss</div>
+        <div class="question-text">"Are there clinical trials for non-immunosuppressive FSGS treatments I should consider?"</div>
+        <div class="question-evidence">2 active trials within 50 miles studying sparsentan and endothelin receptor antagonists for FSGS.</div>
+      </div>
+
+      <div class="section-label" style="padding-top: 8px;">Health Summary for Your Doctor</div>
+
+      <div class="card" style="cursor:default; background: var(--gray-50);">
+        <div style="font-size:13px; color: var(--gray-600); line-height: 1.8;">
+          <strong style="color: var(--gray-900);">Patient Summary — Maya P.</strong><br>
+          <strong>Diagnosis:</strong> FSGS (Feb 2026)<br>
+          <strong>Current Treatment:</strong> Prednisone 20mg, Lisinopril 10mg, Omeprazole 20mg<br>
+          <strong>eGFR Trend:</strong> 66 → 58 mL/min over 18 months (Stage 3a CKD)<br>
+          <strong>Proteinuria:</strong> Rising (1.8 g/g, up from 0.8)<br>
+          <strong>BP:</strong> 128/82 (controlled on Lisinopril)<br>
+          <strong>Genetics:</strong> CYP2C19 poor metabolizer (affects omeprazole)<br>
+          <strong>Genetic testing for FSGS:</strong> Not yet performed<br>
+          <strong>Duration on steroids:</strong> 4 months, no proteinuria response
+        </div>
+      </div>
+
+      <div style="padding: 16px;">
+        <button class="btn btn-primary">Export as PDF</button>
+        <button class="btn btn-secondary" style="margin-top: 8px;">Share with Dr. Patel</button>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-item" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        <span class="nav-label">Back</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: CLINICAL TRIALS ========== -->
+  <div class="screen" id="screen-trials">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>&#x1F50B; 87%</span>
+    </div>
+
+    <div class="screen-header">
+      <div class="screen-title">Clinical Trials</div>
+      <div class="screen-subtitle">Matched to your health profile</div>
+    </div>
+
+    <div class="screen-content">
+      <div class="alert-card alert-emerald">
+        <div class="alert-icon">&#x2705;</div>
+        <div class="alert-text">
+          <div class="alert-title">2 trials match your profile</div>
+          Based on your FSGS diagnosis, eGFR stage, age, and location. Updated daily from ClinicalTrials.gov.
+        </div>
+      </div>
+
+      <div class="trial-card">
+        <div class="trial-phase">Phase 3</div>
+        <div class="trial-title">Sparsentan vs. Irbesartan in FSGS (DUPLEX Extension)</div>
+        <div class="trial-meta">
+          <span>&#x1F4CD; Houston Methodist — 32 mi</span>
+          <span>&#x1F4C5; Enrolling</span>
+        </div>
+        <div class="trial-match">
+          <span>&#x2705;</span>
+          <span>92% Profile Match — You likely meet 11 of 12 eligibility criteria</span>
+        </div>
+        <div style="margin-top: 12px; font-size: 13px; color: var(--gray-600); line-height: 1.6;">
+          Studying a dual endothelin/angiotensin receptor antagonist for reducing proteinuria in FSGS. <strong>Non-immunosuppressive approach</strong> — relevant given your potential steroid resistance.
+        </div>
+        <div style="margin-top: 12px;">
+          <button class="btn btn-secondary" style="font-size: 13px; padding: 10px 16px;">Generate Questions for Dr. Patel</button>
+        </div>
+      </div>
+
+      <div class="trial-card">
+        <div class="trial-phase">Phase 2</div>
+        <div class="trial-title">Atrasentan for Primary Proteinuric Glomerulopathies</div>
+        <div class="trial-meta">
+          <span>&#x1F4CD; Baylor College — 28 mi</span>
+          <span>&#x1F4C5; Enrolling</span>
+        </div>
+        <div class="trial-match">
+          <span>&#x2705;</span>
+          <span>85% Profile Match — 9 of 11 criteria met</span>
+        </div>
+        <div style="margin-top: 12px; font-size: 13px; color: var(--gray-600); line-height: 1.6;">
+          Selective endothelin A receptor antagonist for reducing proteinuria. Includes FSGS patients with eGFR > 30. Non-immunosuppressive.
+        </div>
+        <div style="margin-top: 12px;">
+          <button class="btn btn-secondary" style="font-size: 13px; padding: 10px 16px;">Generate Questions for Dr. Patel</button>
+        </div>
+      </div>
+
+      <div class="section-label" style="padding-top: 8px;">What to Know About Clinical Trials</div>
+
+      <div class="card" style="cursor:default;">
+        <div class="card-desc" style="font-size: 13px; line-height: 1.7;">
+          <strong>Clinical trials are an option, not an obligation.</strong> Fewer than 5% of patients participate, often because they don't know trials exist. Asking your specialist about trial eligibility is a form of advocacy — it opens doors to treatments that may not be available otherwise.
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-item" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('labs')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span class="nav-label">Health</span>
+      </button>
+      <button class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span class="nav-label">Discover</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('sources')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span class="nav-label">Settings</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: GENETICS ========== -->
+  <div class="screen" id="screen-genetics">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>&#x1F50B; 87%</span>
+    </div>
+
+    <div class="screen-header">
+      <div class="screen-title">Genetic Insights</div>
+      <div class="screen-subtitle">Pharmacogenomics from your 23andMe data</div>
+    </div>
+
+    <div class="screen-content">
+      <div class="alert-card alert-amber">
+        <div class="alert-icon">&#x26A0;&#xFE0F;</div>
+        <div class="alert-text">
+          <div class="alert-title">1 medication may need attention</div>
+          Your CYP2C19 genotype suggests you're a poor metabolizer. This affects how your body processes omeprazole.
+        </div>
+      </div>
+
+      <div class="card" style="cursor:default;">
+        <div class="card-title" style="font-size: 15px; margin-bottom: 16px;">Your Metabolizer Profile</div>
+
+        <div class="gene-result">
+          <div>
+            <div class="gene-name">CYP2D6</div>
+            <div class="gene-detail">Metabolizes SSRIs, opioids, beta-blockers</div>
+          </div>
+          <span class="gene-status gene-normal">Normal</span>
+        </div>
+
+        <div class="gene-result">
+          <div>
+            <div class="gene-name">CYP2C19</div>
+            <div class="gene-detail">Metabolizes PPIs, clopidogrel, SSRIs</div>
+          </div>
+          <span class="gene-status gene-alert">Poor Metabolizer</span>
+        </div>
+
+        <div class="gene-result">
+          <div>
+            <div class="gene-name">CYP3A4</div>
+            <div class="gene-detail">Metabolizes statins, calcium channel blockers</div>
+          </div>
+          <span class="gene-status gene-normal">Normal</span>
+        </div>
+
+        <div class="gene-result">
+          <div>
+            <div class="gene-name">CYP2C9</div>
+            <div class="gene-detail">Metabolizes warfarin, NSAIDs</div>
+          </div>
+          <span class="gene-status gene-attention">Intermediate</span>
+        </div>
+      </div>
+
+      <div class="section-label">Medication Impact</div>
+
+      <div class="card" style="cursor:default; border-color: var(--rose-100);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <span style="font-size: 24px;">&#x1F48A;</span>
+          <div>
+            <div class="card-title" style="font-size: 14px; color: var(--rose-600);">Omeprazole 20mg</div>
+            <div class="card-desc">Affected by CYP2C19 poor metabolizer status</div>
+          </div>
+        </div>
+        <div style="font-size: 13px; color: var(--gray-600); line-height: 1.7;">
+          As a CYP2C19 poor metabolizer, you process omeprazole much more slowly than normal metabolizers. This means the drug stays in your system longer, increasing both effectiveness and potential side effects. <strong>CPIC guidelines suggest a dose reduction may be appropriate.</strong>
+        </div>
+        <div style="margin-top: 8px; font-size: 11px; color: var(--gray-400);">
+          Source: CPIC Guideline for PPIs and CYP2C19, 2023
+        </div>
+      </div>
+
+      <div class="section-label">Question for Your Doctor</div>
+
+      <div class="question-item" style="border-left: 3px solid var(--amber-500);">
+        <div class="question-number" style="color: var(--amber-600);">Based on your genetics</div>
+        <div class="question-text">"I'm a CYP2C19 poor metabolizer. Should my omeprazole dose be adjusted, or should we consider an alternative PPI?"</div>
+        <div class="question-evidence">CPIC guidelines recommend considering dose adjustment for CYP2C19 poor metabolizers on PPIs.</div>
+      </div>
+
+      <div style="padding: 16px;">
+        <button class="btn btn-outline" style="font-size: 13px;">
+          <span>&#x1F4C4;</span> View Full Genetic Report
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-item" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        <span class="nav-label">Back</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: DATA SOURCES ========== -->
+  <div class="screen" id="screen-sources">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>&#x1F50B; 87%</span>
+    </div>
+
+    <div class="screen-header">
+      <div class="screen-title">Data Sources</div>
+      <div class="screen-subtitle">4 connected &middot; 3 available to add</div>
+    </div>
+
+    <div class="screen-content">
+      <div class="section-label">Connected</div>
+
+      <div class="connector">
+        <div class="connector-icon">&#x2328;&#xFE0F;</div>
+        <div class="connector-info">
+          <div class="connector-name">Apple Health</div>
+          <div class="connector-desc">Heart rate, steps, sleep, blood pressure</div>
+        </div>
+        <span class="connector-status connector-connected">Synced</span>
+      </div>
+
+      <div class="connector">
+        <div class="connector-icon">&#x1F9EA;</div>
+        <div class="connector-info">
+          <div class="connector-name">Quest Diagnostics</div>
+          <div class="connector-desc">Lab results via Health Gorilla</div>
+        </div>
+        <span class="connector-status connector-connected">Synced</span>
+      </div>
+
+      <div class="connector">
+        <div class="connector-icon">&#x1F48A;</div>
+        <div class="connector-info">
+          <div class="connector-name">Medication List</div>
+          <div class="connector-desc">3 medications tracked</div>
+        </div>
+        <span class="connector-status connector-connected">Active</span>
+      </div>
+
+      <div class="connector">
+        <div class="connector-icon">&#x1F9EC;</div>
+        <div class="connector-info">
+          <div class="connector-name">23andMe</div>
+          <div class="connector-desc">Pharmacogenomics profile imported</div>
+        </div>
+        <span class="connector-status connector-connected">Imported</span>
+      </div>
+
+      <div class="section-label" style="padding-top: 8px;">Available to Connect</div>
+
+      <div class="connector">
+        <div class="connector-icon">&#x1F3E5;</div>
+        <div class="connector-info">
+          <div class="connector-name">Epic MyChart</div>
+          <div class="connector-desc">Clinical records, diagnoses, visit notes</div>
+        </div>
+        <span class="connector-status connector-available">Connect</span>
+      </div>
+
+      <div class="connector">
+        <div class="connector-icon">&#x231A;</div>
+        <div class="connector-info">
+          <div class="connector-name">Oura Ring</div>
+          <div class="connector-desc">Sleep, HRV, temperature, readiness</div>
+        </div>
+        <span class="connector-status connector-available">Connect</span>
+      </div>
+
+      <div class="connector">
+        <div class="connector-icon">&#x1F4B3;</div>
+        <div class="connector-info">
+          <div class="connector-name">Insurance Claims</div>
+          <div class="connector-desc">Care history, costs, coverage gaps</div>
+        </div>
+        <span class="connector-status connector-available">Connect</span>
+      </div>
+
+      <div class="section-label" style="padding-top: 8px;">Coming Soon</div>
+
+      <div class="connector" style="opacity: 0.5;">
+        <div class="connector-icon">&#x1F4CA;</div>
+        <div class="connector-info">
+          <div class="connector-name">Dexcom / Libre CGM</div>
+          <div class="connector-desc">Continuous glucose monitoring</div>
+        </div>
+        <span class="connector-status" style="font-size: 11px; color: var(--gray-400);">Q3 2026</span>
+      </div>
+
+      <div class="connector" style="opacity: 0.5;">
+        <div class="connector-icon">&#x1F4C4;</div>
+        <div class="connector-info">
+          <div class="connector-name">TEFCA National Records</div>
+          <div class="connector-desc">Access records from any US provider</div>
+        </div>
+        <span class="connector-status" style="font-size: 11px; color: var(--gray-400);">Q4 2026</span>
+      </div>
+
+      <div style="padding: 24px 16px;">
+        <div class="card" style="cursor: default; background: var(--teal-50); border-color: var(--teal-100);">
+          <div class="card-desc" style="color: var(--teal-800); text-align: center; font-size: 13px;">
+            <strong>The more data you connect, the smarter your advocacy becomes.</strong><br>
+            Each new source helps us give you better questions, better insights, and better recommendations.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-item" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('labs')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span class="nav-label">Health</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('trials')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span class="nav-label">Discover</span>
+      </button>
+      <button class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span class="nav-label">Settings</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showScreen(name) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Show target
+  document.getElementById('screen-' + name).classList.add('active');
+  // Update nav buttons
+  document.querySelectorAll('.screen-nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.textContent.toLowerCase().replace(/\s/g, '') === name.toLowerCase().replace(/\s/g, '')) {
+      btn.classList.add('active');
+    }
+  });
+  // Scroll to top of phone
+  const content = document.querySelector('#screen-' + name + ' .screen-content');
+  if (content) content.scrollTop = 0;
+}
+</script>
+
+</body>
+</html>
