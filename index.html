@@ -4,70 +4,134 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Longitude — Patient Health Advocacy Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --teal-50: #f0fdfa;
-    --teal-100: #ccfbf1;
-    --teal-200: #99f6e4;
-    --teal-400: #2dd4bf;
-    --teal-500: #14b8a6;
-    --teal-600: #0d9488;
-    --teal-700: #0f766e;
-    --teal-800: #115e59;
-    --teal-900: #134e4a;
-    --amber-50: #fffbeb;
-    --amber-100: #fef3c7;
-    --amber-400: #fbbf24;
-    --amber-500: #f59e0b;
-    --amber-600: #d97706;
-    --rose-50: #fff1f2;
-    --rose-100: #ffe4e6;
-    --rose-500: #f43f5e;
-    --rose-600: #e11d48;
-    --emerald-50: #ecfdf5;
-    --emerald-100: #d1fae5;
-    --emerald-400: #34d399;
-    --emerald-500: #10b981;
-    --emerald-600: #059669;
-    --gray-50: #f9fafb;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-300: #d1d5db;
-    --gray-400: #9ca3af;
-    --gray-500: #6b7280;
-    --gray-600: #4b5563;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
-    --gray-900: #111827;
-    --ivory: #fffbeb;
+    /* Warm foundation */
+    --cream: #FFF9F2;
+    --cream-deep: #FFF1E3;
+    --warm-white: #FFFCF8;
+    --parchment: #F5EAD9;
+
+    /* Primary — Terracotta / Coral */
+    --terra-50: #FFF5F1;
+    --terra-100: #FFE8E0;
+    --terra-200: #FFD0C1;
+    --terra-300: #FFB09A;
+    --terra-400: #E8937C;
+    --terra-500: #D4725C;
+    --terra-600: #C05A44;
+    --terra-700: #A04835;
+    --terra-800: #7A3828;
+
+    /* Amber / Gold */
+    --amber-50: #FFF8EB;
+    --amber-100: #FFEFC9;
+    --amber-200: #FFE09A;
+    --amber-300: #FFD06B;
+    --amber-400: #E8A44A;
+    --amber-500: #D4903A;
+    --amber-600: #B8762B;
+
+    /* Sage — for positive/success */
+    --sage-50: #F2F7F4;
+    --sage-100: #DCE9E1;
+    --sage-200: #BBDAC6;
+    --sage-300: #9AC8AB;
+    --sage-400: #7BAE8E;
+    --sage-500: #5D9672;
+    --sage-600: #4A7A5B;
+
+    /* Warm Rose — for alerts */
+    --rose-50: #FFF3F4;
+    --rose-100: #FFE0E3;
+    --rose-200: #FFC1C7;
+    --rose-300: #F09AA3;
+    --rose-400: #D4626F;
+    --rose-500: #B84D59;
+    --rose-600: #9A3A45;
+
+    /* Lavender — for genetics/secondary */
+    --lav-50: #F7F4FB;
+    --lav-100: #EDE7F5;
+    --lav-200: #D6CBE8;
+    --lav-300: #B8A9D1;
+    --lav-400: #9B89B8;
+    --lav-500: #7E6B9E;
+
+    /* Warm neutrals */
+    --brown-50: #FAF7F5;
+    --brown-100: #F0EAE5;
+    --brown-200: #DDD4CC;
+    --brown-300: #C4B8AE;
+    --brown-400: #A09189;
+    --brown-500: #7D6E66;
+    --brown-600: #6B5A5E;
+    --brown-700: #54434A;
+    --brown-800: #3D2C2E;
+    --brown-900: #2A1D1F;
+
+    /* Gradients */
+    --grad-warm: linear-gradient(135deg, #FFE8E0 0%, #FFEFC9 50%, #F2F7F4 100%);
+    --grad-terra: linear-gradient(135deg, #D4725C 0%, #E8A44A 100%);
+    --grad-sunset: linear-gradient(160deg, #FFB09A 0%, #FFD06B 100%);
+    --grad-sage: linear-gradient(135deg, #DCE9E1 0%, #F2F7F4 100%);
+    --grad-rose: linear-gradient(135deg, #FFE0E3 0%, #FFF3F4 100%);
+    --grad-lav: linear-gradient(135deg, #EDE7F5 0%, #F7F4FB 100%);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f8fafb;
-    color: var(--gray-800);
-    line-height: 1.5;
+    font-family: 'Outfit', sans-serif;
+    background: var(--cream);
+    color: var(--brown-700);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  h1, h2, h3, .screen-title, .card-title, .alert-title,
+  .onboard-title, .briefing-title, .chart-value, .gene-name {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+  }
+
+  /* Subtle warm noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px;
   }
 
   /* Phone frame */
   .phone-frame {
-    width: 390px;
-    height: 844px;
+    width: 393px;
+    height: 852px;
     margin: 40px auto;
-    background: white;
-    border-radius: 40px;
-    box-shadow: 0 25px 80px rgba(0,0,0,0.15), 0 0 0 2px var(--gray-200);
+    background: var(--cream);
+    border-radius: 44px;
+    box-shadow:
+      0 0 0 2px var(--brown-200),
+      0 30px 90px rgba(61,44,46,0.15),
+      0 10px 30px rgba(61,44,46,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.6);
     overflow: hidden;
     position: relative;
   }
 
   .phone-notch {
-    width: 160px;
+    width: 126px;
     height: 34px;
-    background: black;
-    border-radius: 0 0 20px 20px;
+    background: var(--brown-900);
+    border-radius: 0 0 18px 18px;
     margin: 0 auto;
     position: absolute;
     top: 0;
@@ -89,20 +153,22 @@
   .screen-content {
     flex: 1;
     overflow-y: auto;
-    padding-bottom: 80px;
+    padding-bottom: 88px;
   }
+  .screen-content::-webkit-scrollbar { width: 0; }
 
   /* Status bar */
   .status-bar {
     height: 54px;
-    padding: 34px 24px 0;
+    padding: 34px 28px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
     font-weight: 600;
-    color: var(--gray-800);
+    color: var(--brown-700);
     flex-shrink: 0;
+    letter-spacing: 0.3px;
   }
 
   /* Navigation */
@@ -111,98 +177,115 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 80px;
-    background: white;
-    border-top: 1px solid var(--gray-200);
+    height: 84px;
+    background: var(--warm-white);
+    border-top: 1px solid var(--brown-100);
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding-bottom: 16px;
+    padding-bottom: 20px;
     z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255,252,248,0.88);
   }
   .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 12px;
-    transition: all 0.2s;
+    padding: 8px 14px;
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
     border: none;
     background: none;
-    font-family: inherit;
+    font-family: 'Outfit', sans-serif;
   }
-  .nav-item:hover { background: var(--teal-50); }
-  .nav-item.active { color: var(--teal-600); }
-  .nav-item:not(.active) { color: var(--gray-400); }
-  .nav-label { font-size: 10px; font-weight: 500; }
-  .nav-icon { width: 24px; height: 24px; }
+  .nav-item:hover { background: var(--terra-50); }
+  .nav-item.active { color: var(--terra-500); }
+  .nav-item:not(.active) { color: var(--brown-400); }
+  .nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.3px; }
+  .nav-icon { width: 22px; height: 22px; }
 
   /* Screen header */
   .screen-header {
-    padding: 12px 24px 16px;
-    background: white;
+    padding: 10px 24px 18px;
     flex-shrink: 0;
   }
   .screen-title {
     font-size: 28px;
-    font-weight: 700;
-    color: var(--gray-900);
-    letter-spacing: -0.5px;
+    font-weight: 600;
+    color: var(--brown-900);
+    letter-spacing: -0.3px;
+    line-height: 1.15;
   }
   .screen-subtitle {
     font-size: 14px;
-    color: var(--gray-500);
-    margin-top: 2px;
+    color: var(--brown-400);
+    margin-top: 4px;
+    font-weight: 400;
   }
 
   /* Cards */
   .card {
-    background: white;
-    border-radius: 16px;
+    background: var(--warm-white);
+    border-radius: 20px;
     padding: 20px;
-    margin: 0 16px 12px;
-    border: 1px solid var(--gray-100);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin: 0 16px 14px;
+    border: 1px solid rgba(221,212,204,0.5);
+    box-shadow: 0 2px 8px rgba(61,44,46,0.04), 0 0 0 0 transparent;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.35s cubic-bezier(.4,0,.2,1);
   }
-  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); }
+  .card:hover {
+    box-shadow: 0 8px 24px rgba(61,44,46,0.08);
+    transform: translateY(-2px);
+    border-color: var(--terra-200);
+  }
 
   .card-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     margin-bottom: 12px;
   }
   .card-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     flex-shrink: 0;
   }
-  .card-title { font-size: 16px; font-weight: 600; color: var(--gray-900); }
-  .card-desc { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+  .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--brown-800);
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--brown-500);
+    line-height: 1.6;
+  }
 
   /* Tags */
   .tag {
     display: inline-block;
-    padding: 4px 10px;
-    border-radius: 20px;
+    padding: 5px 12px;
+    border-radius: 24px;
     font-size: 11px;
     font-weight: 600;
     margin-right: 6px;
-    margin-top: 8px;
+    margin-top: 10px;
+    letter-spacing: 0.2px;
   }
-  .tag-teal { background: var(--teal-50); color: var(--teal-700); }
+  .tag-terra { background: var(--terra-50); color: var(--terra-600); }
   .tag-amber { background: var(--amber-50); color: var(--amber-600); }
-  .tag-rose { background: var(--rose-50); color: var(--rose-600); }
-  .tag-emerald { background: var(--emerald-50); color: var(--emerald-600); }
+  .tag-rose { background: var(--rose-50); color: var(--rose-500); }
+  .tag-sage { background: var(--sage-50); color: var(--sage-600); }
 
   /* Buttons */
   .btn {
@@ -210,81 +293,119 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 14px 24px;
-    border-radius: 14px;
+    padding: 16px 24px;
+    border-radius: 18px;
     font-size: 15px;
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    font-family: 'Outfit', sans-serif;
     width: 100%;
+    letter-spacing: 0.2px;
   }
-  .btn-primary { background: var(--teal-600); color: white; }
-  .btn-primary:hover { background: var(--teal-700); }
-  .btn-secondary { background: var(--teal-50); color: var(--teal-700); }
-  .btn-secondary:hover { background: var(--teal-100); }
-  .btn-outline { background: white; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
-  .btn-outline:hover { border-color: var(--gray-300); background: var(--gray-50); }
+  .btn-primary {
+    background: var(--grad-terra);
+    color: white;
+    box-shadow: 0 4px 16px rgba(212,114,92,0.3);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 6px 24px rgba(212,114,92,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-secondary { background: var(--terra-50); color: var(--terra-600); }
+  .btn-secondary:hover { background: var(--terra-100); }
+  .btn-outline {
+    background: var(--warm-white);
+    color: var(--brown-700);
+    border: 1.5px solid var(--brown-200);
+  }
+  .btn-outline:hover { border-color: var(--terra-300); background: var(--terra-50); }
 
   /* Alert card */
   .alert-card {
-    border-radius: 16px;
-    padding: 16px 20px;
-    margin: 0 16px 12px;
+    border-radius: 20px;
+    padding: 18px 20px;
+    margin: 0 16px 14px;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 14px;
+    transition: all 0.3s;
   }
-  .alert-amber { background: var(--amber-50); border: 1px solid var(--amber-100); }
-  .alert-rose { background: var(--rose-50); border: 1px solid var(--rose-100); }
-  .alert-emerald { background: var(--emerald-50); border: 1px solid var(--emerald-100); }
-  .alert-teal { background: var(--teal-50); border: 1px solid var(--teal-100); }
-  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-  .alert-text { font-size: 13px; line-height: 1.5; }
-  .alert-title { font-weight: 600; color: var(--gray-900); margin-bottom: 2px; }
+  .alert-card:hover { transform: translateY(-1px); }
+  .alert-amber { background: var(--grad-sunset); border: 1px solid rgba(232,164,74,0.2); }
+  .alert-rose { background: var(--grad-rose); border: 1px solid rgba(212,98,111,0.15); }
+  .alert-sage { background: var(--grad-sage); border: 1px solid rgba(123,174,142,0.2); }
+  .alert-terra { background: var(--terra-50); border: 1px solid var(--terra-100); }
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .alert-text { font-size: 13px; line-height: 1.6; }
+  .alert-title {
+    font-weight: 600;
+    color: var(--brown-800);
+    margin-bottom: 3px;
+    font-size: 14px;
+  }
 
   /* Biomarker chart */
   .chart-container {
-    padding: 16px;
-    margin: 0 16px 12px;
-    background: white;
-    border-radius: 16px;
-    border: 1px solid var(--gray-100);
+    padding: 20px;
+    margin: 0 16px 14px;
+    background: var(--warm-white);
+    border-radius: 20px;
+    border: 1px solid rgba(221,212,204,0.5);
   }
   .chart-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 16px;
   }
-  .chart-label { font-size: 14px; font-weight: 600; color: var(--gray-900); }
-  .chart-value { font-size: 24px; font-weight: 700; color: var(--teal-600); }
-  .chart-unit { font-size: 12px; color: var(--gray-500); font-weight: 400; }
-  .chart-change { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 8px; }
-  .chart-change.down { background: var(--rose-50); color: var(--rose-600); }
-  .chart-change.up { background: var(--emerald-50); color: var(--emerald-600); }
+  .chart-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--brown-500);
+    letter-spacing: 0.3px;
+  }
+  .chart-value {
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--brown-800);
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+  .chart-unit { font-size: 13px; color: var(--brown-400); font-weight: 400; font-family: 'Outfit', sans-serif; }
+  .chart-change {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+  }
+  .chart-change.down { background: var(--rose-100); color: var(--rose-500); }
+  .chart-change.up { background: var(--sage-100); color: var(--sage-500); }
 
   .sparkline {
     height: 80px;
     display: flex;
     align-items: flex-end;
-    gap: 4px;
+    gap: 5px;
     padding: 8px 0;
   }
   .sparkline-bar {
     flex: 1;
-    border-radius: 4px 4px 0 0;
+    border-radius: 6px 6px 3px 3px;
     min-height: 4px;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(.4,0,.2,1);
+    position: relative;
   }
-  .sparkline-bar:hover { opacity: 0.8; }
+  .sparkline-bar:hover { opacity: 0.8; transform: scaleY(1.05); transform-origin: bottom; }
   .sparkline-labels {
     display: flex;
     justify-content: space-between;
     font-size: 10px;
-    color: var(--gray-400);
-    padding-top: 4px;
+    color: var(--brown-400);
+    padding-top: 6px;
+    font-weight: 400;
   }
 
   /* Reference range */
@@ -292,89 +413,112 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--gray-100);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--brown-100);
     font-size: 11px;
-    color: var(--gray-500);
+    color: var(--brown-400);
   }
   .ref-range-bar {
     flex: 1;
     height: 6px;
-    background: var(--gray-100);
+    background: var(--brown-100);
     border-radius: 3px;
     position: relative;
   }
   .ref-range-normal {
     position: absolute;
     height: 100%;
-    background: var(--emerald-100);
+    background: var(--sage-200);
     border-radius: 3px;
   }
   .ref-range-marker {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    top: -2px;
-    border: 2px solid white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    top: -3px;
+    border: 2.5px solid var(--warm-white);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
 
   /* Question list */
   .question-item {
-    padding: 16px 20px;
-    margin: 0 16px 8px;
-    background: white;
-    border-radius: 14px;
-    border: 1px solid var(--gray-100);
+    padding: 18px 20px;
+    margin: 0 16px 10px;
+    background: var(--warm-white);
+    border-radius: 18px;
+    border: 1px solid rgba(221,212,204,0.4);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
   }
-  .question-item:hover { border-color: var(--teal-200); background: var(--teal-50); }
+  .question-item:hover {
+    border-color: var(--terra-200);
+    background: var(--terra-50);
+    transform: translateY(-1px);
+  }
   .question-number {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    color: var(--teal-600);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-family: 'Outfit', sans-serif;
   }
-  .question-text { font-size: 14px; font-weight: 500; color: var(--gray-800); margin-bottom: 6px; }
-  .question-evidence { font-size: 11px; color: var(--gray-400); font-style: italic; }
+  .question-text {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--brown-800);
+    margin-bottom: 8px;
+    line-height: 1.5;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+  }
+  .question-evidence {
+    font-size: 11.5px;
+    color: var(--brown-400);
+    line-height: 1.5;
+  }
 
   /* Trial card */
   .trial-card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    margin: 0 16px 12px;
-    border: 1px solid var(--gray-100);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    background: var(--warm-white);
+    border-radius: 20px;
+    padding: 22px;
+    margin: 0 16px 14px;
+    border: 1px solid rgba(221,212,204,0.5);
+    box-shadow: 0 2px 8px rgba(61,44,46,0.04);
   }
   .trial-phase {
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-size: 10px;
     font-weight: 700;
-    background: var(--teal-50);
-    color: var(--teal-700);
+    background: var(--lav-100);
+    color: var(--lav-500);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
   }
-  .trial-title { font-size: 15px; font-weight: 600; color: var(--gray-900); margin: 10px 0 6px; }
-  .trial-meta { font-size: 12px; color: var(--gray-500); display: flex; gap: 12px; margin-bottom: 12px; }
+  .trial-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--brown-800);
+    margin: 12px 0 8px;
+    line-height: 1.4;
+  }
+  .trial-meta { font-size: 12px; color: var(--brown-400); display: flex; gap: 14px; margin-bottom: 14px; }
   .trial-match {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    background: var(--emerald-50);
-    border-radius: 10px;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--sage-50);
+    border-radius: 14px;
     font-size: 12px;
-    color: var(--emerald-600);
+    color: var(--sage-600);
     font-weight: 600;
+    border: 1px solid var(--sage-100);
   }
 
   /* Genetics card */
@@ -382,81 +526,110 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--gray-100);
+    padding: 16px 0;
+    border-bottom: 1px solid var(--brown-100);
   }
   .gene-result:last-child { border-bottom: none; }
-  .gene-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
-  .gene-detail { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+  .gene-name { font-size: 15px; font-weight: 500; color: var(--brown-800); }
+  .gene-detail { font-size: 12px; color: var(--brown-400); margin-top: 3px; }
   .gene-status {
-    padding: 4px 12px;
-    border-radius: 8px;
+    padding: 5px 14px;
+    border-radius: 10px;
     font-size: 11px;
     font-weight: 600;
+    letter-spacing: 0.2px;
   }
-  .gene-normal { background: var(--emerald-50); color: var(--emerald-600); }
-  .gene-attention { background: var(--amber-50); color: var(--amber-600); }
-  .gene-alert { background: var(--rose-50); color: var(--rose-600); }
+  .gene-normal { background: var(--sage-100); color: var(--sage-600); }
+  .gene-attention { background: var(--amber-100); color: var(--amber-600); }
+  .gene-alert { background: var(--rose-100); color: var(--rose-500); }
 
   /* Onboarding */
   .onboard-hero {
-    padding: 80px 32px 40px;
+    padding: 80px 32px 36px;
     text-align: center;
-    background: linear-gradient(180deg, var(--teal-50) 0%, white 100%);
+    background: var(--grad-warm);
+    position: relative;
+    overflow: hidden;
+  }
+  .onboard-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: -20px;
+    right: -20px;
+    height: 80px;
+    background: var(--cream);
+    border-radius: 50% 50% 0 0;
   }
   .onboard-logo {
-    font-size: 42px;
-    margin-bottom: 16px;
+    width: 72px;
+    height: 72px;
+    border-radius: 22px;
+    background: var(--grad-terra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 24px rgba(212,114,92,0.3);
+    color: white;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
   }
   .onboard-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--gray-900);
-    letter-spacing: -0.5px;
-    margin-bottom: 12px;
+    font-size: 27px;
+    font-weight: 500;
+    color: var(--brown-900);
+    letter-spacing: -0.3px;
+    margin-bottom: 14px;
     line-height: 1.2;
+    position: relative;
+    z-index: 1;
   }
   .onboard-desc {
     font-size: 15px;
-    color: var(--gray-500);
-    line-height: 1.6;
+    color: var(--brown-500);
+    line-height: 1.65;
     max-width: 300px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
   }
 
   .onboard-features {
-    padding: 24px 24px 32px;
+    padding: 20px 24px 28px;
   }
   .onboard-feature {
     display: flex;
     gap: 16px;
-    padding: 16px 0;
+    padding: 18px 0;
     align-items: flex-start;
+    border-bottom: 1px solid var(--brown-100);
   }
+  .onboard-feature:last-child { border-bottom: none; }
   .onboard-feature-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--teal-50);
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 22px;
     flex-shrink: 0;
   }
-  .onboard-feature-title { font-size: 14px; font-weight: 600; color: var(--gray-900); }
-  .onboard-feature-desc { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+  .onboard-feature-title { font-size: 14px; font-weight: 600; color: var(--brown-800); }
+  .onboard-feature-desc { font-size: 13px; color: var(--brown-400); margin-top: 3px; line-height: 1.5; }
 
-  .onboard-actions { padding: 0 24px 40px; display: flex; flex-direction: column; gap: 10px; }
+  .onboard-actions { padding: 0 24px 44px; display: flex; flex-direction: column; gap: 10px; }
 
   /* Section divider */
   .section-label {
-    padding: 8px 24px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--gray-400);
+    padding: 6px 24px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brown-400);
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1.2px;
   }
 
   /* Data source connector */
@@ -466,44 +639,61 @@
     gap: 14px;
     padding: 16px 20px;
     margin: 0 16px 8px;
-    background: white;
-    border-radius: 14px;
-    border: 1px solid var(--gray-100);
+    background: var(--warm-white);
+    border-radius: 18px;
+    border: 1px solid rgba(221,212,204,0.4);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
   }
-  .connector:hover { border-color: var(--teal-200); }
+  .connector:hover { border-color: var(--terra-200); transform: translateY(-1px); }
   .connector-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    background: var(--gray-50);
+    background: var(--brown-50);
   }
   .connector-info { flex: 1; }
-  .connector-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
-  .connector-desc { font-size: 12px; color: var(--gray-500); }
+  .connector-name { font-size: 14px; font-weight: 600; color: var(--brown-800); }
+  .connector-desc { font-size: 12px; color: var(--brown-400); margin-top: 1px; }
   .connector-status {
     font-size: 11px;
     font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 8px;
+    padding: 5px 12px;
+    border-radius: 10px;
+    letter-spacing: 0.2px;
   }
-  .connector-connected { background: var(--emerald-50); color: var(--emerald-600); }
-  .connector-available { background: var(--gray-100); color: var(--gray-500); }
+  .connector-connected { background: var(--sage-100); color: var(--sage-600); }
+  .connector-available { background: var(--brown-100); color: var(--brown-500); }
 
-  /* Condition briefing */
+  /* Condition briefing header */
   .briefing-header {
-    padding: 20px 24px;
-    background: linear-gradient(135deg, var(--teal-600) 0%, var(--teal-800) 100%);
+    padding: 20px 24px 24px;
+    background: var(--grad-terra);
     color: white;
+    position: relative;
+    overflow: hidden;
   }
-  .briefing-condition { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
-  .briefing-title { font-size: 22px; font-weight: 700; margin-top: 4px; }
-  .briefing-meta { font-size: 12px; opacity: 0.7; margin-top: 4px; }
+  .briefing-header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .briefing-condition {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.75;
+    font-family: 'Outfit', sans-serif;
+  }
+  .briefing-title { font-size: 21px; font-weight: 500; margin-top: 6px; line-height: 1.25; position: relative; z-index: 1; }
+  .briefing-meta { font-size: 12px; opacity: 0.65; margin-top: 6px; font-family: 'Outfit', sans-serif; }
 
   /* Medication list */
   .med-item {
@@ -511,27 +701,25 @@
     align-items: center;
     gap: 14px;
     padding: 14px 20px;
-    margin: 0 16px 6px;
-    background: white;
-    border-radius: 12px;
-    border: 1px solid var(--gray-100);
+    margin: 0 16px 8px;
+    background: var(--warm-white);
+    border-radius: 16px;
+    border: 1px solid rgba(221,212,204,0.4);
+    transition: all 0.3s;
   }
+  .med-item:hover { border-color: var(--terra-200); }
   .med-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: var(--teal-50);
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
   }
-  .med-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
-  .med-dose { font-size: 12px; color: var(--gray-500); }
-  .med-warning {
-    margin-left: auto;
-    font-size: 16px;
-  }
+  .med-name { font-size: 14px; font-weight: 600; color: var(--brown-800); }
+  .med-dose { font-size: 12px; color: var(--brown-400); }
+  .med-warning { margin-left: auto; font-size: 16px; }
 
   /* Screen navigation strip */
   .screen-nav {
@@ -539,50 +727,78 @@
     top: 0;
     left: 0;
     right: 0;
-    background: var(--gray-900);
+    background: var(--brown-900);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 5px;
     padding: 12px 16px;
     z-index: 200;
     flex-wrap: wrap;
   }
   .screen-nav-btn {
     padding: 6px 14px;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
-    border: 1px solid var(--gray-700);
+    border: 1px solid var(--brown-700);
     background: transparent;
-    color: var(--gray-300);
-    transition: all 0.2s;
-    font-family: inherit;
+    color: var(--brown-300);
+    transition: all 0.25s;
+    font-family: 'Outfit', sans-serif;
   }
-  .screen-nav-btn:hover { background: var(--gray-800); color: white; }
-  .screen-nav-btn.active { background: var(--teal-600); border-color: var(--teal-600); color: white; }
-
+  .screen-nav-btn:hover { background: var(--brown-800); color: white; }
+  .screen-nav-btn.active {
+    background: var(--grad-terra);
+    border-color: var(--terra-500);
+    color: white;
+  }
   .screen-nav-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--teal-400);
-    margin-right: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--terra-300);
+    margin-right: 14px;
     white-space: nowrap;
+    font-family: 'Fraunces', serif;
   }
 
-  body { padding-top: 60px; }
+  body { padding-top: 58px; }
 
-  /* Scrollbar */
-  .screen-content::-webkit-scrollbar { width: 0; }
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .screen.active .card,
+  .screen.active .alert-card,
+  .screen.active .question-item,
+  .screen.active .trial-card,
+  .screen.active .connector,
+  .screen.active .med-item,
+  .screen.active .chart-container {
+    animation: fadeUp 0.45s cubic-bezier(.4,0,.2,1) backwards;
+  }
+  .screen.active *:nth-child(1) { animation-delay: 0s; }
+  .screen.active *:nth-child(2) { animation-delay: 0.05s; }
+  .screen.active *:nth-child(3) { animation-delay: 0.1s; }
+  .screen.active *:nth-child(4) { animation-delay: 0.15s; }
+  .screen.active *:nth-child(5) { animation-delay: 0.2s; }
+  .screen.active *:nth-child(6) { animation-delay: 0.25s; }
+  .screen.active *:nth-child(7) { animation-delay: 0.3s; }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212,114,92,0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(212,114,92,0); }
+  }
 </style>
 </head>
 <body>
 
 <!-- Screen Navigation Strip -->
 <div class="screen-nav">
-  <span class="screen-nav-title">Longitude Mockup</span>
+  <span class="screen-nav-title">Longitude</span>
   <button class="screen-nav-btn active" onclick="showScreen('onboarding')">Onboarding</button>
   <button class="screen-nav-btn" onclick="showScreen('dashboard')">Dashboard</button>
   <button class="screen-nav-btn" onclick="showScreen('condition')">Condition</button>
@@ -601,38 +817,38 @@
   <div class="screen active" id="screen-onboarding">
     <div class="screen-content">
       <div class="onboard-hero">
-        <div class="onboard-logo">&#x1F9ED;</div>
+        <div class="onboard-logo">L</div>
         <div class="onboard-title">Know what to ask.<br>Know what to test.</div>
         <div class="onboard-desc">Longitude turns your health data into advocacy intelligence — so you can make better decisions with your doctors.</div>
       </div>
 
       <div class="onboard-features">
         <div class="onboard-feature">
-          <div class="onboard-feature-icon">&#x1F50D;</div>
+          <div class="onboard-feature-icon" style="background: var(--terra-50);">&#x1F50D;</div>
           <div>
             <div class="onboard-feature-title">Understand Your Conditions</div>
             <div class="onboard-feature-desc">AI briefings on what matters, what to test, and what questions to ask your doctors</div>
           </div>
         </div>
         <div class="onboard-feature">
-          <div class="onboard-feature-icon">&#x1F4CA;</div>
+          <div class="onboard-feature-icon" style="background: var(--amber-50);">&#x1F4CA;</div>
           <div>
             <div class="onboard-feature-title">Track Trends, Not Just Numbers</div>
-            <div class="onboard-feature-desc">See your labs, biometrics, and health data as a trajectory — not isolated snapshots</div>
+            <div class="onboard-feature-desc">See your labs and biometrics as a trajectory — not isolated snapshots</div>
           </div>
         </div>
         <div class="onboard-feature">
-          <div class="onboard-feature-icon">&#x1F9EC;</div>
+          <div class="onboard-feature-icon" style="background: var(--lav-50);">&#x1F9EC;</div>
           <div>
             <div class="onboard-feature-title">Unlock Your Genetics</div>
-            <div class="onboard-feature-desc">Import 23andMe data to see which medications may need adjustment based on your DNA</div>
+            <div class="onboard-feature-desc">Import 23andMe data to learn which medications may need adjustment</div>
           </div>
         </div>
         <div class="onboard-feature">
-          <div class="onboard-feature-icon">&#x1F3AF;</div>
+          <div class="onboard-feature-icon" style="background: var(--sage-50);">&#x1F3AF;</div>
           <div>
             <div class="onboard-feature-title">Find Clinical Trials</div>
-            <div class="onboard-feature-desc">AI matches you to relevant trials based on your full health profile — not just your diagnosis</div>
+            <div class="onboard-feature-desc">AI matches you to relevant trials based on your full health profile</div>
           </div>
         </div>
       </div>
@@ -648,7 +864,7 @@
   <div class="screen" id="screen-dashboard">
     <div class="status-bar">
       <span>9:41</span>
-      <span>&#x1F50B; 87%</span>
+      <span style="opacity:0.5;">&#x25CF;&#x25CF;&#x25CF;&#x25CF;</span>
     </div>
 
     <div class="screen-header">
@@ -658,31 +874,31 @@
 
     <div class="screen-content">
       <!-- Urgent Alert -->
-      <div class="alert-card alert-amber" onclick="showScreen('condition')">
-        <div class="alert-icon">&#x26A0;&#xFE0F;</div>
+      <div class="alert-card alert-amber" onclick="showScreen('condition')" style="cursor:pointer;">
+        <div class="alert-icon">&#x2728;</div>
         <div class="alert-text">
           <div class="alert-title">Advocacy Action Needed</div>
-          Your FSGS diagnosis may have a genetic component (8-35% of cases). Genetic testing could change your treatment plan. <strong>Tap to learn what to ask.</strong>
+          Your FSGS diagnosis may have a genetic component (8-35% of cases). Genetic testing could change your treatment plan. <strong style="color:var(--brown-800);">Tap to learn what to ask.</strong>
         </div>
       </div>
 
       <!-- Visit Prep -->
       <div class="card" onclick="showScreen('visit')">
         <div class="card-header">
-          <div class="card-icon" style="background: var(--teal-50);">&#x1F4CB;</div>
+          <div class="card-icon" style="background: var(--terra-50); color: var(--terra-500);">&#x1F4CB;</div>
           <div>
             <div class="card-title">Visit Briefing Ready</div>
-            <div class="card-desc">Dr. Patel — Nephrology — Apr 18</div>
+            <div class="card-desc">Dr. Patel &mdash; Nephrology &mdash; Apr 18</div>
           </div>
         </div>
         <div class="card-desc">3 evidence-based questions prepared for your appointment based on your latest labs and condition profile.</div>
-        <span class="tag tag-teal">3 Questions Ready</span>
+        <span class="tag tag-terra">3 Questions Ready</span>
       </div>
 
       <!-- Lab Alert -->
       <div class="card" onclick="showScreen('labs')">
         <div class="card-header">
-          <div class="card-icon" style="background: var(--rose-50);">&#x1F9EA;</div>
+          <div class="card-icon" style="background: var(--rose-50); color: var(--rose-400);">&#x1F9EA;</div>
           <div>
             <div class="card-title">Lab Trend Alert</div>
             <div class="card-desc">eGFR declining over 18 months</div>
@@ -690,26 +906,26 @@
         </div>
         <div class="card-desc">Your kidney function has decreased 12% since Oct 2024. This rate of decline may warrant a conversation with your nephrologist.</div>
         <span class="tag tag-rose">Declining Trend</span>
-        <span class="tag tag-teal">Questions Available</span>
+        <span class="tag tag-terra">Questions Available</span>
       </div>
 
       <!-- Trial Match -->
       <div class="card" onclick="showScreen('trials')">
         <div class="card-header">
-          <div class="card-icon" style="background: var(--emerald-50);">&#x1F3AF;</div>
+          <div class="card-icon" style="background: var(--sage-50); color: var(--sage-500);">&#x1F3AF;</div>
           <div>
             <div class="card-title">2 Clinical Trials Found</div>
             <div class="card-desc">Matching your FSGS profile</div>
           </div>
         </div>
-        <div class="card-desc">New trials studying non-immunosuppressive approaches for genetic FSGS. One is enrolling within 50 miles of you.</div>
-        <span class="tag tag-emerald">High Match</span>
+        <div class="card-desc">New trials studying non-immunosuppressive approaches for genetic FSGS. One is enrolling within 50 miles.</div>
+        <span class="tag tag-sage">High Match</span>
       </div>
 
       <!-- Genetics -->
       <div class="card" onclick="showScreen('genetics')">
         <div class="card-header">
-          <div class="card-icon" style="background: var(--amber-50);">&#x1F9EC;</div>
+          <div class="card-icon" style="background: var(--lav-50); color: var(--lav-400);">&#x1F9EC;</div>
           <div>
             <div class="card-title">Genetic Insight</div>
             <div class="card-desc">CYP2C19 result needs attention</div>
@@ -723,7 +939,7 @@
       <div class="section-label">Your Medications</div>
 
       <div class="med-item">
-        <div class="med-icon">&#x1F48A;</div>
+        <div class="med-icon" style="background: var(--amber-50);">&#x1F48A;</div>
         <div>
           <div class="med-name">Prednisone</div>
           <div class="med-dose">20mg daily</div>
@@ -732,7 +948,7 @@
       </div>
 
       <div class="med-item">
-        <div class="med-icon">&#x1F48A;</div>
+        <div class="med-icon" style="background: var(--sage-50);">&#x1F48A;</div>
         <div>
           <div class="med-name">Lisinopril</div>
           <div class="med-dose">10mg daily</div>
@@ -741,7 +957,7 @@
       </div>
 
       <div class="med-item">
-        <div class="med-icon">&#x1F48A;</div>
+        <div class="med-icon" style="background: var(--lav-50);">&#x1F48A;</div>
         <div>
           <div class="med-name">Omeprazole</div>
           <div class="med-dose">20mg daily</div>
@@ -750,22 +966,21 @@
       </div>
     </div>
 
-    <!-- Nav Bar -->
     <div class="nav-bar">
       <button class="nav-item active" onclick="showScreen('dashboard')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
         <span class="nav-label">Home</span>
       </button>
       <button class="nav-item" onclick="showScreen('labs')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         <span class="nav-label">Health</span>
       </button>
       <button class="nav-item" onclick="showScreen('trials')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         <span class="nav-label">Discover</span>
       </button>
       <button class="nav-item" onclick="showScreen('sources')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         <span class="nav-label">Settings</span>
       </button>
     </div>
@@ -773,9 +988,9 @@
 
   <!-- ========== SCREEN: CONDITION BRIEFING ========== -->
   <div class="screen" id="screen-condition">
-    <div class="status-bar" style="color:white; background: var(--teal-700);">
+    <div class="status-bar" style="color:rgba(255,255,255,0.9); background:transparent; position:relative; z-index:2;">
       <span>9:41</span>
-      <span>&#x1F50B; 87%</span>
+      <span style="opacity:0.5;">&#x25CF;&#x25CF;&#x25CF;&#x25CF;</span>
     </div>
 
     <div class="briefing-header">
@@ -790,58 +1005,58 @@
         <div class="alert-text">
           <div class="alert-title">Genetic Testing May Change Your Treatment</div>
           8-35% of FSGS cases have a genetic cause. Genetic FSGS generally <strong>does not respond to steroids</strong>. In one study, 50% of patients with genetic variants received unnecessary immunosuppression.
-          <div style="margin-top: 6px; font-size: 11px; color: var(--gray-400);">Source: Kidney International, 2024 &middot; APOL1 Research Consortium</div>
+          <div style="margin-top: 8px; font-size: 11px; color: var(--brown-400);">Source: Kidney International, 2024 &middot; APOL1 Research Consortium</div>
         </div>
       </div>
 
-      <div class="section-label" style="padding-top: 8px;">Key Facts About Your Condition</div>
+      <div class="section-label" style="padding-top: 6px;">Key Facts</div>
 
       <div class="card" style="cursor: default;">
-        <div class="card-title" style="font-size: 14px; margin-bottom: 8px;">What You Should Know</div>
-        <ul style="font-size: 13px; color: var(--gray-600); padding-left: 18px; line-height: 2;">
-          <li>FSGS accounts for <strong>40% of adult nephrotic syndrome</strong> cases</li>
+        <div class="card-title" style="font-size: 15px; margin-bottom: 10px;">What You Should Know</div>
+        <ul style="font-size: 13px; color: var(--brown-600); padding-left: 18px; line-height: 2.1;">
+          <li>FSGS accounts for <strong>40% of adult nephrotic syndrome</strong></li>
           <li>Over <strong>50 monogenic causes</strong> of steroid-resistant FSGS identified</li>
-          <li>Genetic testing can prevent months of unnecessary steroid treatment</li>
-          <li>APOL1 high-risk variants are found in <strong>~14% of African Americans</strong></li>
-          <li>Genetic FSGS has different transplant recurrence risk than immune-mediated</li>
+          <li>Genetic testing can prevent months of unnecessary treatment</li>
+          <li>APOL1 high-risk variants found in <strong>~14% of African Americans</strong></li>
+          <li>Genetic FSGS has different transplant recurrence risk</li>
         </ul>
       </div>
 
-      <div class="section-label">Questions to Ask Your Nephrologist</div>
+      <div class="section-label">Questions for Your Nephrologist</div>
 
-      <div class="question-item" style="border-left: 3px solid var(--teal-500);">
-        <div class="question-number">Priority 1</div>
+      <div class="question-item" style="border-left: 3px solid var(--terra-400);">
+        <div class="question-number" style="color: var(--terra-500);">Priority 1</div>
         <div class="question-text">"Should I get genetic testing before starting immunosuppressive therapy?"</div>
         <div class="question-evidence">8-35% of FSGS is genetic and steroid-resistant. Testing can prevent ineffective treatment. (Kidney International, 2024)</div>
       </div>
 
-      <div class="question-item" style="border-left: 3px solid var(--teal-500);">
-        <div class="question-number">Priority 2</div>
-        <div class="question-text">"What is the specific genetic panel that should be ordered for FSGS?"</div>
+      <div class="question-item" style="border-left: 3px solid var(--terra-300);">
+        <div class="question-number" style="color: var(--terra-400);">Priority 2</div>
+        <div class="question-text">"What specific genetic panel should be ordered for FSGS?"</div>
         <div class="question-evidence">Exome sequencing found diagnostic variants in 29% of adults with FSGS. (JASN, 2023)</div>
       </div>
 
-      <div class="question-item" style="border-left: 3px solid var(--amber-500);">
-        <div class="question-number">Priority 3</div>
-        <div class="question-text">"If I do have genetic FSGS, what are the treatment alternatives to steroids?"</div>
+      <div class="question-item" style="border-left: 3px solid var(--amber-400);">
+        <div class="question-number" style="color: var(--amber-500);">Priority 3</div>
+        <div class="question-text">"If I do have genetic FSGS, what are the treatment alternatives?"</div>
         <div class="question-evidence">Genetic FSGS requires targeted management based on the specific mutation. (Nature Reviews Nephrology, 2024)</div>
       </div>
 
-      <div class="question-item" style="border-left: 3px solid var(--gray-300);">
-        <div class="question-number">Also Ask</div>
-        <div class="question-text">"Should my family members be tested? What are the hereditary implications?"</div>
+      <div class="question-item" style="border-left: 3px solid var(--brown-200);">
+        <div class="question-number" style="color: var(--brown-400);">Also Ask</div>
+        <div class="question-text">"Should my family members be tested for hereditary implications?"</div>
         <div class="question-evidence">Genetic counseling recommended for all confirmed genetic FSGS cases. (KDIGO, 2025)</div>
       </div>
 
       <div style="padding: 16px;">
         <button class="btn btn-primary">Export Visit Briefing (PDF)</button>
-        <button class="btn btn-secondary" style="margin-top: 8px;" onclick="showScreen('trials')">View Related Clinical Trials</button>
+        <button class="btn btn-secondary" style="margin-top: 10px;" onclick="showScreen('trials')">View Related Clinical Trials</button>
       </div>
     </div>
 
     <div class="nav-bar">
-      <button class="nav-item" onclick="showScreen('dashboard')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      <button class="nav-item" onclick="showScreen('dashboard')" style="color:var(--terra-500);">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18l-6-6 6-6"/></svg>
         <span class="nav-label">Back</span>
       </button>
     </div>
@@ -851,7 +1066,7 @@
   <div class="screen" id="screen-labs">
     <div class="status-bar">
       <span>9:41</span>
-      <span>&#x1F50B; 87%</span>
+      <span style="opacity:0.5;">&#x25CF;&#x25CF;&#x25CF;&#x25CF;</span>
     </div>
 
     <div class="screen-header">
@@ -860,7 +1075,6 @@
     </div>
 
     <div class="screen-content">
-      <!-- eGFR Chart -->
       <div class="chart-container">
         <div class="chart-header">
           <div>
@@ -870,30 +1084,23 @@
           <span class="chart-change down">&#x2193; 12%</span>
         </div>
         <div class="sparkline">
-          <div class="sparkline-bar" style="height:85%; background: var(--emerald-400);"></div>
-          <div class="sparkline-bar" style="height:80%; background: var(--emerald-400);"></div>
+          <div class="sparkline-bar" style="height:85%; background: var(--sage-400);"></div>
+          <div class="sparkline-bar" style="height:80%; background: var(--sage-400);"></div>
           <div class="sparkline-bar" style="height:75%; background: var(--amber-400);"></div>
           <div class="sparkline-bar" style="height:72%; background: var(--amber-400);"></div>
           <div class="sparkline-bar" style="height:68%; background: var(--amber-400);"></div>
           <div class="sparkline-bar" style="height:65%; background: var(--amber-500);"></div>
-          <div class="sparkline-bar" style="height:62%; background: var(--amber-500);"></div>
-          <div class="sparkline-bar" style="height:60%; background: var(--rose-500);"></div>
+          <div class="sparkline-bar" style="height:62%; background: var(--rose-300);"></div>
+          <div class="sparkline-bar" style="height:60%; background: var(--rose-400);"></div>
         </div>
         <div class="sparkline-labels">
-          <span>Oct '24</span>
-          <span>Jan '25</span>
-          <span>Apr '25</span>
-          <span>Jul '25</span>
-          <span>Oct '25</span>
-          <span>Jan '26</span>
-          <span>Mar '26</span>
-          <span>Apr '26</span>
+          <span>Oct '24</span><span>Jan '25</span><span>Apr '25</span><span>Jul '25</span><span>Oct '25</span><span>Jan '26</span><span>Mar</span><span>Apr</span>
         </div>
         <div class="ref-range">
           <span>Low</span>
           <div class="ref-range-bar">
             <div class="ref-range-normal" style="left: 40%; width: 50%;"></div>
-            <div class="ref-range-marker" style="left: 32%; background: var(--amber-500);"></div>
+            <div class="ref-range-marker" style="left: 32%; background: var(--amber-400);"></div>
           </div>
           <span>High</span>
         </div>
@@ -903,88 +1110,76 @@
         <div class="alert-icon">&#x1F4C9;</div>
         <div class="alert-text">
           <div class="alert-title">Declining Trend Detected</div>
-          Your eGFR has dropped from 66 to 58 over 18 months. At this rate, you may reach Stage 3b CKD within 2 years. <strong>This warrants a conversation with your nephrologist about monitoring frequency and treatment adjustment.</strong>
+          Your eGFR has dropped from 66 to 58 over 18 months. At this rate, you may reach Stage 3b CKD within 2 years. <strong style="color:var(--brown-800);">This warrants a conversation with your nephrologist about monitoring frequency and treatment adjustment.</strong>
         </div>
       </div>
 
-      <!-- Protein/Creatinine -->
       <div class="chart-container">
         <div class="chart-header">
           <div>
             <div class="chart-label">Urine Protein/Creatinine</div>
             <div class="chart-value">1.8 <span class="chart-unit">g/g</span></div>
           </div>
-          <span class="chart-change down" style="background: var(--amber-50); color: var(--amber-600);">&#x2191; Elevated</span>
+          <span class="chart-change" style="background: var(--amber-100); color: var(--amber-600);">&#x2191; Elevated</span>
         </div>
         <div class="sparkline">
-          <div class="sparkline-bar" style="height:35%; background: var(--amber-400);"></div>
+          <div class="sparkline-bar" style="height:35%; background: var(--amber-300);"></div>
           <div class="sparkline-bar" style="height:40%; background: var(--amber-400);"></div>
           <div class="sparkline-bar" style="height:50%; background: var(--amber-500);"></div>
           <div class="sparkline-bar" style="height:55%; background: var(--amber-500);"></div>
-          <div class="sparkline-bar" style="height:60%; background: var(--rose-400);"></div>
-          <div class="sparkline-bar" style="height:65%; background: var(--rose-500);"></div>
+          <div class="sparkline-bar" style="height:60%; background: var(--rose-300);"></div>
+          <div class="sparkline-bar" style="height:65%; background: var(--rose-400);"></div>
         </div>
         <div class="sparkline-labels">
-          <span>Oct '24</span>
-          <span>Jan '25</span>
-          <span>Apr '25</span>
-          <span>Oct '25</span>
-          <span>Jan '26</span>
-          <span>Apr '26</span>
+          <span>Oct '24</span><span>Jan '25</span><span>Apr '25</span><span>Oct '25</span><span>Jan '26</span><span>Apr '26</span>
         </div>
       </div>
 
-      <!-- Blood Pressure -->
       <div class="chart-container">
         <div class="chart-header">
           <div>
             <div class="chart-label">Blood Pressure</div>
             <div class="chart-value">128/82 <span class="chart-unit">mmHg</span></div>
           </div>
-          <span class="chart-change" style="background: var(--gray-100); color: var(--gray-600);">Stable</span>
+          <span class="chart-change" style="background: var(--brown-100); color: var(--brown-500);">Stable</span>
         </div>
         <div class="sparkline">
-          <div class="sparkline-bar" style="height:70%; background: var(--teal-400);"></div>
-          <div class="sparkline-bar" style="height:72%; background: var(--teal-400);"></div>
-          <div class="sparkline-bar" style="height:68%; background: var(--teal-400);"></div>
-          <div class="sparkline-bar" style="height:73%; background: var(--teal-400);"></div>
-          <div class="sparkline-bar" style="height:70%; background: var(--teal-400);"></div>
-          <div class="sparkline-bar" style="height:71%; background: var(--teal-400);"></div>
+          <div class="sparkline-bar" style="height:70%; background: var(--sage-300);"></div>
+          <div class="sparkline-bar" style="height:72%; background: var(--sage-300);"></div>
+          <div class="sparkline-bar" style="height:68%; background: var(--sage-300);"></div>
+          <div class="sparkline-bar" style="height:73%; background: var(--sage-300);"></div>
+          <div class="sparkline-bar" style="height:70%; background: var(--sage-300);"></div>
+          <div class="sparkline-bar" style="height:71%; background: var(--sage-300);"></div>
         </div>
         <div class="sparkline-labels">
-          <span>Oct '24</span>
-          <span>Jan '25</span>
-          <span>Apr '25</span>
-          <span>Oct '25</span>
-          <span>Jan '26</span>
-          <span>Apr '26</span>
+          <span>Oct '24</span><span>Jan '25</span><span>Apr '25</span><span>Oct '25</span><span>Jan '26</span><span>Apr '26</span>
         </div>
       </div>
 
       <div class="section-label">AI Interpretation</div>
-      <div class="card" style="cursor:default; background: var(--teal-50); border-color: var(--teal-100);">
-        <div class="card-desc" style="color: var(--teal-800); font-size: 13px;">
-          <strong>What your numbers mean together:</strong> Your declining eGFR combined with rising proteinuria suggests your FSGS is not well-controlled on current therapy. Blood pressure is stable on Lisinopril, which is protective for kidneys. The pattern supports discussing treatment modification — especially given the possibility of genetic steroid resistance.
-          <div style="margin-top: 8px; font-size: 11px; color: var(--teal-600);">Source: KDIGO 2024 Glomerular Diseases Guideline</div>
+      <div class="card" style="cursor:default; background: var(--terra-50); border-color: var(--terra-100);">
+        <div class="card-desc" style="color: var(--brown-700); font-size: 13.5px; line-height: 1.7;">
+          <strong style="color: var(--brown-800);">What your numbers mean together:</strong> Your declining eGFR combined with rising proteinuria suggests your FSGS is not well-controlled on current therapy. Blood pressure is stable on Lisinopril, which is protective. The pattern supports discussing treatment modification &mdash; especially given the possibility of genetic steroid resistance.
+          <div style="margin-top: 10px; font-size: 11px; color: var(--brown-400);">Source: KDIGO 2024 Glomerular Diseases Guideline</div>
         </div>
       </div>
     </div>
 
     <div class="nav-bar">
       <button class="nav-item" onclick="showScreen('dashboard')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
         <span class="nav-label">Home</span>
       </button>
       <button class="nav-item active">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         <span class="nav-label">Health</span>
       </button>
       <button class="nav-item" onclick="showScreen('trials')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         <span class="nav-label">Discover</span>
       </button>
       <button class="nav-item" onclick="showScreen('sources')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         <span class="nav-label">Settings</span>
       </button>
     </div>
@@ -994,12 +1189,12 @@
   <div class="screen" id="screen-visit">
     <div class="status-bar">
       <span>9:41</span>
-      <span>&#x1F50B; 87%</span>
+      <span style="opacity:0.5;">&#x25CF;&#x25CF;&#x25CF;&#x25CF;</span>
     </div>
 
     <div class="screen-header">
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom: 8px;">
-        <div style="width:44px; height:44px; border-radius:12px; background:var(--teal-50); display:flex; align-items:center; justify-content:center; font-size:22px;">&#x1F4CB;</div>
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom: 6px;">
+        <div style="width:48px; height:48px; border-radius:16px; background:var(--grad-terra); display:flex; align-items:center; justify-content:center; font-size:22px; color:white; box-shadow: 0 4px 12px rgba(212,114,92,0.25);">&#x1F4CB;</div>
         <div>
           <div class="screen-title" style="font-size:20px;">Visit Briefing</div>
           <div class="screen-subtitle">Dr. Sanjay Patel &middot; Nephrology &middot; Apr 18</div>
@@ -1008,59 +1203,58 @@
     </div>
 
     <div class="screen-content">
-      <div class="alert-card alert-teal">
-        <div class="alert-icon">&#x1F4A1;</div>
+      <div class="alert-card alert-terra">
+        <div class="alert-icon">&#x2728;</div>
         <div class="alert-text">
-          <div class="alert-title">Your visit briefing is personalized</div>
-          Based on your FSGS diagnosis, declining eGFR trend, current medications, and genetic profile, here are the most important topics for this appointment.
+          <div class="alert-title">Personalized for you</div>
+          Based on your FSGS diagnosis, declining eGFR, current medications, and genetic profile, here are the most important topics for this appointment.
         </div>
       </div>
 
       <div class="section-label">Priority Questions</div>
 
-      <div class="question-item" style="border-left: 3px solid var(--rose-500);">
-        <div class="question-number" style="color: var(--rose-600);">Critical</div>
-        <div class="question-text">"My eGFR has dropped from 66 to 58 in 18 months. Should we adjust my monitoring frequency or treatment approach?"</div>
-        <div class="question-evidence">KDIGO recommends increased monitoring when eGFR decline exceeds 5 mL/min/year. Your decline rate: ~6.4 mL/min/year.</div>
+      <div class="question-item" style="border-left: 3px solid var(--rose-400);">
+        <div class="question-number" style="color: var(--rose-500);">Critical</div>
+        <div class="question-text">"My eGFR has dropped from 66 to 58 in 18 months. Should we adjust my monitoring or treatment?"</div>
+        <div class="question-evidence">KDIGO recommends increased monitoring when eGFR decline exceeds 5 mL/min/year. Your rate: ~6.4 mL/min/year.</div>
       </div>
 
-      <div class="question-item" style="border-left: 3px solid var(--amber-500);">
-        <div class="question-number" style="color: var(--amber-600);">Important</div>
-        <div class="question-text">"I've been on prednisone for 4 months with no improvement in proteinuria. Should we pursue genetic testing for steroid-resistant FSGS?"</div>
-        <div class="question-evidence">50% of patients with genetic FSGS variants received unnecessary immunosuppression. Testing yield: 29% in adult-onset FSGS.</div>
+      <div class="question-item" style="border-left: 3px solid var(--amber-400);">
+        <div class="question-number" style="color: var(--amber-500);">Important</div>
+        <div class="question-text">"I've been on prednisone for 4 months with no improvement. Should we pursue genetic testing for steroid-resistant FSGS?"</div>
+        <div class="question-evidence">50% of patients with genetic variants received unnecessary immunosuppression. Testing yield: 29% in adult-onset FSGS.</div>
       </div>
 
-      <div class="question-item" style="border-left: 3px solid var(--teal-500);">
-        <div class="question-number" style="color: var(--teal-600);">Discuss</div>
+      <div class="question-item" style="border-left: 3px solid var(--sage-400);">
+        <div class="question-number" style="color: var(--sage-500);">Discuss</div>
         <div class="question-text">"Are there clinical trials for non-immunosuppressive FSGS treatments I should consider?"</div>
         <div class="question-evidence">2 active trials within 50 miles studying sparsentan and endothelin receptor antagonists for FSGS.</div>
       </div>
 
-      <div class="section-label" style="padding-top: 8px;">Health Summary for Your Doctor</div>
+      <div class="section-label" style="padding-top: 6px;">Health Summary</div>
 
-      <div class="card" style="cursor:default; background: var(--gray-50);">
-        <div style="font-size:13px; color: var(--gray-600); line-height: 1.8;">
-          <strong style="color: var(--gray-900);">Patient Summary — Maya P.</strong><br>
+      <div class="card" style="cursor:default; background: var(--parchment); border-color: var(--brown-200);">
+        <div style="font-size:13px; color: var(--brown-600); line-height: 1.9;">
+          <strong style="color: var(--brown-800); font-family: 'Fraunces', serif; font-size: 14px;">Patient Summary &mdash; Maya P.</strong><br>
           <strong>Diagnosis:</strong> FSGS (Feb 2026)<br>
-          <strong>Current Treatment:</strong> Prednisone 20mg, Lisinopril 10mg, Omeprazole 20mg<br>
-          <strong>eGFR Trend:</strong> 66 → 58 mL/min over 18 months (Stage 3a CKD)<br>
+          <strong>Treatment:</strong> Prednisone 20mg, Lisinopril 10mg, Omeprazole 20mg<br>
+          <strong>eGFR Trend:</strong> 66 &rarr; 58 over 18 months (Stage 3a CKD)<br>
           <strong>Proteinuria:</strong> Rising (1.8 g/g, up from 0.8)<br>
-          <strong>BP:</strong> 128/82 (controlled on Lisinopril)<br>
-          <strong>Genetics:</strong> CYP2C19 poor metabolizer (affects omeprazole)<br>
-          <strong>Genetic testing for FSGS:</strong> Not yet performed<br>
-          <strong>Duration on steroids:</strong> 4 months, no proteinuria response
+          <strong>BP:</strong> 128/82 (controlled)<br>
+          <strong>Genetics:</strong> CYP2C19 poor metabolizer<br>
+          <strong>Steroid response:</strong> None after 4 months
         </div>
       </div>
 
       <div style="padding: 16px;">
         <button class="btn btn-primary">Export as PDF</button>
-        <button class="btn btn-secondary" style="margin-top: 8px;">Share with Dr. Patel</button>
+        <button class="btn btn-secondary" style="margin-top: 10px;">Share with Dr. Patel</button>
       </div>
     </div>
 
     <div class="nav-bar">
-      <button class="nav-item" onclick="showScreen('dashboard')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      <button class="nav-item" onclick="showScreen('dashboard')" style="color:var(--terra-500);">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18l-6-6 6-6"/></svg>
         <span class="nav-label">Back</span>
       </button>
     </div>
@@ -1070,7 +1264,7 @@
   <div class="screen" id="screen-trials">
     <div class="status-bar">
       <span>9:41</span>
-      <span>&#x1F50B; 87%</span>
+      <span style="opacity:0.5;">&#x25CF;&#x25CF;&#x25CF;&#x25CF;</span>
     </div>
 
     <div class="screen-header">
@@ -1079,76 +1273,74 @@
     </div>
 
     <div class="screen-content">
-      <div class="alert-card alert-emerald">
+      <div class="alert-card alert-sage">
         <div class="alert-icon">&#x2705;</div>
         <div class="alert-text">
           <div class="alert-title">2 trials match your profile</div>
-          Based on your FSGS diagnosis, eGFR stage, age, and location. Updated daily from ClinicalTrials.gov.
+          Based on your FSGS diagnosis, eGFR, age, and location. Updated daily from ClinicalTrials.gov.
         </div>
       </div>
 
       <div class="trial-card">
         <div class="trial-phase">Phase 3</div>
-        <div class="trial-title">Sparsentan vs. Irbesartan in FSGS (DUPLEX Extension)</div>
+        <div class="trial-title" style="font-family:'Fraunces',serif;">Sparsentan vs. Irbesartan in FSGS (DUPLEX Extension)</div>
         <div class="trial-meta">
-          <span>&#x1F4CD; Houston Methodist — 32 mi</span>
+          <span>&#x1F4CD; Houston Methodist &mdash; 32 mi</span>
           <span>&#x1F4C5; Enrolling</span>
         </div>
         <div class="trial-match">
           <span>&#x2705;</span>
-          <span>92% Profile Match — You likely meet 11 of 12 eligibility criteria</span>
+          <span>92% Profile Match &mdash; 11 of 12 criteria met</span>
         </div>
-        <div style="margin-top: 12px; font-size: 13px; color: var(--gray-600); line-height: 1.6;">
-          Studying a dual endothelin/angiotensin receptor antagonist for reducing proteinuria in FSGS. <strong>Non-immunosuppressive approach</strong> — relevant given your potential steroid resistance.
+        <div style="margin-top: 14px; font-size: 13px; color: var(--brown-500); line-height: 1.65;">
+          Dual endothelin/angiotensin receptor antagonist for reducing proteinuria in FSGS. <strong style="color:var(--brown-700);">Non-immunosuppressive</strong> &mdash; relevant given potential steroid resistance.
         </div>
-        <div style="margin-top: 12px;">
-          <button class="btn btn-secondary" style="font-size: 13px; padding: 10px 16px;">Generate Questions for Dr. Patel</button>
+        <div style="margin-top: 14px;">
+          <button class="btn btn-secondary" style="font-size: 13px; padding: 12px 16px;">Generate Questions for Dr. Patel</button>
         </div>
       </div>
 
       <div class="trial-card">
         <div class="trial-phase">Phase 2</div>
-        <div class="trial-title">Atrasentan for Primary Proteinuric Glomerulopathies</div>
+        <div class="trial-title" style="font-family:'Fraunces',serif;">Atrasentan for Primary Proteinuric Glomerulopathies</div>
         <div class="trial-meta">
-          <span>&#x1F4CD; Baylor College — 28 mi</span>
+          <span>&#x1F4CD; Baylor College &mdash; 28 mi</span>
           <span>&#x1F4C5; Enrolling</span>
         </div>
         <div class="trial-match">
           <span>&#x2705;</span>
-          <span>85% Profile Match — 9 of 11 criteria met</span>
+          <span>85% Profile Match &mdash; 9 of 11 criteria met</span>
         </div>
-        <div style="margin-top: 12px; font-size: 13px; color: var(--gray-600); line-height: 1.6;">
-          Selective endothelin A receptor antagonist for reducing proteinuria. Includes FSGS patients with eGFR > 30. Non-immunosuppressive.
+        <div style="margin-top: 14px; font-size: 13px; color: var(--brown-500); line-height: 1.65;">
+          Selective endothelin A receptor antagonist. Includes FSGS patients with eGFR > 30. Non-immunosuppressive.
         </div>
-        <div style="margin-top: 12px;">
-          <button class="btn btn-secondary" style="font-size: 13px; padding: 10px 16px;">Generate Questions for Dr. Patel</button>
+        <div style="margin-top: 14px;">
+          <button class="btn btn-secondary" style="font-size: 13px; padding: 12px 16px;">Generate Questions for Dr. Patel</button>
         </div>
       </div>
 
-      <div class="section-label" style="padding-top: 8px;">What to Know About Clinical Trials</div>
-
-      <div class="card" style="cursor:default;">
-        <div class="card-desc" style="font-size: 13px; line-height: 1.7;">
-          <strong>Clinical trials are an option, not an obligation.</strong> Fewer than 5% of patients participate, often because they don't know trials exist. Asking your specialist about trial eligibility is a form of advocacy — it opens doors to treatments that may not be available otherwise.
+      <div class="card" style="cursor:default; background: var(--parchment); border-color: var(--brown-200);">
+        <div class="card-desc" style="font-size: 13.5px; line-height: 1.7; color: var(--brown-600);">
+          <strong style="color:var(--brown-800); font-family:'Fraunces',serif;">Clinical trials are an option, not an obligation.</strong> Fewer than 5% of patients participate, often because they don't know trials exist. Asking your specialist is a form of advocacy.
         </div>
       </div>
     </div>
 
     <div class="nav-bar">
       <button class="nav-item" onclick="showScreen('dashboard')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
         <span class="nav-label">Home</span>
       </button>
       <button class="nav-item" onclick="showScreen('labs')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         <span class="nav-label">Health</span>
       </button>
       <button class="nav-item active">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         <span class="nav-label">Discover</span>
       </button>
       <button class="nav-item" onclick="showScreen('sources')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         <span class="nav-label">Settings</span>
       </button>
     </div>
@@ -1158,7 +1350,7 @@
   <div class="screen" id="screen-genetics">
     <div class="status-bar">
       <span>9:41</span>
-      <span>&#x1F50B; 87%</span>
+      <span style="opacity:0.5;">&#x25CF;&#x25CF;&#x25CF;&#x25CF;</span>
     </div>
 
     <div class="screen-header">
@@ -1168,7 +1360,7 @@
 
     <div class="screen-content">
       <div class="alert-card alert-amber">
-        <div class="alert-icon">&#x26A0;&#xFE0F;</div>
+        <div class="alert-icon">&#x2728;</div>
         <div class="alert-text">
           <div class="alert-title">1 medication may need attention</div>
           Your CYP2C19 genotype suggests you're a poor metabolizer. This affects how your body processes omeprazole.
@@ -1176,7 +1368,7 @@
       </div>
 
       <div class="card" style="cursor:default;">
-        <div class="card-title" style="font-size: 15px; margin-bottom: 16px;">Your Metabolizer Profile</div>
+        <div class="card-title" style="font-size: 16px; margin-bottom: 16px;">Your Metabolizer Profile</div>
 
         <div class="gene-result">
           <div>
@@ -1213,40 +1405,38 @@
 
       <div class="section-label">Medication Impact</div>
 
-      <div class="card" style="cursor:default; border-color: var(--rose-100);">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-          <span style="font-size: 24px;">&#x1F48A;</span>
+      <div class="card" style="cursor:default; border-color: var(--rose-100); background: linear-gradient(135deg, var(--rose-50) 0%, var(--warm-white) 100%);">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+          <div style="width:42px; height:42px; border-radius:12px; background:var(--rose-100); display:flex; align-items:center; justify-content:center; font-size:20px;">&#x1F48A;</div>
           <div>
-            <div class="card-title" style="font-size: 14px; color: var(--rose-600);">Omeprazole 20mg</div>
-            <div class="card-desc">Affected by CYP2C19 poor metabolizer status</div>
+            <div class="card-title" style="font-size: 15px; color: var(--rose-500);">Omeprazole 20mg</div>
+            <div class="card-desc" style="font-size: 12px;">Affected by CYP2C19 poor metabolizer status</div>
           </div>
         </div>
-        <div style="font-size: 13px; color: var(--gray-600); line-height: 1.7;">
-          As a CYP2C19 poor metabolizer, you process omeprazole much more slowly than normal metabolizers. This means the drug stays in your system longer, increasing both effectiveness and potential side effects. <strong>CPIC guidelines suggest a dose reduction may be appropriate.</strong>
+        <div style="font-size: 13px; color: var(--brown-600); line-height: 1.7;">
+          As a CYP2C19 poor metabolizer, you process omeprazole much more slowly. This means the drug stays in your system longer, increasing both effectiveness and potential side effects. <strong style="color:var(--brown-800);">CPIC guidelines suggest a dose reduction may be appropriate.</strong>
         </div>
-        <div style="margin-top: 8px; font-size: 11px; color: var(--gray-400);">
+        <div style="margin-top: 10px; font-size: 11px; color: var(--brown-400);">
           Source: CPIC Guideline for PPIs and CYP2C19, 2023
         </div>
       </div>
 
       <div class="section-label">Question for Your Doctor</div>
 
-      <div class="question-item" style="border-left: 3px solid var(--amber-500);">
-        <div class="question-number" style="color: var(--amber-600);">Based on your genetics</div>
-        <div class="question-text">"I'm a CYP2C19 poor metabolizer. Should my omeprazole dose be adjusted, or should we consider an alternative PPI?"</div>
-        <div class="question-evidence">CPIC guidelines recommend considering dose adjustment for CYP2C19 poor metabolizers on PPIs.</div>
+      <div class="question-item" style="border-left: 3px solid var(--lav-400);">
+        <div class="question-number" style="color: var(--lav-500);">Based on your genetics</div>
+        <div class="question-text">"I'm a CYP2C19 poor metabolizer. Should my omeprazole dose be adjusted, or should we consider an alternative?"</div>
+        <div class="question-evidence">CPIC guidelines recommend dose adjustment for CYP2C19 poor metabolizers on PPIs.</div>
       </div>
 
       <div style="padding: 16px;">
-        <button class="btn btn-outline" style="font-size: 13px;">
-          <span>&#x1F4C4;</span> View Full Genetic Report
-        </button>
+        <button class="btn btn-outline" style="font-size: 13px;">View Full Genetic Report</button>
       </div>
     </div>
 
     <div class="nav-bar">
-      <button class="nav-item" onclick="showScreen('dashboard')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      <button class="nav-item" onclick="showScreen('dashboard')" style="color:var(--terra-500);">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18l-6-6 6-6"/></svg>
         <span class="nav-label">Back</span>
       </button>
     </div>
@@ -1256,7 +1446,7 @@
   <div class="screen" id="screen-sources">
     <div class="status-bar">
       <span>9:41</span>
-      <span>&#x1F50B; 87%</span>
+      <span style="opacity:0.5;">&#x25CF;&#x25CF;&#x25CF;&#x25CF;</span>
     </div>
 
     <div class="screen-header">
@@ -1268,7 +1458,7 @@
       <div class="section-label">Connected</div>
 
       <div class="connector">
-        <div class="connector-icon">&#x2328;&#xFE0F;</div>
+        <div class="connector-icon" style="background: var(--terra-50);">&#x2328;&#xFE0F;</div>
         <div class="connector-info">
           <div class="connector-name">Apple Health</div>
           <div class="connector-desc">Heart rate, steps, sleep, blood pressure</div>
@@ -1277,7 +1467,7 @@
       </div>
 
       <div class="connector">
-        <div class="connector-icon">&#x1F9EA;</div>
+        <div class="connector-icon" style="background: var(--amber-50);">&#x1F9EA;</div>
         <div class="connector-info">
           <div class="connector-name">Quest Diagnostics</div>
           <div class="connector-desc">Lab results via Health Gorilla</div>
@@ -1286,7 +1476,7 @@
       </div>
 
       <div class="connector">
-        <div class="connector-icon">&#x1F48A;</div>
+        <div class="connector-icon" style="background: var(--sage-50);">&#x1F48A;</div>
         <div class="connector-info">
           <div class="connector-name">Medication List</div>
           <div class="connector-desc">3 medications tracked</div>
@@ -1295,7 +1485,7 @@
       </div>
 
       <div class="connector">
-        <div class="connector-icon">&#x1F9EC;</div>
+        <div class="connector-icon" style="background: var(--lav-50);">&#x1F9EC;</div>
         <div class="connector-info">
           <div class="connector-name">23andMe</div>
           <div class="connector-desc">Pharmacogenomics profile imported</div>
@@ -1303,7 +1493,7 @@
         <span class="connector-status connector-connected">Imported</span>
       </div>
 
-      <div class="section-label" style="padding-top: 8px;">Available to Connect</div>
+      <div class="section-label" style="padding-top: 10px;">Available</div>
 
       <div class="connector">
         <div class="connector-icon">&#x1F3E5;</div>
@@ -1332,31 +1522,31 @@
         <span class="connector-status connector-available">Connect</span>
       </div>
 
-      <div class="section-label" style="padding-top: 8px;">Coming Soon</div>
+      <div class="section-label" style="padding-top: 10px;">Coming Soon</div>
 
-      <div class="connector" style="opacity: 0.5;">
+      <div class="connector" style="opacity: 0.45;">
         <div class="connector-icon">&#x1F4CA;</div>
         <div class="connector-info">
           <div class="connector-name">Dexcom / Libre CGM</div>
           <div class="connector-desc">Continuous glucose monitoring</div>
         </div>
-        <span class="connector-status" style="font-size: 11px; color: var(--gray-400);">Q3 2026</span>
+        <span class="connector-status" style="font-size: 11px; color: var(--brown-400);">Q3 2026</span>
       </div>
 
-      <div class="connector" style="opacity: 0.5;">
+      <div class="connector" style="opacity: 0.45;">
         <div class="connector-icon">&#x1F4C4;</div>
         <div class="connector-info">
           <div class="connector-name">TEFCA National Records</div>
           <div class="connector-desc">Access records from any US provider</div>
         </div>
-        <span class="connector-status" style="font-size: 11px; color: var(--gray-400);">Q4 2026</span>
+        <span class="connector-status" style="font-size: 11px; color: var(--brown-400);">Q4 2026</span>
       </div>
 
       <div style="padding: 24px 16px;">
-        <div class="card" style="cursor: default; background: var(--teal-50); border-color: var(--teal-100);">
-          <div class="card-desc" style="color: var(--teal-800); text-align: center; font-size: 13px;">
-            <strong>The more data you connect, the smarter your advocacy becomes.</strong><br>
-            Each new source helps us give you better questions, better insights, and better recommendations.
+        <div class="card" style="cursor: default; background: var(--grad-warm); border-color: var(--terra-100);">
+          <div class="card-desc" style="color: var(--brown-700); text-align: center; font-size: 13.5px; line-height: 1.7;">
+            <strong style="font-family:'Fraunces',serif; font-size: 15px; color: var(--brown-800);">The more you connect, the smarter your advocacy becomes.</strong><br>
+            Each source helps us give you better questions, better insights, and better care.
           </div>
         </div>
       </div>
@@ -1364,19 +1554,19 @@
 
     <div class="nav-bar">
       <button class="nav-item" onclick="showScreen('dashboard')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
         <span class="nav-label">Home</span>
       </button>
       <button class="nav-item" onclick="showScreen('labs')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         <span class="nav-label">Health</span>
       </button>
       <button class="nav-item" onclick="showScreen('trials')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         <span class="nav-label">Discover</span>
       </button>
       <button class="nav-item active">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         <span class="nav-label">Settings</span>
       </button>
     </div>
@@ -1386,18 +1576,14 @@
 
 <script>
 function showScreen(name) {
-  // Hide all screens
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  // Show target
   document.getElementById('screen-' + name).classList.add('active');
-  // Update nav buttons
   document.querySelectorAll('.screen-nav-btn').forEach(btn => {
     btn.classList.remove('active');
     if (btn.textContent.toLowerCase().replace(/\s/g, '') === name.toLowerCase().replace(/\s/g, '')) {
       btn.classList.add('active');
     }
   });
-  // Scroll to top of phone
   const content = document.querySelector('#screen-' + name + ' .screen-content');
   if (content) content.scrollTop = 0;
 }
