@@ -1001,6 +1001,17 @@
           <span class="tag tag-amber">Action Recommended</span>
         </div>
 
+        <div class="card" onclick="go('conditions')">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--terra-50);color:var(--terra-500);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            </div>
+            <div><div class="card-title">Your Conditions</div><div class="card-desc">Explore condition briefings, questions, and advocacy guides</div></div>
+          </div>
+          <div class="card-desc">Access detailed briefings with evidence-based questions for every condition you're tracking.</div>
+          <span class="tag tag-terra">5 Conditions</span>
+        </div>
+
         <div class="section-label">Your Medications</div>
         <div class="med-item" onclick="openMedSheet('prednisone')"><div class="med-icon" style="background:var(--amber-50);">&#x1F48A;</div><div><div class="med-name">Prednisone</div><div class="med-dose">20mg daily</div></div><div class="med-warning">&#x26A0;&#xFE0F;</div></div>
         <div class="med-item" onclick="openMedSheet('lisinopril')"><div class="med-icon" style="background:var(--sage-50);">&#x1F48A;</div><div><div class="med-name">Lisinopril</div><div class="med-dose">10mg daily</div></div><div class="med-warning" style="opacity:.3">&#x2705;</div></div>
@@ -1013,7 +1024,7 @@
   <!-- ===== CONDITION ===== -->
   <div class="screen" id="screen-condition">
     <div class="briefing-header">
-      <button class="briefing-back" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
       <div class="briefing-condition">Condition Briefing</div>
       <div class="briefing-title">Focal Segmental Glomerulosclerosis (FSGS)</div>
       <div class="briefing-meta">Diagnosed Feb 2026 &middot; Updated today</div>
@@ -1097,6 +1108,357 @@
         <div style="padding:16px;">
           <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
           <button class="btn btn-secondary" style="margin-top:10px;" onclick="go('trials')">View Related Clinical Trials</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONDITIONS LIBRARY ===== -->
+  <div class="screen" id="screen-conditions">
+    <div class="topbar">
+      <button class="topbar-back" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div><div class="topbar-title">Your Conditions</div><div class="topbar-subtitle">Briefings, questions &amp; advocacy guides</div></div>
+    </div>
+    <div class="screen-scroll screen-pad-bottom-solo">
+      <div class="stagger" style="padding-top:8px;">
+        <div class="card" onclick="go('condition')" style="border-left:4px solid var(--terra-500);">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--terra-50);color:var(--terra-500);">&#x1F9EC;</div>
+            <div style="flex:1;"><div class="card-title">FSGS</div><div class="card-desc">Focal Segmental Glomerulosclerosis — kidney scarring affecting filtration</div></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+        <div class="card" onclick="go('crc')" style="border-left:4px solid var(--terra-600);">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--terra-50);color:var(--terra-600);">&#x1F3AF;</div>
+            <div style="flex:1;"><div class="card-title">Stage 4 Colorectal Cancer</div><div class="card-desc">Metastatic CRC — molecular profiling determines treatment eligibility</div></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+        <div class="card" onclick="go('gallstones')" style="border-left:4px solid var(--amber-500);">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--amber-50);color:var(--amber-500);">&#x1F48E;</div>
+            <div style="flex:1;"><div class="card-title">Gallstones</div><div class="card-desc">Cholelithiasis — most are silent, but complications can be emergencies</div></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+        <div class="card" onclick="go('kidneystones')" style="border-left:4px solid var(--amber-600);">
+          <div class="card-header">
+            <div class="card-icon" style="background:linear-gradient(135deg, var(--amber-50) 0%, var(--sage-50) 100%);color:var(--amber-600);">&#x1FAA8;</div>
+            <div style="flex:1;"><div class="card-title">Kidney Stones</div><div class="card-desc">Nephrolithiasis — stone composition determines prevention strategy</div></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+        <div class="card" onclick="go('perimenopause')" style="border-left:4px solid var(--lav-400);">
+          <div class="card-header">
+            <div class="card-icon" style="background:linear-gradient(135deg, var(--lav-50) 0%, var(--rose-50) 100%);color:var(--lav-400);">&#x1F338;</div>
+            <div style="flex:1;"><div class="card-title">Perimenopause</div><div class="card-desc">Hormonal transition — frequently misdiagnosed as anxiety or depression</div></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brown-300)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLORECTAL CANCER BRIEFING ===== -->
+  <div class="screen" id="screen-crc">
+    <div class="briefing-header" style="background:var(--grad-terra);">
+      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="briefing-condition">Condition Briefing</div>
+      <div class="briefing-title">Stage 4 Colorectal Cancer</div>
+      <div class="briefing-meta">Metastatic CRC &middot; Updated today</div>
+    </div>
+    <div class="screen-scroll screen-pad-bottom-solo">
+      <div class="stagger" style="padding-top:16px;">
+        <div class="alert-card alert-amber static">
+          <div class="alert-icon">&#x26A0;&#xFE0F;</div>
+          <div class="alert-text">
+            <div class="alert-title">Molecular Profiling Is Not Optional</div>
+            Molecular profiling determines whether you qualify for immunotherapy, targeted therapy, or clinical trials that could change your outcome.
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:4px;">Questions for Your Oncologist</div>
+        <div class="question-item" style="border-left:3px solid var(--terra-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--terra-500);">Priority 1</div>
+          <div class="question-head">
+            <div class="question-text">"Has my tumor been tested for MSI/MMR status, and am I eligible for immunotherapy?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">KEYNOTE-177 trial showed pembrolizumab achieved 16.5-month PFS in MSI-H mCRC patients. Only ~5% of mCRC is MSI-H, but for those patients, immunotherapy is transformative.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Has my tumor been tested for MSI/MMR status, and am I eligible for immunotherapy?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--terra-300);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--terra-400);">Priority 2</div>
+          <div class="question-head">
+            <div class="question-text">"Has comprehensive molecular profiling been done &mdash; KRAS, NRAS, BRAF, HER2, NTRK, TMB?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">NCCN 2025 guidelines mandate comprehensive biomarker testing for all mCRC patients. Approximately 50% of tumors are KRAS mutant, which excludes anti-EGFR therapy and directs treatment toward alternative targeted agents.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Has comprehensive molecular profiling been done — KRAS, NRAS, BRAF, HER2, NTRK, TMB?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--amber-500);">Priority 3</div>
+          <div class="question-head">
+            <div class="question-text">"Should I be tested for DPD deficiency before starting 5-FU/capecitabine?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">The EMA mandates DPYD testing before fluoropyrimidine therapy. 3-8% of patients carry DPYD variants causing potentially fatal toxicity. This is entirely preventable with pre-treatment genotyping.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Should I be tested for DPD deficiency before starting 5-FU/capecitabine?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:6px;">Advocacy Failure</div>
+        <div class="alert-card alert-rose static">
+          <div class="alert-icon">&#x1F6A8;</div>
+          <div class="alert-text">
+            <div class="alert-title">Up to 30% of mCRC patients may not receive comprehensive biomarker testing.</div>
+            Without full molecular profiling, patients may miss eligibility for immunotherapy, targeted therapy, or clinical trials that could significantly improve outcomes. Ask your oncologist to confirm all recommended biomarkers have been tested.
+          </div>
+        </div>
+        <div style="padding:16px;">
+          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
+          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for CRC clinical trials...')">Find Clinical Trials</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GALLSTONES BRIEFING ===== -->
+  <div class="screen" id="screen-gallstones">
+    <div class="briefing-header" style="background:linear-gradient(135deg, var(--amber-500) 0%, var(--amber-300) 100%);">
+      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="briefing-condition">Condition Briefing</div>
+      <div class="briefing-title">Gallstones</div>
+      <div class="briefing-meta">Cholelithiasis &middot; Updated today</div>
+    </div>
+    <div class="screen-scroll screen-pad-bottom-solo">
+      <div class="stagger" style="padding-top:16px;">
+        <div class="alert-card alert-amber static">
+          <div class="alert-icon">&#x1F4A1;</div>
+          <div class="alert-text">
+            <div class="alert-title">Most Gallstones Don't Need Treatment</div>
+            Most gallstones (80%) are asymptomatic and don't need treatment &mdash; but knowing the warning signs of cholangitis or pancreatitis could save your life.
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:4px;">Questions for Your Doctor</div>
+        <div class="question-item" style="border-left:3px solid var(--amber-500);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--amber-600);">Priority 1</div>
+          <div class="question-head">
+            <div class="question-text">"Are my stones symptomatic enough for surgery, or is watchful waiting appropriate?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">Only 1-2% of asymptomatic gallstone patients develop symptoms per year. NIH and SAGES guidelines support watchful waiting for incidental, asymptomatic stones. Surgery is indicated for biliary colic, not silent stones.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Are my stones symptomatic enough for surgery, or is watchful waiting appropriate?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--amber-500);">Priority 2</div>
+          <div class="question-head">
+            <div class="question-text">"Could a stone be in my bile duct? Do I need MRCP or ERCP?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">MRCP has near-100% negative predictive value for common bile duct stones, making it ideal for ruling out choledocholithiasis non-invasively. ERCP carries a 5-10% complication risk (pancreatitis, perforation) and should only be used therapeutically, not diagnostically.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Could a stone be in my bile duct? Do I need MRCP or ERCP?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--rose-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--rose-500);">Priority 3</div>
+          <div class="question-head">
+            <div class="question-text">"What are the warning signs that I need to go to the ER immediately?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">Charcot's triad (fever + RUQ pain + jaundice) indicates cholangitis requiring emergency intervention. Reynolds' pentad adds confusion and hypotension, indicating septic cholangitis with high mortality if untreated.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'What are the warning signs that I need to go to the ER immediately?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:6px;">Red Flags</div>
+        <div class="alert-card alert-rose static">
+          <div class="alert-icon">&#x1F6A8;</div>
+          <div class="alert-text">
+            <div class="alert-title">Fever + RUQ pain + jaundice = ER immediately</div>
+            This combination (Charcot's triad) suggests ascending cholangitis, a life-threatening infection of the biliary system. Do not wait for a scheduled appointment. Call 911 or go to the emergency department.
+          </div>
+        </div>
+        <div style="padding:16px;">
+          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
+          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for gallstone clinical trials...')">Find Clinical Trials</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== KIDNEY STONES BRIEFING ===== -->
+  <div class="screen" id="screen-kidneystones">
+    <div class="briefing-header" style="background:linear-gradient(135deg, var(--amber-600) 0%, var(--sage-400) 100%);">
+      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="briefing-condition">Condition Briefing</div>
+      <div class="briefing-title">Kidney Stones</div>
+      <div class="briefing-meta">Nephrolithiasis &middot; Updated today</div>
+    </div>
+    <div class="screen-scroll screen-pad-bottom-solo">
+      <div class="stagger" style="padding-top:16px;">
+        <div class="alert-card alert-amber static">
+          <div class="alert-icon">&#x26A0;&#xFE0F;</div>
+          <div class="alert-text">
+            <div class="alert-title">Prevention Is Undertreated</div>
+            Only 7% of high-risk stone patients receive the metabolic workup that could prevent their next stone. Stone composition determines everything.
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:4px;">Questions for Your Urologist</div>
+        <div class="question-item" style="border-left:3px solid var(--amber-600);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--amber-600);">Priority 1</div>
+          <div class="question-head">
+            <div class="question-text">"Was my stone sent for composition analysis, and what type is it?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">AUA/EAU guidelines recommend stone composition analysis for all retrieved stones. Treatment differs dramatically by type: calcium oxalate (dietary changes, thiazides), uric acid (alkalinization, allopurinol), struvite (infection treatment), cystine (tiopronin, hydration).</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Was my stone sent for composition analysis, and what type is it?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--sage-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--sage-500);">Priority 2</div>
+          <div class="question-head">
+            <div class="question-text">"Should I have a 24-hour urine metabolic workup?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">Only 7% of recurrent stone formers receive a 24-hour urine collection, despite AUA guidelines recommending it for all recurrent stone formers. This test identifies specific metabolic abnormalities (hypercalciuria, hyperoxaluria, hypocitraturia) that can be treated to prevent recurrence.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Should I have a 24-hour urine metabolic workup?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--lav-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--lav-500);">Priority 3</div>
+          <div class="question-head">
+            <div class="question-text">"Could I have primary hyperparathyroidism?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">Primary hyperparathyroidism causes approximately 5% of kidney stones and is completely treatable with parathyroidectomy. PTH levels are rarely checked in stone patients despite guidelines. A simple blood test for calcium and PTH can identify this curable cause.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Could I have primary hyperparathyroidism?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:6px;">Advocacy Failure</div>
+        <div class="alert-card alert-rose static">
+          <div class="alert-icon">&#x1F6A8;</div>
+          <div class="alert-text">
+            <div class="alert-title">93% of recurrent stone formers treated reactively rather than preventively.</div>
+            Most patients receive surgery for each stone episode without ever getting the metabolic workup that could prevent future stones. Demand a 24-hour urine collection and stone composition analysis. Prevention is possible.
+          </div>
+        </div>
+        <div style="padding:16px;">
+          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
+          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for kidney stone clinical trials...')">Find Clinical Trials</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PERIMENOPAUSE BRIEFING ===== -->
+  <div class="screen" id="screen-perimenopause">
+    <div class="briefing-header" style="background:linear-gradient(135deg, var(--lav-400) 0%, var(--rose-300) 100%);">
+      <button class="briefing-back" onclick="go('conditions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="briefing-condition">Condition Briefing</div>
+      <div class="briefing-title">Perimenopause</div>
+      <div class="briefing-meta">Hormonal Transition &middot; Updated today</div>
+    </div>
+    <div class="screen-scroll screen-pad-bottom-solo">
+      <div class="stagger" style="padding-top:16px;">
+        <div class="alert-card alert-rose static">
+          <div class="alert-icon">&#x1F4A1;</div>
+          <div class="alert-text">
+            <div class="alert-title">Your Symptoms Are Real</div>
+            Nearly 40% of perimenopausal women report feeling misdiagnosed. Over 50% receive a psychiatric diagnosis before perimenopause is considered. Your symptoms are real.
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:4px;">Questions for Your Doctor</div>
+        <div class="question-item" style="border-left:3px solid var(--lav-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--lav-500);">Priority 1</div>
+          <div class="question-head">
+            <div class="question-text">"Could this be perimenopause, not anxiety/depression/thyroid?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">Over 50% of perimenopausal women receive a psychiatric diagnosis before perimenopause is considered. Only 42% of clinicians initiate discussion about menopause symptoms. Symptoms overlap significantly with anxiety, depression, and thyroid disorders.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Could this be perimenopause, not anxiety/depression/thyroid?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--rose-300);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--rose-400);">Priority 2</div>
+          <div class="question-head">
+            <div class="question-text">"Am I a candidate for HRT, and which type?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">In 2025, the FDA removed misleading black box warnings on HRT based on the flawed 2002 WHI study. Transdermal estradiol is safer than oral (no VTE risk increase). The timing hypothesis shows maximum benefit when started within 10 years of menopause onset.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'Am I a candidate for HRT, and which type?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="question-item" style="border-left:3px solid var(--amber-400);" onclick="toggleQuestion(this)">
+          <div class="question-number" style="color:var(--amber-500);">Priority 3</div>
+          <div class="question-head">
+            <div class="question-text">"When should I get a bone density scan?"</div>
+            <svg class="question-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="question-body">
+            <div class="question-evidence">Women lose up to 10% of bone mass in the first 5 post-menopausal years, with the fastest bone loss occurring 2-3 years around the final menstrual period. Early DEXA scanning can identify women at highest risk before fractures occur.</div>
+            <button class="question-copy-btn" onclick="event.stopPropagation();copyQuestion(this, 'When should I get a bone density scan?')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+        <div class="section-label" style="padding-top:6px;">Key Advocacy Update</div>
+        <div class="alert-card alert-sage static">
+          <div class="alert-icon">&#x2705;</div>
+          <div class="alert-text">
+            <div class="alert-title">In 2025, the FDA removed misleading black box warnings on HRT.</div>
+            The warnings were based on the flawed 2002 WHI study that used older oral formulations in women over 60. Modern transdermal HRT started in the perimenopause window has a favorable risk-benefit profile. Discuss current evidence with your doctor.
+          </div>
+        </div>
+        <div style="padding:16px;">
+          <button class="btn btn-primary" onclick="showToast('&#x1F4C4;', 'Condition briefing exported to your Files')">Export Visit Briefing (PDF)</button>
+          <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('&#x1F50D;', 'Searching for perimenopause clinical trials...')">Find Clinical Trials</button>
         </div>
       </div>
     </div>
