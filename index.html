@@ -2212,8 +2212,14 @@ function go(target) {
   currentScreen = target;
   updateNavBars();
 
-  const scroller = next.querySelector('.screen-scroll') || next.querySelector('.chat-messages');
-  if (scroller) scroller.scrollTop = scroller.scrollHeight || 0;
+  // Scroll to top for all screens except chat (which scrolls to bottom)
+  if (target === 'ask') {
+    const chatEl = next.querySelector('.chat-messages') || next.querySelector('.screen-scroll');
+    if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
+  } else {
+    const scroller = next.querySelector('.screen-scroll');
+    if (scroller) scroller.scrollTop = 0;
+  }
 
   if (target === 'profile') animateAdvocacyRing();
   if (target === 'labs') animateCharts();
