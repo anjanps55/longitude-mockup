@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Longitude — Product Overview & PRD</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' rx='8' fill='%23D4725C'/%3E%3Cpath d='M18 4 L18 32 M10 8 C10 8 18 14 18 18 M26 8 C26 8 18 14 18 18 M8 20 C12 24 18 28 18 32 M28 20 C24 24 18 28 18 32' stroke='white' stroke-width='2.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FFF9F2; --cream-deep:#FFF1E3; --warm-white:#FFFCF8; --parchment:#F5EAD9;
+  --terra-50:#FFF5F1; --terra-100:#FFE8E0; --terra-200:#FFD0C1; --terra-300:#FFB09A;
+  --terra-400:#E8937C; --terra-500:#D4725C; --terra-600:#C05A44; --terra-700:#A04835;
+  --amber-50:#FFF8EB; --amber-100:#FFEFC9; --amber-200:#FFE09A; --amber-300:#FFD06B;
+  --amber-400:#E8A44A; --amber-500:#D4903A; --amber-600:#B8762B;
+  --sage-50:#F2F7F4; --sage-100:#DCE9E1; --sage-200:#BBDAC6; --sage-300:#9AC8AB;
+  --sage-400:#7BAE8E; --sage-500:#5D9672; --sage-600:#4A7A5B;
+  --rose-50:#FFF3F4; --rose-100:#FFE0E3; --rose-200:#FFC1C7; --rose-300:#F09AA3;
+  --rose-400:#D4626F; --rose-500:#B84D59; --rose-600:#9A3A45;
+  --lav-50:#F7F4FB; --lav-100:#EDE7F5; --lav-200:#D6CBE8; --lav-300:#B8A9D1;
+  --lav-400:#9B89B8; --lav-500:#7E6B9E;
+  --brown-50:#FAF7F5; --brown-100:#F0EAE5; --brown-200:#DDD4CC; --brown-300:#C4B8AE;
+  --brown-400:#A09189; --brown-500:#7D6E66; --brown-600:#6B5A5E; --brown-700:#54434A;
+  --brown-800:#3D2C2E; --brown-900:#2A1D1F;
+  --grad-terra:linear-gradient(135deg,#D4725C 0%,#E8A44A 100%);
+  --grad-sunset:linear-gradient(160deg,#FFB09A 0%,#FFD06B 100%);
+  --grad-sage:linear-gradient(135deg,#DCE9E1 0%,#F2F7F4 100%);
+  --grad-warm:linear-gradient(135deg,#FFE8E0 0%,#FFEFC9 50%,#F2F7F4 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--cream);
+  color:var(--brown-700);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+h1,h2,h3,h4{font-family:'Fraunces',serif;font-optical-sizing:auto;color:var(--brown-900);font-weight:500;}
+code,.mono{font-family:'JetBrains Mono',monospace;}
+
+/* noise texture */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.022;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px;
+}
+
+/* ===== LAYOUT ===== */
+.shell{display:flex;height:100vh;overflow:hidden;}
+
+/* ---- sidebar ---- */
+.sidebar{
+  width:286px;flex-shrink:0;background:var(--warm-white);
+  border-right:1px solid var(--brown-100);
+  display:flex;flex-direction:column;
+  z-index:60;transition:width .28s cubic-bezier(.4,0,.2,1);
+}
+.side-head{padding:24px 22px 18px;border-bottom:1px solid var(--brown-100);}
+.side-head-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.logo{display:flex;align-items:center;gap:11px;overflow:hidden;}
+.logo-mark{width:38px;height:38px;border-radius:11px;background:var(--grad-terra);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-mark svg{width:23px;height:23px;}
+.logo-text{font-family:'Fraunces',serif;font-size:23px;color:var(--brown-900);
+  letter-spacing:-.5px;white-space:nowrap;}
+.side-tag{font-size:11px;color:var(--brown-400);margin-top:11px;letter-spacing:.4px;
+  text-transform:uppercase;font-weight:600;white-space:nowrap;}
+.collapse-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--brown-200);
+  background:var(--cream);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--brown-500);flex-shrink:0;transition:all .2s;}
+.collapse-btn:hover{background:var(--terra-50);color:var(--terra-600);border-color:var(--terra-200);}
+.collapse-btn svg{width:16px;height:16px;transition:transform .3s;}
+.side-nav{flex:1;overflow-y:auto;padding:14px 14px 24px;}
+.side-nav::-webkit-scrollbar{width:0;}
+.nav-item{
+  display:flex;align-items:center;gap:13px;width:100%;text-align:left;
+  padding:11px 12px;border-radius:12px;border:none;background:none;cursor:pointer;
+  font-family:'Outfit',sans-serif;color:var(--brown-500);font-size:13.5px;
+  transition:background .2s,color .2s;margin-bottom:2px;white-space:nowrap;
+}
+.nav-item:hover{background:var(--terra-50);color:var(--brown-800);}
+.nav-item.active{background:var(--terra-50);color:var(--terra-700);font-weight:600;}
+.nav-num{
+  font-family:'JetBrains Mono',monospace;font-size:11px;width:24px;height:24px;
+  border-radius:7px;background:var(--brown-100);color:var(--brown-500);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;
+}
+.nav-item:hover .nav-num{background:var(--terra-100);color:var(--terra-600);}
+.nav-item.active .nav-num{background:var(--grad-terra);color:#fff;}
+.side-foot{padding:16px 22px;border-top:1px solid var(--brown-100);
+  font-size:11px;color:var(--brown-400);white-space:nowrap;}
+.side-foot a{color:var(--terra-500);text-decoration:none;}
+
+/* ---- collapsed sidebar (desktop only) ---- */
+@media(min-width:861px){
+  .sidebar.collapsed{width:74px;}
+  .sidebar.collapsed .collapse-btn svg{transform:rotate(180deg);}
+  .sidebar.collapsed .logo,
+  .sidebar.collapsed .side-tag,
+  .sidebar.collapsed .side-foot{display:none;}
+  .sidebar.collapsed .side-head{padding:24px 0 18px;}
+  .sidebar.collapsed .side-head-row{justify-content:center;}
+  .sidebar.collapsed .side-nav{padding:14px 8px 24px;}
+  .sidebar.collapsed .nav-item{justify-content:center;padding:11px 0;gap:0;}
+  .sidebar.collapsed .nav-item span:last-child{display:none;}
+}
+
+/* ---- main ---- */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.progress{height:3px;background:var(--brown-100);flex-shrink:0;}
+.progress-fill{height:100%;background:var(--grad-terra);width:10%;
+  transition:width .4s cubic-bezier(.4,0,.2,1);}
+.doc{flex:1;overflow-y:auto;scroll-behavior:smooth;}
+.doc::-webkit-scrollbar{width:9px;}
+.doc::-webkit-scrollbar-thumb{background:var(--brown-200);border-radius:8px;}
+
+.page{display:none;max-width:920px;margin:0 auto;padding:54px 56px 40px;}
+.page.active{display:block;animation:fade .45s cubic-bezier(.4,0,.2,1);}
+@keyframes fade{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* ---- mobile bar ---- */
+.mobilebar{display:none;align-items:center;gap:12px;padding:14px 18px;
+  background:var(--warm-white);border-bottom:1px solid var(--brown-100);}
+.menu-btn{width:40px;height:40px;border-radius:11px;border:1px solid var(--brown-200);
+  background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.menu-btn svg{width:20px;height:20px;color:var(--brown-700);}
+.scrim{display:none;position:fixed;inset:0;background:rgba(42,29,31,.4);z-index:55;}
+
+/* ===== PAGE HEADER ===== */
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;
+  color:var(--terra-600);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+.page-title{font-size:42px;line-height:1.12;letter-spacing:-1px;margin-bottom:18px;}
+.page-title em{font-style:italic;color:var(--terra-500);}
+.page-lead{font-size:18.5px;color:var(--brown-500);font-weight:300;line-height:1.6;
+  max-width:680px;margin-bottom:8px;}
+.page-lead strong{font-weight:600;color:var(--brown-700);}
+
+/* ===== SECTIONS ===== */
+.section{margin-top:46px;}
+.section-label{display:flex;align-items:center;gap:11px;margin-bottom:20px;}
+.section-label .dot{width:7px;height:7px;border-radius:50%;background:var(--terra-500);flex-shrink:0;}
+.section-label h3{font-size:13px;letter-spacing:1.3px;text-transform:uppercase;
+  color:var(--brown-500);font-family:'Outfit',sans-serif;font-weight:700;}
+.section h2{font-size:27px;line-height:1.25;margin-bottom:14px;letter-spacing:-.4px;}
+.section p{font-size:15.5px;color:var(--brown-600);margin-bottom:14px;}
+.section p strong{color:var(--brown-800);font-weight:600;}
+
+/* ===== GRIDS ===== */
+.grid{display:grid;gap:16px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+
+/* ===== CARD ===== */
+.card{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-radius:18px;padding:22px;}
+.card h4{font-size:17px;margin-bottom:7px;font-family:'Outfit',sans-serif;font-weight:600;color:var(--brown-800);}
+.card p{font-size:13.5px;color:var(--brown-500);margin-bottom:0;}
+.card-ico{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;font-size:21px;margin-bottom:14px;}
+
+/* ===== STAT ===== */
+.stat{background:var(--warm-white);border:1px solid var(--brown-100);border-radius:18px;
+  padding:24px 22px;text-align:left;}
+.stat .num{font-family:'Fraunces',serif;font-size:40px;font-weight:500;
+  line-height:1;letter-spacing:-1px;margin-bottom:9px;}
+.stat .lbl{font-size:13px;color:var(--brown-500);line-height:1.5;}
+.stat-region{display:flex;align-items:center;gap:10px;margin:24px 0 12px;
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--brown-500);}
+.stat-region::before{content:'';width:18px;height:3px;border-radius:2px;background:var(--terra-400);}
+.stat-note{font-size:12px;color:var(--brown-400);margin-top:16px;margin-bottom:0;font-style:italic;}
+
+/* ===== CALLOUT ===== */
+.callout{border-radius:18px;padding:24px 26px;margin:24px 0;border:1px solid;}
+.callout .co-tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:block;}
+.callout p{font-size:15px;margin-bottom:10px;}
+.callout p:last-child{margin-bottom:0;}
+.co-founder{background:var(--terra-50);border-color:var(--terra-200);}
+.co-founder .co-tag{color:var(--terra-600);}
+.co-insight{background:var(--sage-50);border-color:var(--sage-200);}
+.co-insight .co-tag{color:var(--sage-600);}
+.co-amber{background:var(--amber-50);border-color:var(--amber-200);}
+.co-amber .co-tag{color:var(--amber-600);}
+
+/* ===== PILLARS ===== */
+.pillar{background:var(--warm-white);border:1px solid var(--brown-100);border-radius:18px;
+  padding:24px;position:relative;overflow:hidden;}
+.pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
+.pillar.p1::before{background:var(--terra-500);}
+.pillar.p2::before{background:var(--amber-400);}
+.pillar.p3::before{background:var(--sage-500);}
+.pillar .p-step{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--brown-400);
+  letter-spacing:1px;margin-bottom:8px;}
+.pillar h4{font-size:21px;font-family:'Fraunces',serif;margin-bottom:9px;color:var(--brown-900);}
+.pillar p{font-size:13.5px;color:var(--brown-500);}
+
+/* ===== CONCEPT ROW (the intelligence model) ===== */
+.concept{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-radius:18px;padding:0;margin-bottom:14px;overflow:hidden;}
+.concept-top{display:flex;align-items:center;gap:13px;padding:16px 22px;
+  background:var(--brown-50);border-bottom:1px solid var(--brown-100);}
+.concept-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;
+  width:30px;height:30px;border-radius:8px;background:var(--grad-terra);color:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.concept-top h4{font-size:16.5px;font-family:'Outfit',sans-serif;font-weight:600;
+  color:var(--brown-800);}
+.concept-body{display:grid;grid-template-columns:1fr 1fr;}
+.concept-half{padding:18px 22px;}
+.concept-half.left{border-right:1px solid var(--brown-100);}
+.concept-half .ch-lbl{font-size:11px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:8px;}
+.concept-half.left .ch-lbl{color:var(--brown-400);}
+.concept-half.right .ch-lbl{color:var(--terra-600);}
+.concept-half p{font-size:13.5px;color:var(--brown-600);margin-bottom:0;}
+
+/* ===== REF TAG ===== */
+.reftag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;
+  background:var(--terra-50);color:var(--terra-600);padding:4px 8px;border-radius:6px;
+  flex-shrink:0;letter-spacing:.5px;text-transform:uppercase;}
+
+/* ===== TABLE ===== */
+.tbl{width:100%;border-collapse:collapse;background:var(--warm-white);
+  border:1px solid var(--brown-100);border-radius:16px;overflow:hidden;font-size:13.5px;}
+.tbl th{background:var(--brown-50);text-align:left;padding:13px 16px;
+  font-weight:700;color:var(--brown-700);font-size:12px;letter-spacing:.5px;
+  text-transform:uppercase;}
+.tbl td{padding:13px 16px;border-top:1px solid var(--brown-100);color:var(--brown-600);
+  vertical-align:top;}
+.tbl td:first-child{font-weight:600;color:var(--brown-800);}
+.tbl .col-h{color:var(--brown-500);}
+.tbl .col-l{color:var(--terra-700);font-weight:500;}
+
+/* ===== PERSONA ===== */
+.persona{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-radius:18px;padding:22px;}
+.persona-head{display:flex;align-items:center;gap:13px;margin-bottom:14px;}
+.persona-av{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;font-family:'Fraunces',serif;font-size:21px;color:#fff;flex-shrink:0;}
+.persona-name{font-size:16px;font-weight:600;color:var(--brown-900);font-family:'Outfit',sans-serif;}
+.persona-role{font-size:12px;color:var(--brown-400);}
+.persona-tag{font-family:'Fraunces',serif;font-size:13px;font-style:italic;
+  color:var(--brown-500);margin-bottom:12px;}
+.persona .lbl{font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--brown-400);margin-bottom:3px;margin-top:11px;}
+.persona p{font-size:13px;color:var(--brown-600);margin-bottom:0;}
+
+/* ===== FEATURE ===== */
+.feature{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-radius:18px;padding:22px;display:flex;flex-direction:column;}
+.feature-head{display:flex;align-items:flex-start;gap:13px;margin-bottom:11px;}
+.feature-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0;}
+.feature h4{font-size:16px;font-family:'Outfit',sans-serif;font-weight:600;
+  color:var(--brown-800);line-height:1.3;}
+.feature p{font-size:13px;color:var(--brown-500);margin-bottom:13px;flex:1;}
+.lineage{display:flex;align-items:center;gap:8px;padding-top:12px;
+  border-top:1px dashed var(--brown-200);font-size:11.5px;color:var(--brown-500);}
+
+/* ===== PILL ===== */
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;
+  font-weight:600;letter-spacing:.3px;}
+.pill-p0{background:var(--rose-100);color:var(--rose-600);}
+.pill-p1{background:var(--amber-100);color:var(--amber-600);}
+.pill-p2{background:var(--sage-100);color:var(--sage-600);}
+.pill-core{background:var(--lav-100);color:var(--lav-500);}
+
+/* ===== JOURNEY ===== */
+.journey{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-radius:18px;padding:24px;margin-bottom:16px;}
+.journey-head{display:flex;align-items:center;gap:13px;margin-bottom:6px;}
+.journey-n{width:34px;height:34px;border-radius:10px;background:var(--grad-terra);
+  color:#fff;font-family:'Fraunces',serif;font-size:16px;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;}
+.journey-head h4{font-size:18px;font-family:'Fraunces',serif;color:var(--brown-900);}
+.journey-trigger{font-size:12.5px;color:var(--brown-400);margin-bottom:16px;
+  padding-left:47px;}
+.journey-trigger b{color:var(--terra-600);font-weight:600;}
+.steps{list-style:none;counter-reset:s;margin-bottom:14px;}
+.steps li{position:relative;padding-left:34px;margin-bottom:9px;font-size:13.5px;
+  color:var(--brown-600);counter-increment:s;}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;
+  width:21px;height:21px;border-radius:6px;background:var(--terra-50);
+  color:var(--terra-600);font-family:'JetBrains Mono',monospace;font-size:11px;
+  font-weight:500;display:flex;align-items:center;justify-content:center;}
+.journey-out{background:var(--sage-50);border-radius:12px;padding:12px 15px;
+  font-size:12.5px;color:var(--sage-600);}
+.journey-out b{font-weight:700;}
+.journey-link{margin-top:12px;font-size:11.5px;color:var(--brown-500);
+  display:flex;align-items:center;gap:8px;}
+
+/* ===== COMPACT LIST ===== */
+.clist{list-style:none;margin:8px 0 0;}
+.clist li{position:relative;padding-left:20px;font-size:13px;color:var(--brown-600);margin-bottom:7px;}
+.clist li:last-child{margin-bottom:0;}
+.clist li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:2px;}
+.clist.keep li::before{background:var(--sage-400);}
+.clist.drop li::before{background:var(--brown-300);}
+
+/* ===== ASK DEMO ===== */
+.ask-demo{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-radius:18px;padding:22px;}
+.ask-lbl{font-size:10.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;
+  color:var(--brown-400);margin-bottom:6px;}
+.ask-q{background:var(--terra-50);border:1px solid var(--terra-100);
+  border-radius:14px 14px 14px 5px;padding:12px 15px;font-size:13.5px;
+  color:var(--brown-700);margin-bottom:18px;}
+.ask-a{font-size:13.5px;color:var(--brown-600);}
+.ask-a p{font-size:13.5px;color:var(--brown-600);margin:8px 0;}
+.ask-a ul{list-style:none;margin:10px 0 0;}
+.ask-a li{position:relative;padding-left:19px;margin-bottom:7px;font-size:13px;color:var(--brown-600);}
+.ask-a li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;
+  border-radius:2px;background:var(--amber-400);}
+
+/* ===== TIER ===== */
+.tier{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-left-width:5px;border-radius:12px;padding:15px 19px;margin-bottom:10px;}
+.tier h4{font-size:14.5px;font-family:'Outfit',sans-serif;font-weight:600;
+  margin-bottom:3px;display:flex;align-items:center;gap:9px;}
+.tier p{font-size:12.5px;color:var(--brown-500);margin-bottom:0;}
+.tier .tnum{font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;
+  border-radius:5px;font-weight:500;}
+.t1{border-left-color:var(--sage-500);} .t1 .tnum{background:var(--sage-100);color:var(--sage-600);}
+.t2{border-left-color:var(--sage-400);} .t2 .tnum{background:var(--sage-100);color:var(--sage-600);}
+.t3{border-left-color:var(--amber-400);} .t3 .tnum{background:var(--amber-100);color:var(--amber-600);}
+.t4{border-left-color:var(--lav-400);} .t4 .tnum{background:var(--lav-100);color:var(--lav-500);}
+.t5{border-left-color:var(--brown-300);} .t5 .tnum{background:var(--brown-100);color:var(--brown-500);}
+
+/* ===== ESCALATION ===== */
+.esc{border-radius:16px;padding:20px;border:1px solid;}
+.esc .e-dot{width:13px;height:13px;border-radius:50%;margin-bottom:11px;}
+.esc h4{font-size:16px;font-family:'Outfit',sans-serif;font-weight:700;margin-bottom:7px;}
+.esc p{font-size:12.5px;margin-bottom:0;}
+.esc-r{background:var(--rose-50);border-color:var(--rose-200);}
+.esc-r .e-dot{background:var(--rose-500);} .esc-r h4{color:var(--rose-600);}
+.esc-y{background:var(--amber-50);border-color:var(--amber-200);}
+.esc-y .e-dot{background:var(--amber-400);} .esc-y h4{color:var(--amber-600);}
+.esc-g{background:var(--sage-50);border-color:var(--sage-200);}
+.esc-g .e-dot{background:var(--sage-500);} .esc-g h4{color:var(--sage-600);}
+
+/* ===== ROADMAP ===== */
+.phase{display:flex;gap:18px;margin-bottom:6px;}
+.phase-rail{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.phase-node{width:30px;height:30px;border-radius:9px;background:var(--grad-terra);
+  color:#fff;font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;
+  align-items:center;justify-content:center;}
+.phase-line{width:2px;flex:1;background:var(--brown-200);margin:4px 0;}
+.phase-body{padding-bottom:22px;}
+.phase-body h4{font-size:16px;font-family:'Outfit',sans-serif;font-weight:600;color:var(--brown-800);}
+.phase-when{font-size:11.5px;color:var(--brown-400);font-family:'JetBrains Mono',monospace;
+  margin-bottom:6px;}
+.phase-body p{font-size:13px;color:var(--brown-500);margin-bottom:0;}
+
+/* ===== COPY SNIPPET ===== */
+.snippet{background:var(--cream-deep);border:1px solid var(--amber-200);
+  border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+.snippet .sn-h{font-family:'Fraunces',serif;font-size:16px;color:var(--brown-900);
+  margin-bottom:4px;}
+.snippet .sn-s{font-size:13px;color:var(--brown-500);}
+
+/* ===== SWATCHES ===== */
+.swatches{display:flex;gap:10px;flex-wrap:wrap;}
+.sw{width:60px;}
+.sw-c{height:48px;border-radius:11px;border:1px solid rgba(0,0,0,.05);margin-bottom:6px;}
+.sw-l{font-size:10px;color:var(--brown-400);font-family:'JetBrains Mono',monospace;}
+
+/* ===== COVER ===== */
+.cover{display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 3px);
+  max-width:760px;margin:0 auto;padding:40px 56px;}
+.cover-mark{width:60px;height:60px;border-radius:17px;background:var(--grad-terra);
+  display:flex;align-items:center;justify-content:center;margin-bottom:30px;}
+.cover-mark svg{width:36px;height:36px;}
+.cover .ck{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--terra-600);margin-bottom:18px;}
+.cover h1{font-size:60px;line-height:1.05;letter-spacing:-2px;margin-bottom:20px;}
+.cover h1 em{font-style:italic;color:var(--terra-500);}
+.cover .clead{font-size:20px;color:var(--brown-500);font-weight:300;
+  max-width:560px;margin-bottom:30px;}
+.cover-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:38px;}
+.chip{background:var(--warm-white);border:1px solid var(--brown-200);border-radius:10px;
+  padding:8px 14px;font-size:12px;color:var(--brown-600);}
+.chip b{color:var(--brown-800);font-weight:600;}
+.cover-note{background:var(--warm-white);border:1px solid var(--brown-100);
+  border-radius:16px;padding:22px 24px;}
+.cover-note .cn-t{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--brown-400);margin-bottom:10px;}
+.cover-note p{font-size:14px;color:var(--brown-600);margin-bottom:10px;}
+.cover-note p:last-child{margin-bottom:0;}
+.cover-note kbd{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--brown-100);
+  border:1px solid var(--brown-200);border-radius:5px;padding:1px 6px;color:var(--brown-700);}
+
+/* ===== PAGE FOOTER NAV ===== */
+.pagenav{display:flex;justify-content:space-between;align-items:center;
+  margin-top:54px;padding-top:24px;border-top:1px solid var(--brown-100);}
+.pn-btn{display:flex;align-items:center;gap:10px;background:var(--warm-white);
+  border:1px solid var(--brown-200);border-radius:12px;padding:11px 16px;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .2s;max-width:48%;}
+.pn-btn:hover{border-color:var(--terra-300);background:var(--terra-50);}
+.pn-btn:disabled{opacity:.35;cursor:not-allowed;}
+.pn-btn:disabled:hover{border-color:var(--brown-200);background:var(--warm-white);}
+.pn-btn svg{width:17px;height:17px;color:var(--terra-500);flex-shrink:0;}
+.pn-dir{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--brown-400);}
+.pn-ttl{font-size:13.5px;color:var(--brown-800);font-weight:600;}
+.pn-btn.next{text-align:right;}
+
+.divider{height:1px;background:var(--brown-100);margin:30px 0;}
+.mt0{margin-top:0;}
+.lead-list{list-style:none;margin:14px 0;}
+.lead-list li{position:relative;padding-left:24px;font-size:14.5px;color:var(--brown-600);
+  margin-bottom:9px;}
+.lead-list li::before{content:'';position:absolute;left:3px;top:9px;width:7px;height:7px;
+  border-radius:2px;background:var(--terra-400);}
+.lead-list li b{color:var(--brown-800);font-weight:600;}
+
+@media(max-width:1080px){
+  .page{padding:44px 36px 36px;}
+  .cover{padding:40px 36px;}
+  .cover h1{font-size:48px;}
+}
+@media(max-width:860px){
+  .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 0 60px rgba(42,29,31,.2);}
+  .sidebar.open{transform:translateX(0);}
+  .collapse-btn{display:none;}
+  .scrim.open{display:block;}
+  .mobilebar{display:flex;}
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+  .concept-body{grid-template-columns:1fr;}
+  .concept-half.left{border-right:none;border-bottom:1px solid var(--brown-100);}
+  .page{padding:30px 22px;}
+  .page-title{font-size:32px;}
+  .cover{padding:34px 22px;}
+  .cover h1{font-size:38px;}
+  .pn-ttl{font-size:12px;}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">
+      <div class="side-head-row">
+        <div class="logo">
+          <div class="logo-mark">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 4 L18 32 M10 8 C10 8 18 14 18 18 M26 8 C26 8 18 14 18 18 M8 20 C12 24 18 28 18 32 M28 20 C24 24 18 28 18 32" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="logo-text">Longitude</span>
+        </div>
+        <button class="collapse-btn" id="collapseBtn" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </button>
+      </div>
+      <div class="side-tag">Product Overview &amp; PRD</div>
+    </div>
+    <nav class="side-nav" id="sideNav"><!-- injected --></nav>
+    <div class="side-foot">
+      PxlBrain &middot; Pre-Seed 2026<br>
+      <a href="mailto:anjan@pxlbrain.com">anjan@pxlbrain.com</a>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="main">
+    <div class="mobilebar">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="logo"><span class="logo-text" style="font-size:19px;">Longitude</span></div>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+    <div class="doc" id="doc">
+
+      <!-- ============ PAGE 0 — COVER ============ -->
+      <section class="page active" data-title="Cover">
+        <div class="cover">
+          <div class="cover-mark">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 4 L18 32 M10 8 C10 8 18 14 18 18 M26 8 C26 8 18 14 18 18 M8 20 C12 24 18 28 18 32 M28 20 C24 24 18 28 18 32" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ck">Product Overview &amp; PRD &middot; v1.1</div>
+          <h1>Turning patients into <em>advocates</em> for their own health.</h1>
+          <p class="clead">Longitude unifies a person's complete health picture, reads it against the frontier of medical knowledge, and tells them exactly what to ask, test, and explore.</p>
+          <div class="cover-meta">
+            <div class="chip"><b>Owner</b> &nbsp;Anjan Panneer Selvam</div>
+            <div class="chip"><b>Org</b> &nbsp;PxlBrain</div>
+            <div class="chip"><b>Status</b> &nbsp;Draft for review</div>
+            <div class="chip"><b>Updated</b> &nbsp;May 2026</div>
+          </div>
+          <div class="cover-note">
+            <div class="cn-t">How to read this document</div>
+            <p>This is a product document, not a technical spec — it covers the problem, the people, the modules, the journeys, and the trust model. No architecture or implementation detail.</p>
+            <p>It is organised into <b>11 pages</b>, each a single idea, with sections inside. Move with the left menu, the buttons at the bottom of each page, or the <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys.</p>
+            <p>One idea runs through all of it: data aggregation and genomics are commoditising — Longitude's real value is the <b>intelligence model</b> that turns a person's whole health picture into advocacy they can act on. Page&nbsp;04 lays out that model in full.</p>
+          </div>
+          <div class="pagenav">
+            <button class="pn-btn" disabled><span><span class="pn-dir">Start</span><span class="pn-ttl">&nbsp;</span></span></button>
+            <button class="pn-btn next" onclick="go(1)">
+              <span><span class="pn-dir">Next</span><span class="pn-ttl">The Problem</span></span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 1 — THE PROBLEM ============ -->
+      <section class="page" data-title="The Problem">
+        <div class="eyebrow">Page 01 — The Problem</div>
+        <h1 class="page-title">Modern medicine is extraordinary. Access to <em>understanding</em> it is not.</h1>
+        <p class="page-lead">The gap between what doctors know and what patients can act on is where outcomes are lost. Longitude exists to close that gap.</p>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>The literacy gap</h3></div>
+          <h2>Most people cannot fully advocate for themselves in a clinical setting</h2>
+          <p>Health information is asymmetric by default — the patient has the most at stake and the least context. This is not an American problem, an Indian problem, or a problem of any one health system. It is the mainstream experience of being a patient almost everywhere.</p>
+
+          <div class="stat-region">United States</div>
+          <div class="grid g3">
+            <div class="stat"><div class="num" style="color:var(--terra-500)">88%</div><div class="lbl">of American adults lack proficient health literacy</div></div>
+            <div class="stat"><div class="num" style="color:var(--rose-500)">795K</div><div class="lbl">Americans die or are permanently disabled each year from diagnostic errors</div></div>
+            <div class="stat"><div class="num" style="color:var(--amber-500)">1 in 4</div><div class="lbl">eligible cancer patients receive recommended genomic profiling</div></div>
+          </div>
+
+          <div class="stat-region">India</div>
+          <div class="grid g3">
+            <div class="stat"><div class="num" style="color:var(--terra-500)">~2 min</div><div class="lbl">the average primary-care consultation — among the shortest in the world</div></div>
+            <div class="stat"><div class="num" style="color:var(--rose-500)">~60%</div><div class="lbl">of cancers diagnosed at an advanced stage, when treatment options have narrowed</div></div>
+            <div class="stat"><div class="num" style="color:var(--amber-500)">1.4M</div><div class="lbl">new cancer cases a year — the vast majority without molecular profiling</div></div>
+          </div>
+
+          <div class="stat-region">Worldwide</div>
+          <div class="grid g3">
+            <div class="stat"><div class="num" style="color:var(--terra-500)">300M+</div><div class="lbl">people live with a rare disease — most face a years-long diagnostic odyssey</div></div>
+            <div class="stat"><div class="num" style="color:var(--rose-500)">~5 yrs</div><div class="lbl">the average wait for a correct rare-disease diagnosis</div></div>
+            <div class="stat"><div class="num" style="color:var(--amber-500)">4 in 10</div><div class="lbl">patients are harmed in primary &amp; ambulatory care, much of it preventable (WHO)</div></div>
+          </div>
+          <p class="stat-note">Figures drawn from public health research and government data; precise sources to be cited in the appendix.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Why this matters</h3></div>
+          <h2>Advocacy works — but today it is a privilege</h2>
+          <p>Patients who self-advocate get measurably better outcomes: fewer misdiagnoses, earlier interventions, treatments better matched to their biology. But advocacy requires three things most people do not have:</p>
+          <ul class="lead-list">
+            <li><b>Knowledge</b> — knowing which questions and tests actually matter for your situation.</li>
+            <li><b>Confidence</b> — the standing to ask them, and to push back when an answer feels thin.</li>
+            <li><b>Access</b> — the information that makes a question worth asking in the first place.</li>
+          </ul>
+          <p>Today that combination correlates with income, education, and personal connections. <strong>Longitude's purpose is to decouple advocacy from privilege</strong> — to give every patient the preparation that today only the most resourced ones have.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Why this is personal</h3></div>
+          <div class="callout co-founder">
+            <span class="co-tag">Founder Story</span>
+            <p>For Anjan, this began at home. His mother fought a lifelong battle with kidney disease — and <strong>never came to know what caused her kidneys to fail</strong>. She went on to live <strong>19 years with a transplanted kidney</strong>, holding that ground year after year by advocating relentlessly for herself. She showed Anjan, long before he had words for it, what informed self-advocacy is worth to a patient: time.</p>
+            <p>Anjan was later diagnosed with an <strong>extremely rare kidney disease</strong> of his own. His nephrologist recommended steroid therapy. Through self-directed research, Anjan found a genetic panel that revealed he was <strong>genetically resistant to steroids</strong> — the recommended treatment would have been life-compromising.</p>
+            <p>His uncle, diagnosed with <strong>colorectal cancer</strong>, similarly had to self-advocate for molecular testing and clinical-trial access that changed his treatment path. Most patients would never know to ask.</p>
+            <p>It did not stop with family. In the years since, Anjan has walked many friends through the same kind of moment — <strong>personally helping each of them build the advocacy pathway</strong> that brought them through. Longitude turns that repeated, hard-won work into a product, so finding the right path no longer depends on knowing the right person.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Why now</h3></div>
+          <h2>The pieces needed to solve this only recently fell into place</h2>
+          <p>Patient advocacy has always mattered. What is new is that it is finally <strong>buildable at scale</strong> — four shifts have converged in the last few years:</p>
+          <ul class="lead-list">
+            <li><b>Health data is becoming portable.</b> Interoperability standards and national data-exchange networks mean a patient's records can finally be assembled in one place.</li>
+            <li><b>AI can now do the synthesis.</b> Reasoning across labs, genetics, guidelines, and trials in plain language was not possible at consumer quality until recently.</li>
+            <li><b>Patients expect digital health.</b> Post-pandemic, managing care through an app is normal, not novel.</li>
+            <li><b>The competitive gap is open.</b> No platform yet combines longitudinal multi-modal data with AI advocacy — and the nearest competitor is scoped to rare disease only. The window is real but finite.</li>
+          </ul>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(0)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">Cover</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(2)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">The Solution</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 2 — THE SOLUTION ============ -->
+      <section class="page" data-title="The Solution">
+        <div class="eyebrow">Page 02 — The Solution</div>
+        <h1 class="page-title">A longitudinal health record that <em>works for the patient.</em></h1>
+        <p class="page-lead">Longitude is an AI-powered patient health advocacy platform. It does not replace the doctor — it makes the patient ready for the doctor.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>In one sentence</h3></div>
+          <div class="callout co-insight">
+            <span class="co-tag">Product Definition</span>
+            <p style="font-size:17px;color:var(--brown-700);">Longitude aggregates a person's biometrics, labs, medications, genetics, wellness signals, and clinical records into one longitudinal profile — then uses AI to generate <strong>personalised advocacy intelligence</strong>: what to ask doctors, what tests to request, what trials are relevant, and what genetic insights could change a treatment decision.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>The model</h3></div>
+          <h2>Three pillars: Aggregate, Analyze, Advocate</h2>
+          <p>Every Longitude feature sits on one of three steps. The first two are increasingly commoditised. The third is the product.</p>
+          <div class="grid g3">
+            <div class="pillar p1">
+              <div class="p-step">PILLAR 01</div>
+              <h4>Aggregate</h4>
+              <p>Labs, medications, genetics, biometrics, wellness data, and clinical records — pulled into one longitudinal view that follows the patient over years, not visits.</p>
+            </div>
+            <div class="pillar p2">
+              <div class="p-step">PILLAR 02</div>
+              <h4>Analyze</h4>
+              <p>AI cross-references the patient's full picture against clinical literature, treatment guidelines, genetic databases, and trial registries — and detects what's trending, missing, or worth a second look.</p>
+            </div>
+            <div class="pillar p3">
+              <div class="p-step">PILLAR 03</div>
+              <h4>Advocate</h4>
+              <p>The output the patient actually uses: questions to ask, tests to request, trials to explore, and insights a rushed appointment may have missed — every one cited and explainable.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>The wedge</h3></div>
+          <h2>What makes Longitude defensible</h2>
+          <div class="grid g2">
+            <div class="card">
+              <h4>The advocacy layer</h4>
+              <p>Data aggregation, consumer genomics, and trial matching are all commoditising. The intelligence layer that synthesises them into "based on everything about <em>you</em>, here's what to do" is not.</p>
+            </div>
+            <div class="card">
+              <h4>Longitudinal multi-modal convergence</h4>
+              <p>No platform unifies clinical records + labs + biometrics + genomics + nutrition + medications into one timeline <em>and</em> generates advocacy from it. Longitude integrates all six.</p>
+            </div>
+            <div class="card">
+              <h4>The medication–food–genetics nexus</h4>
+              <p>A triple convergence no competitor offers: how a patient's genetics, their current drugs, and their diet interact — surfaced as one safety and optimisation layer.</p>
+            </div>
+            <div class="card">
+              <h4>Patient-owned, enterprise-funded</h4>
+              <p>The patient controls their data — avoiding the employer-owned-data trap. Revenue comes from B2B2C channels, avoiding the B2C-only model that has sunk consumer-health companies.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Boundaries</h3></div>
+          <h2>What Longitude is not — out of scope for v1</h2>
+          <p>Drawing the line clearly is itself a safety decision. Longitude is an <strong>education and advocacy tool</strong>, not a diagnostic device or care provider.</p>
+          <div class="grid g3">
+            <div class="card"><p><strong>Not diagnosis or treatment.</strong> Every recommendation routes the patient back to their provider.</p></div>
+            <div class="card"><p><strong>Not telemedicine.</strong> No virtual consultations — we prepare patients for their own visits.</p></div>
+            <div class="card"><p><strong>Not a pharmacy.</strong> No prescription ordering or fulfilment.</p></div>
+            <div class="card"><p><strong>Not a claims processor.</strong> Claims data is shown for context only.</p></div>
+            <div class="card"><p><strong>Not imaging analysis.</strong> Radiology reports are read as text; raw scans are not.</p></div>
+            <div class="card"><p><strong>Not a social network.</strong> Community insight is anonymised and aggregated — no messaging or forums.</p></div>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">The Problem</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(3)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">Longitude Lite</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 3 — LONGITUDE LITE ============ -->
+      <section class="page" data-title="Longitude Lite">
+        <div class="eyebrow">Page 03 — Product Shape</div>
+        <h1 class="page-title">One engine, <em>two front doors.</em></h1>
+        <p class="page-lead">Not every health question needs a longitudinal profile. <strong>Longitude Lite</strong> is the zero-setup front door for everyday worries — one question, one calibrated answer — and the funnel that brings people to the full platform.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>Two front doors</h3></div>
+          <h2>A stomach ache and a chronic diagnosis are not the same job</h2>
+          <p>The everyday-question user and the longitudinal patient want genuinely different things. Forcing the first to build a profile before they can ask about a stomach ache loses them in seconds. So Longitude offers two entrances to the same intelligence.</p>
+          <div class="grid g2">
+            <div class="pillar p1">
+              <div class="p-step">FRONT DOOR 01</div>
+              <h4>Longitude Lite</h4>
+              <p>Zero setup. One quick question, one calibrated answer with escalation built in. Free, for everyday worries — the mass-market entry point.</p>
+            </div>
+            <div class="pillar p2">
+              <div class="p-step">FRONT DOOR 02</div>
+              <h4>Longitude</h4>
+              <p>The longitudinal advocacy platform — profile, visit briefings, trial matching, genetics. For managing real conditions over months and years.</p>
+            </div>
+          </div>
+          <table class="tbl" style="margin-top:16px;">
+            <thead><tr><th>&nbsp;</th><th>The everyday question</th><th>The longitudinal patient</th></tr></thead>
+            <tbody>
+              <tr><td>Trigger</td><td class="col-h">"Is this stomach ache normal?"</td><td class="col-l">"I've just been diagnosed with something"</td></tr>
+              <tr><td>What they need</td><td class="col-h">Fast reassurance — or a clear "get seen now"</td><td class="col-l">Ongoing advocacy across visits and years</td></tr>
+              <tr><td>Time horizon</td><td class="col-h">Two minutes, then done</td><td class="col-l">Months and years</td></tr>
+              <tr><td>Setup tolerance</td><td class="col-h">Zero — won't connect any data</td><td class="col-l">Will invest in building a real profile</td></tr>
+              <tr><td>How often</td><td class="col-h">Occasional, episodic</td><td class="col-l">Continuous</td></tr>
+              <tr><td>Served by</td><td class="col-h">Longitude Lite</td><td class="col-l">Longitude — the platform</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>What Longitude Lite is</h3></div>
+          <h2>Zero setup. One question. One honest answer.</h2>
+          <p>Lite is an instant way to ask a single health question and get a calibrated reply — <em>is this fine, should I see someone, or do I need help now?</em> No account, no data to connect, no profile to build. It is the acute-triage instinct of the platform, exposed directly.</p>
+          <div class="grid g2">
+            <div class="card" style="background:var(--sage-50);border-color:var(--sage-200);">
+              <h4 style="color:var(--sage-600)">What Lite is</h4>
+              <p style="color:var(--brown-600)">A fast, friendly answer to one everyday worry — built around triage and escalation, written in plain language, honest about uncertainty.</p>
+            </div>
+            <div class="card" style="background:var(--rose-50);border-color:var(--rose-200);">
+              <h4 style="color:var(--rose-600)">What Lite is not</h4>
+              <p style="color:var(--brown-600)">Not a profile, not a data platform, not a symptom-list generator. It never tells a user what they "have" — it tells them what to do next.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Same engine, lighter</h3></div>
+          <h2>The intelligence model — with the longitudinal layer switched off</h2>
+          <p>Lite is not a second product with a second brain. It runs on the exact intelligence model described on Page 04. It simply does not carry the heavy, longitudinal half.</p>
+          <div class="grid g2">
+            <div class="card">
+              <h4>What Lite keeps</h4>
+              <ul class="clist keep">
+                <li>The calibrated voice — warm, direct, never alarmist</li>
+                <li>Red / yellow / green escalation</li>
+                <li>Source-first, cited answers</li>
+                <li>Evidence tiers on every claim</li>
+                <li>The mental-health crisis protocol</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>What Lite sets aside</h4>
+              <ul class="clist drop">
+                <li>The longitudinal health profile</li>
+                <li>Data aggregation across sources</li>
+                <li>Clinical-trial matching</li>
+                <li>Pharmacogenomics &amp; genetics</li>
+                <li>Visit briefings &amp; the Advocacy Plan</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>What it feels like</h3></div>
+          <h2>One question in, one calibrated answer out</h2>
+          <div class="ask-demo">
+            <div class="ask-lbl">The patient asks</div>
+            <div class="ask-q">"I've had a dull stomach ache since last night, around my belly button. No fever. I ate something new yesterday."</div>
+            <div class="ask-lbl">Longitude Lite replies</div>
+            <div class="ask-a">
+              <p><span class="pill pill-p2">Green &middot; likely not urgent</span></p>
+              <p>A dull ache near the belly button a day after a new food is most often simple indigestion or a mild stomach bug. Here is exactly what would change that assessment:</p>
+              <ul>
+                <li>Pain moves to the <b>lower-right and sharpens</b> — could be appendicitis; get seen today.</li>
+                <li><b>Fever, persistent vomiting, or any blood</b> — get seen now.</li>
+                <li>Still there after <b>48 hours</b> — book a visit with your doctor.</li>
+              </ul>
+              <p>If you do see someone, two questions worth asking: "Could this be more than indigestion?" and "What should bring me back sooner?"</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Why Lite belongs in Longitude</h3></div>
+          <h2>Lite acquires. The platform retains.</h2>
+          <p>The everyday-question user is the mass market — easy to reach, costs nothing emotionally to try. The chronic-condition user is rare, hard to reach cold, and the one who monetises. <strong>Lite is the cheap, viral top-of-funnel; Longitude is the deep, paid retention product.</strong> The upgrade is honest, never forced:</p>
+          <ol class="steps">
+            <li>A user asks Lite an everyday question — no account, no setup.</li>
+            <li>Lite answers, calibrated, with escalation built in. They leave satisfied.</li>
+            <li>Over time, Lite notices a pattern — the same symptom returning, a new diagnosis, a medication to manage.</li>
+            <li>Lite invites them up: "Want Longitude to remember this, so the next answer already knows your history?" — the step into the full profile.</li>
+          </ol>
+          <div class="callout co-amber">
+            <span class="co-tag">Recommendation</span>
+            <p>Build Lite as a <strong>mode within Longitude, not a separate company</strong>. A standalone symptom-answer app is the most commoditised space in digital health and has no moat of its own — and a pre-seed team cannot afford two brands, two go-to-markets, and a split focus. One brand, one engine, two front doors: Lite is how people <em>meet</em> Longitude; the longitudinal platform is how they <em>stay</em>.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Safety</h3></div>
+          <h2>The highest-stakes surface gets the most caution</h2>
+          <p>Acute, one-off symptom triage is the highest-liability thing Longitude does — a stomach ache is occasionally appendicitis; "is this just indigestion" is occasionally something serious. Lite leans entirely on <strong>triage and escalation, never diagnosis or default reassurance</strong>. Because Lite has no longitudinal history to reason against, it is deliberately tuned to be <em>more</em> conservative than the full platform: when genuinely uncertain, it routes the user toward care. The escalation framework that governs this is detailed on Page 08.</p>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(2)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">The Solution</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(4)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">The Intelligence Model</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 4 — THE INTELLIGENCE MODEL ============ -->
+      <section class="page" data-title="The Intelligence Model">
+        <div class="eyebrow">Page 04 — The Intelligence Model</div>
+        <h1 class="page-title">How Longitude turns data into <em>advocacy.</em></h1>
+        <p class="page-lead">Aggregating health data is the easy part. The hard part — and the product — is the model that reads it and reasons about it. Nine principles define how Longitude thinks.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>The premise</h3></div>
+          <p>A health platform can store a patient's data and show it back to them. That is a filing cabinet. Longitude is built to do something harder: <strong>reason about the data the way a brilliant, well-prepared doctor would</strong> — one who knows the patient's whole history, has read the current literature, and is firmly on the patient's side.</p>
+          <p>That behaviour is not an accident of good prompts. It is a deliberate design model — nine principles, each shaping how an insight is generated, checked, and delivered. Every module in this document is an application of the principles below.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>The nine principles</h3></div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">01</span><h4>The Specialist Model</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>Health advocacy is not one job. Preparing for a visit, interpreting a result, scouting research, and triaging a worry each demand a different kind of expert — so the engine runs as a team of focused specialists, not one generalist.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>The AI Advocacy Engine is that team behind one interface. Visit Briefing, "What This Means", trial matching, and Ask Longitude are each driven by a specialist tuned to its single job.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">02</span><h4>The Calibrated Voice</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>The right tone is a battle-hardened ER doctor's — calibrated, not cautious; warm, not clinical; honest about uncertainty. It gives real assessments instead of hiding behind "consult your doctor".</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>One communication standard across every screen, alert, and message. Real conclusions delivered with warmth — never hedged into uselessness, never coldly clinical.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">03</span><h4>Red / Yellow / Green Escalation</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>Every assessment is triaged into three calibrated levels — act now, talk to your doctor soon, or you're okay. De-escalation is taken as seriously as escalation: a tool that warns about everything is trusted for nothing.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>The logic behind every alert and lab flag — and the spine of Longitude Lite. Severity is never decorative; it tells the patient whether to act, ask, or relax. Detailed on Page 08.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">04</span><h4>Separating the Read from the Delivery</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>A clinical assessment should be produced dispassionately and accurately first; the empathetic, plain-language delivery is a second, separate step. Neither is allowed to compromise the other.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>"The read" and "the delivery" are generated separately, so the patient gets accuracy that isn't softened away and warmth that isn't an afterthought.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">05</span><h4>Source-First Trust</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>Nothing is asserted from thin air. Every claim traces to a real document — a lab value, a genetic variant, a guideline, a study — and the patient's own source records are never altered.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>A "show the source" affordance on every insight. Each recommendation cites exactly what it is based on. No black-box outputs.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">06</span><h4>The Living Knowledge Base</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>A health record should be a living, interlinked knowledge base — collected, organised, and cross-referenced over time — not a pile of disconnected documents the patient has to assemble themselves.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>This is the Longitudinal Health Profile. Longitude continuously gathers, structures, and interlinks the patient's health story so the whole picture is always one step away.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">07</span><h4>Evidence Tiers</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>Not all evidence is equal, and patients deserve to know which is which. Every claim is labelled by quality — from clinically validated down to community-reported — and weaker evidence is labelled, never hidden.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>Every recommendation carries a visible evidence tier, so a patient can tell "proven" from "promising" without a medical degree. The full tier system is on Page 08.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">08</span><h4>The Advocacy Plan</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>Advocacy works best as a single, ruthlessly prioritised, dated plan — tiered from "your specialist would prescribe this" down to "worth watching" — that always shows what changed since the last version.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>A proactive Advocacy Plan: a living, prioritised set of next steps that updates as the profile changes and highlights what's new every time.</p></div>
+            </div>
+          </div>
+
+          <div class="concept">
+            <div class="concept-top"><span class="concept-num">09</span><h4>Compounding Intelligence</h4></div>
+            <div class="concept-body">
+              <div class="concept-half left"><div class="ch-lbl">The principle</div><p>A patient's questions and discoveries should make the system permanently smarter. Insight from one conversation should not vanish into a chat log — it should fold back into the record.</p></div>
+              <div class="concept-half right"><div class="ch-lbl">In the product</div><p>Every meaningful interaction can be saved into the profile. The more a patient uses Longitude, the more personal and precise it becomes.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Why the model is the moat</h3></div>
+          <div class="callout co-amber">
+            <span class="co-tag">Strategic note</span>
+            <p>Data aggregation, consumer genomics, and trial-matching are all becoming commodities — any well-funded team can buy or build them. The nine principles above are not a feature anyone can copy from a screenshot; they are <strong>how the product reasons and earns trust</strong>. That is where Longitude's defensibility compounds over time — and why the intelligence model, not the data plumbing, is the centre of this document.</p>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">Longitude Lite</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(5)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">Who It's For</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 5 — PERSONAS ============ -->
+      <section class="page" data-title="Who It's For">
+        <div class="eyebrow">Page 05 — Users</div>
+        <h1 class="page-title">Six people, one unmet need: <em>knowing what to ask.</em></h1>
+        <p class="page-lead">Longitude's primary users are adults managing chronic and serious conditions. Secondary users are proactive healthy adults and caregivers. These six personas anchor every product decision.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>Primary &amp; secondary personas</h3></div>
+          <div class="grid g2">
+
+            <div class="persona">
+              <div class="persona-head">
+                <div class="persona-av" style="background:var(--grad-terra)">M</div>
+                <div><div class="persona-name">Maya, 34</div><div class="persona-role">Teacher &middot; Houston, TX</div></div>
+              </div>
+              <div class="persona-tag">"The Rare Disease Warrior"</div>
+              <div class="lbl">Situation</div>
+              <p>Newly diagnosed with a rare kidney disease after months of unexplained symptoms. Moderate health literacy, no medical background, overwhelmed by conflicting forum advice.</p>
+              <div class="lbl">What Longitude gives her</div>
+              <p>Her diagnosis in plain language, the tests she should request and why, and a way to track whether treatment is actually working over time.</p>
+            </div>
+
+            <div class="persona">
+              <div class="persona-head">
+                <div class="persona-av" style="background:linear-gradient(135deg,#B84D59,#D4626F)">D</div>
+                <div><div class="persona-name">David, 58</div><div class="persona-role">Retired military &middot; Rural Georgia</div></div>
+              </div>
+              <div class="persona-tag">"The Cancer Navigator"</div>
+              <div class="lbl">Situation</div>
+              <p>Stage III colorectal cancer; father died of colon cancer. Two hours from the nearest cancer center; standard molecular testing was never ordered.</p>
+              <div class="lbl">What Longitude gives him</div>
+              <p>The right tests to request for his cancer subtype, clinical trials within travel distance, and clarity on whether family members need screening.</p>
+            </div>
+
+            <div class="persona">
+              <div class="persona-head">
+                <div class="persona-av" style="background:linear-gradient(135deg,#7E6B9E,#9B89B8)">S</div>
+                <div><div class="persona-name">Sarah, 42</div><div class="persona-role">Marketing exec &middot; Denver, CO</div></div>
+              </div>
+              <div class="persona-tag">"The Autoimmune Maze Runner"</div>
+              <div class="lbl">Situation</div>
+              <p>Three years of joint pain, fatigue, and rashes across five doctors. Repeatedly told it's "stress" — no one has connected the scattered symptoms.</p>
+              <div class="lbl">What Longitude gives her</div>
+              <p>A longitudinal view that connects the dots over time, and the evidence to bring to a rheumatologist so she's investigated, not dismissed.</p>
+            </div>
+
+            <div class="persona">
+              <div class="persona-head">
+                <div class="persona-av" style="background:linear-gradient(135deg,#5D9672,#7BAE8E)">J</div>
+                <div><div class="persona-name">James, 29</div><div class="persona-role">Software engineer &middot; Austin, TX</div></div>
+              </div>
+              <div class="persona-tag">"The Mental Health Medicator"</div>
+              <div class="lbl">Situation</div>
+              <p>Four antidepressants in three years, none fully effective, significant side effects. Has heard of pharmacogenomics but no clinician has raised it.</p>
+              <div class="lbl">What Longitude gives him</div>
+              <p>His genetic data interpreted against his medications, and specific questions for his psychiatrist about genetics-guided prescribing.</p>
+            </div>
+
+            <div class="persona">
+              <div class="persona-head">
+                <div class="persona-av" style="background:linear-gradient(135deg,#E8A44A,#FFD06B)">R</div>
+                <div><div class="persona-name">Rosa, 67</div><div class="persona-role">Full-time caregiver &middot; Miami, FL</div></div>
+              </div>
+              <div class="persona-tag">"The Caregiver Advocate"</div>
+              <div class="lbl">Situation</div>
+              <p>Manages her husband's diabetes, hypertension, and early Alzheimer's — 8+ medications on paper notes. Primarily Spanish-speaking, low digital literacy.</p>
+              <div class="lbl">What Longitude gives her</div>
+              <p>Bilingual medication-interaction checking, help preparing questions for his visits, and simple tracking so she's not missing something critical.</p>
+            </div>
+
+            <div class="persona">
+              <div class="persona-head">
+                <div class="persona-av" style="background:linear-gradient(135deg,#D4903A,#E8A44A)">K</div>
+                <div><div class="persona-name">Kevin, 45</div><div class="persona-role">CFO, tech company &middot; San Francisco</div></div>
+              </div>
+              <div class="persona-tag">"The Proactive Executive"</div>
+              <div class="lbl">Situation</div>
+              <p>No current conditions, but a family history of early heart attack and breast cancer. His annual physical always reads "normal" — which isn't the same as optimal.</p>
+              <div class="lbl">What Longitude gives him</div>
+              <p>Which tests to request beyond the standard panel given his family history, and longitudinal trending to catch slow-moving risk early.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="callout co-insight">
+            <span class="co-tag">Common thread</span>
+            <p>Across all six, the failure is identical: <strong>the patient didn't know what to ask, and no one told them.</strong> Maya, David, and James each had a specific, knowable question — about genetic testing, molecular profiling, pharmacogenomics — that would have changed their care. Longitude's job is to surface that question <em>before</em> the appointment, every time. Many of these users first arrive through a single everyday question in Longitude Lite (Page 03).</p>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(4)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">The Intelligence Model</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(6)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">Modules &amp; Features</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 6 — MODULES & FEATURES ============ -->
+      <section class="page" data-title="Modules &amp; Features">
+        <div class="eyebrow">Page 06 — Product Surface</div>
+        <h1 class="page-title">Eight modules. One <em>longitudinal</em> spine.</h1>
+        <p class="page-lead">Each module is a feature area with its own screens and value. Every one carries a priority and a visible link to the design principles on Page 04.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>Priority key</h3></div>
+          <p style="margin-bottom:6px;">
+            <span class="pill pill-p0">P0</span> &nbsp;Foundational — required for launch. &nbsp;&nbsp;
+            <span class="pill pill-p1">P1</span> &nbsp;Connected intelligence — fast follow. &nbsp;&nbsp;
+            <span class="pill pill-p2">P2</span> &nbsp;Scale &amp; reach. &nbsp;&nbsp;
+            <span class="pill pill-core">CORE</span> &nbsp;Cross-cutting layer.
+          </p>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>The modules</h3></div>
+          <div class="grid g2">
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--terra-50)">&#x1F4DA;</div>
+                <h4>Longitudinal Health Profile <span class="pill pill-p0">P0</span></h4>
+              </div>
+              <p>The foundation. A unified, patient-owned record aggregating labs, medications, genetics, biometrics, wellness data, and clinical records — shown as a chronological timeline with biomarker trending and family-history intake.</p>
+              <div class="lineage"><span class="reftag">P06</span> Built on the Living Knowledge Base principle.</div>
+            </div>
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--amber-50)">&#x1F9E0;</div>
+                <h4>AI Advocacy Engine <span class="pill pill-p0">P0</span></h4>
+              </div>
+              <p>The intelligence layer: "Questions to Ask", "Tests to Request", "What This Means" plain-language interpretation, and Condition Briefings on new diagnoses. Every output is cited and shows its reasoning.</p>
+              <div class="lineage"><span class="reftag">P01</span> Built on the Specialist Model — a team of focused specialists.</div>
+            </div>
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--sage-50)">&#x1F4CB;</div>
+                <h4>Visit Briefing <span class="pill pill-p0">P0</span></h4>
+              </div>
+              <p>Tied to a specific upcoming appointment: a prioritised set of 3–5 discussion points, each with evidence-backed questions, plus a one-page patient summary to share with the provider.</p>
+              <div class="lineage"><span class="reftag">P01</span> The Patient Advocate specialist, applied to one appointment.</div>
+            </div>
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--lav-50)">&#x1F52C;</div>
+                <h4>Clinical Trial Matching <span class="pill pill-p1">P1</span></h4>
+              </div>
+              <p>Continuous, location-aware scanning of trial registries against the patient's evolving profile. AI screens eligibility criteria, explains why a trial matches, and generates questions for the patient's specialist.</p>
+              <div class="lineage"><span class="reftag">P01</span> The R&amp;D Scout specialist, matching against your profile.</div>
+            </div>
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--terra-50)">&#x1F9EC;</div>
+                <h4>Pharmacogenomics Intelligence <span class="pill pill-p1">P1</span></h4>
+              </div>
+              <p>Import consumer genomic data; the platform profiles drug-metabolism status and cross-references it against current medications — flagging where a dose or drug choice is worth a conversation.</p>
+              <div class="lineage"><span class="reftag">P05</span> Source-first — every flag cites the variant behind it.</div>
+            </div>
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--amber-50)">&#x1F37D;&#xFE0F;</div>
+                <h4>Medication–Food–Genetics Convergence <span class="pill pill-p1">P1</span></h4>
+              </div>
+              <p>A complete safety layer: time-aware food–drug interactions, drug–drug interactions across the full med list, drug–gene interactions, and nutritional impact on medication efficacy.</p>
+              <div class="lineage"><span class="reftag">P03</span> Calibrated, severity-graded escalation across the med list.</div>
+            </div>
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--sage-50)">&#x1F46A;</div>
+                <h4>Caregiver Mode <span class="pill pill-p2">P2</span></h4>
+              </div>
+              <p>Multi-profile management for the 53M+ Americans caring for someone else: granular shared-access controls, bilingual (English/Spanish) support, and proxy visit preparation.</p>
+              <div class="lineage"><span class="reftag">P02</span> The calibrated voice, applied on behalf of another.</div>
+            </div>
+
+            <div class="feature">
+              <div class="feature-head">
+                <div class="feature-ico" style="background:var(--lav-50)">&#x1F310;</div>
+                <h4>Community Intelligence <span class="pill pill-p2">P2</span></h4>
+              </div>
+              <p>Anonymised, aggregated insight from patients with similar profiles — "people like you" comparisons and opt-in condition cohorts. Peer knowledge, systematised and privacy-safe.</p>
+              <div class="lineage"><span class="reftag">P07</span> Community evidence — labelled by tier, never filtered out.</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>The layer beneath everything</h3></div>
+          <div class="feature" style="border-color:var(--lav-200);background:var(--lav-50);">
+            <div class="feature-head">
+              <div class="feature-ico" style="background:#fff">&#x1F6E1;&#xFE0F;</div>
+              <h4>Trust &amp; Safety Layer <span class="pill pill-core">CORE</span></h4>
+            </div>
+            <p style="color:var(--brown-600);">Not a screen — a layer every module runs through, and the whole of Longitude Lite. The calibrated voice, the red/yellow/green escalation framework, the mental-health crisis protocol, source-first citation, and calibrated-confidence labelling. This is the foundation every other module is built on. Page 08 covers it in full.</p>
+            <div class="lineage" style="border-color:var(--lav-200);"><span class="reftag">P02–07</span> The voice, escalation, source-first, and evidence-tier principles, enforced.</div>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(5)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">Who It's For</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(7)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">User Journeys</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 7 — USER JOURNEYS ============ -->
+      <section class="page" data-title="User Journeys">
+        <div class="eyebrow">Page 07 — Flows</div>
+        <h1 class="page-title">Four journeys where Longitude <em>changes the conversation.</em></h1>
+        <p class="page-lead">Each journey has a trigger, a flow, and a success state — the moment the patient walks into an appointment more prepared than they have ever been.</p>
+
+        <div class="section mt0">
+          <div class="journey">
+            <div class="journey-head"><div class="journey-n">1</div><h4>New Diagnosis Journey</h4></div>
+            <div class="journey-trigger"><b>Trigger:</b> the patient receives a new diagnosis — entered manually or detected from clinical records.</div>
+            <ol class="steps">
+              <li>The diagnosis is entered into Longitude.</li>
+              <li>A <b>Condition Briefing</b> surfaces immediately: key facts, genetic components, standard-of-care tests, treatment landscape, relevant trials.</li>
+              <li>Longitude generates "First Questions" — specific questions for the diagnosing physician.</li>
+              <li>If genetic testing is relevant, it flags: "consider asking about this before starting treatment."</li>
+              <li>Continuous clinical-trial scanning begins for the condition.</li>
+              <li>The patient reviews, saves questions, and optionally shares with a caregiver.</li>
+            </ol>
+            <div class="journey-out"><b>Success state:</b> the patient arrives at the next appointment with evidence-based questions that change the treatment conversation — exactly the conversation Anjan had to fight to have.</div>
+            <div class="journey-link"><span class="reftag">Engine</span> Condition Intelligence, generated by the Patient Advocate specialist.</div>
+          </div>
+
+          <div class="journey">
+            <div class="journey-head"><div class="journey-n">2</div><h4>Lab Results Review Journey</h4></div>
+            <div class="journey-trigger"><b>Trigger:</b> new lab results arrive — via a connected source or a manual photo/PDF upload.</div>
+            <ol class="steps">
+              <li>Longitude parses and normalises the lab values.</li>
+              <li>Each value is shown with a plain-language interpretation.</li>
+              <li>The result is placed in <b>longitudinal context</b> — the current value against every prior result.</li>
+              <li>Concerning values or trends are flagged with calibrated severity ("your eGFR has declined from 72 to 58 over 18 months").</li>
+              <li>If warranted, advocacy recommendations are generated for the next visit.</li>
+              <li>Results are cross-referenced with medications and genetics for interaction insights.</li>
+            </ol>
+            <div class="journey-out"><b>Success state:</b> the patient understands their results in context — and knows whether, and what, to discuss with their doctor.</div>
+            <div class="journey-link"><span class="reftag">Engine</span> The Results Interpreter specialist — signal separated from noise.</div>
+          </div>
+
+          <div class="journey">
+            <div class="journey-head"><div class="journey-n">3</div><h4>Doctor Visit Preparation Journey</h4></div>
+            <div class="journey-trigger"><b>Trigger:</b> the patient has an upcoming appointment — entered manually or synced from a calendar.</div>
+            <ol class="steps">
+              <li>Longitude analyses the full profile: recent labs, medication changes, symptom trends, pending results.</li>
+              <li>It generates a prioritised <b>Visit Briefing</b> — 3–5 key discussion points.</li>
+              <li>Each point comes with specific questions and evidence citations.</li>
+              <li>A one-page patient summary can be exported to share with the provider.</li>
+              <li>After the visit, the patient logs outcomes, new orders, and referrals.</li>
+              <li>The profile updates and future recommendations adjust accordingly.</li>
+            </ol>
+            <div class="journey-out"><b>Success state:</b> a 3–5 minute review means the patient addresses the issues that a rushed appointment would otherwise have missed.</div>
+            <div class="journey-link"><span class="reftag">Engine</span> The Patient Advocate specialist builds the appointment agenda.</div>
+          </div>
+
+          <div class="journey">
+            <div class="journey-head"><div class="journey-n">4</div><h4>Clinical Trial Discovery Journey</h4></div>
+            <div class="journey-trigger"><b>Trigger:</b> a background scan detects a new matching trial — or the patient actively searches.</div>
+            <ol class="steps">
+              <li>Longitude identifies a trial matching the patient's condition, profile, location, and eligibility.</li>
+              <li>It presents a summary: what the trial tests, why the patient may qualify, where it is, what phase.</li>
+              <li>Specific questions for the patient's specialist are generated.</li>
+              <li>If the patient is interested, contact and enrolment guidance is provided.</li>
+              <li>Trial status is tracked, with alerts if enrolment is closing.</li>
+            </ol>
+            <div class="journey-out"><b>Success state:</b> a patient discovers a relevant trial their community physician never mentioned — exactly the gap Anjan's uncle had to bridge alone.</div>
+            <div class="journey-link"><span class="reftag">Engine</span> The R&amp;D Scout specialist — research made personal.</div>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(6)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">Modules &amp; Features</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(8)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">Trust &amp; Safety</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 8 — TRUST & SAFETY ============ -->
+      <section class="page" data-title="Trust &amp; Safety">
+        <div class="eyebrow">Page 08 — The Trust Layer</div>
+        <h1 class="page-title">The safety framework is not a feature. It's the <em>foundation.</em></h1>
+        <p class="page-lead">A platform that hands patients medical recommendations must earn trust deliberately. Longitude's safety model is built in from the first screen — it is not a setting, and it is not optional.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>Escalation framework</h3></div>
+          <h2>Every assessment is triaged — calibrated, never alarmist</h2>
+          <p>Severity always tells the patient one of three things. De-escalation is treated as seriously as escalation: a tool that says "call your doctor" for everything stops being trusted.</p>
+          <div class="grid g3">
+            <div class="esc esc-r">
+              <div class="e-dot"></div>
+              <h4>Red — Act now</h4>
+              <p>Clear, urgent, unsoftened. "Stop reading this and get emergency care. Here's exactly what to tell the triage nurse."</p>
+            </div>
+            <div class="esc esc-y">
+              <div class="e-dot"></div>
+              <h4>Yellow — Soon</h4>
+              <p>Calm but clear. "This doesn't need the ER, but talk to your doctor in the next day or two. Here's why, and what to tell them."</p>
+            </div>
+            <div class="esc esc-g">
+              <div class="e-dot"></div>
+              <h4>Green — You're okay</h4>
+              <p>Warm and specific. "Here's why this is normal — and here's exactly what would change my advice."</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Mental-health crisis protocol</h3></div>
+          <h2>If distress surfaces, support comes first</h2>
+          <p>If a user expresses suicidal ideation, self-harm, or severe psychological distress, Longitude acknowledges it warmly and immediately, surfaces crisis resources — <strong>988 Suicide &amp; Crisis Lifeline, Crisis Text Line (text HOME to 741741), 911</strong> — and then still engages with their health question. Both things are true at once: the person needs support <em>and</em> they have a legitimate medical concern. The product never refuses to help.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>How disclaimers work</h3></div>
+          <h2>Honest about limits — without hiding behind them</h2>
+          <div class="grid g2">
+            <div class="card" style="background:var(--sage-50);border-color:var(--sage-200);">
+              <h4 style="color:var(--sage-600)">What Longitude does</h4>
+              <p>Weaves its limits into the conversation naturally — "I can help you prepare and understand, but I'm not your doctor and I can't examine you." Honest, early, human.</p>
+            </div>
+            <div class="card" style="background:var(--rose-50);border-color:var(--rose-200);">
+              <h4 style="color:var(--rose-600)">What Longitude refuses to do</h4>
+              <p>Stamp a legal banner on every screen, append "consult your doctor" to every paragraph, or use disclaimers as an excuse to give vague, useless answers.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Source-first &amp; evidence tiers</h3></div>
+          <h2>Every claim shows its work</h2>
+          <p>No black-box outputs. Each recommendation cites the lab value, genetic variant, guideline, or study behind it — and carries a visible evidence tier so the patient can weigh it correctly.</p>
+          <div class="tier t1"><h4><span class="tnum">TIER 1</span> Clinically Validated</h4><p>Strong evidence from randomised trials, meta-analyses, or firm clinical consensus.</p></div>
+          <div class="tier t2"><h4><span class="tnum">TIER 2</span> Active Clinical Trials</h4><p>Currently in human trials — phase and recruitment status shown.</p></div>
+          <div class="tier t3"><h4><span class="tnum">TIER 3</span> Early Research</h4><p>Published but not yet in human trials, or very early human data.</p></div>
+          <div class="tier t4"><h4><span class="tnum">TIER 4</span> Theoretical / Horizon</h4><p>A plausible mechanism, but no direct evidence yet — worth watching, not acting on.</p></div>
+          <div class="tier t5"><h4><span class="tnum">TIER 5</span> Community / Anecdotal</h4><p>Patient-reported, source always linked. Valuable signal — clearly labelled, never proof.</p></div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Regulatory posture</h3></div>
+          <div class="callout co-amber">
+            <span class="co-tag">Position</span>
+            <p>Longitude is deliberately scoped as an <strong>education and advocacy tool</strong>, not a diagnostic or decision-support device. It never diagnoses, never prescribes, and always routes the patient back to a licensed provider. This boundary — set on Page 02 — is what keeps the product on the right side of the line while still being genuinely useful.</p>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(7)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">User Journeys</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(9)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">Experience &amp; Design</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 9 — EXPERIENCE & DESIGN ============ -->
+      <section class="page" data-title="Experience &amp; Design">
+        <div class="eyebrow">Page 09 — Experience</div>
+        <h1 class="page-title">Health is complex. The experience should feel <em>calm.</em></h1>
+        <p class="page-lead">Longitude's design exists to reduce anxiety, not amplify it — warm and editorial where most health products are cold and clinical.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>Design principles</h3></div>
+          <div class="grid g2">
+            <div class="card"><div class="card-ico" style="background:var(--terra-50)">&#x1F3AF;</div><h4>Clarity over density</h4><p>Health data is inherently complex. Every screen answers one primary question.</p></div>
+            <div class="card"><div class="card-ico" style="background:var(--amber-50)">&#x1F50D;</div><h4>Progressive disclosure</h4><p>Start simple — "your kidney function is declining" — then let the patient drill into the trend, the guidelines, and the questions.</p></div>
+            <div class="card"><div class="card-ico" style="background:var(--sage-50)">&#x1F50E;</div><h4>Trust through transparency</h4><p>Show the source for every recommendation. Never hide the reasoning behind a confident-looking answer.</p></div>
+            <div class="card"><div class="card-ico" style="background:var(--rose-50)">&#x1F54A;&#xFE0F;</div><h4>Calm urgency</h4><p>Urgent flags are clear but never panic-inducing. Communicate with colour and hierarchy, not exclamation marks.</p></div>
+          </div>
+          <div class="card" style="margin-top:16px;"><div class="card-ico" style="background:var(--lav-50)">&#x267F;</div><h4>Accessible by default</h4><p>Plain language at a sixth-grade reading level, high contrast, scalable text, screen-reader support. Clinical detail is always available on demand — never forced.</p></div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>The voice, in product copy</h3></div>
+          <h2>Calibrated, warm, never saccharine</h2>
+          <p>The calibrated voice from Page 04 shows up in the words on every screen. A few representative moments:</p>
+          <div class="snippet"><div class="sn-h">"Let's understand your condition together"</div><div class="sn-s">New-diagnosis onboarding — we'll show you what to know, what to ask, and what to explore.</div></div>
+          <div class="snippet"><div class="sn-h">"Your visit briefing is ready"</div><div class="sn-s">3 questions that could change the conversation at your next appointment.</div></div>
+          <div class="snippet"><div class="sn-h">"Your lab results, explained"</div><div class="sn-s">Here's what your numbers mean in plain language — and how they've changed over time.</div></div>
+          <div class="snippet"><div class="sn-h">"The more we know, the better we can advocate"</div><div class="sn-s">Empty state — your health story is scattered across clinics, labs, and apps. Let's bring it together.</div></div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Visual identity</h3></div>
+          <h2>Warm, editorial, trustworthy</h2>
+          <p>A deliberate departure from clinical-blue norms. A serif voice for health content, a clean sans for the interface, and a warm palette where terracotta carries trust and severity colours stay calm.</p>
+          <div class="grid g2">
+            <div class="card">
+              <h4>Typography</h4>
+              <p style="margin-bottom:10px;"><span style="font-family:'Fraunces',serif;font-size:22px;color:var(--brown-900);">Fraunces</span> &mdash; serif, for headings &amp; health content.</p>
+              <p><span style="font-family:'Outfit',sans-serif;font-size:18px;color:var(--brown-800);">Outfit</span> &mdash; sans-serif, for interface &amp; body text.</p>
+            </div>
+            <div class="card">
+              <h4>Palette</h4>
+              <div class="swatches">
+                <div class="sw"><div class="sw-c" style="background:#FFF9F2"></div><div class="sw-l">Cream</div></div>
+                <div class="sw"><div class="sw-c" style="background:var(--grad-terra)"></div><div class="sw-l">Terracotta</div></div>
+                <div class="sw"><div class="sw-c" style="background:#E8A44A"></div><div class="sw-l">Amber</div></div>
+                <div class="sw"><div class="sw-c" style="background:#5D9672"></div><div class="sw-l">Sage</div></div>
+                <div class="sw"><div class="sw-c" style="background:#B84D59"></div><div class="sw-l">Rose</div></div>
+              </div>
+              <p style="margin-top:10px;font-size:12px;">Terracotta = trust &amp; advocacy actions. Amber = attention. Sage = positive trends. Rose = urgent flags.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(8)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">Trust &amp; Safety</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(10)">
+            <span><span class="pn-dir">Next</span><span class="pn-ttl">Roadmap &amp; Success</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PAGE 10 — ROADMAP & SUCCESS ============ -->
+      <section class="page" data-title="Roadmap &amp; Success">
+        <div class="eyebrow">Page 10 — Roadmap &amp; Success</div>
+        <h1 class="page-title">From foundation to platform — and how we'll <em>know it worked.</em></h1>
+        <p class="page-lead">A phased build, a clear north star, and a measure of success that is about patients, not just downloads.</p>
+
+        <div class="section mt0">
+          <div class="section-label"><span class="dot"></span><h3>Phased roadmap</h3></div>
+          <div>
+            <div class="phase">
+              <div class="phase-rail"><div class="phase-node">01</div><div class="phase-line"></div></div>
+              <div class="phase-body">
+                <h4>Foundation</h4>
+                <div class="phase-when">Months 1–4</div>
+                <p>Longitude Lite as the free, zero-setup entry point. Core health profile with manual entry, the AI Advocacy Engine (condition briefings, questions to ask, lab interpretation), medications with food–drug interactions, consumer genomics import.</p>
+              </div>
+            </div>
+            <div class="phase">
+              <div class="phase-rail"><div class="phase-node">02</div><div class="phase-line"></div></div>
+              <div class="phase-body">
+                <h4>Connected Intelligence</h4>
+                <div class="phase-when">Months 5–8</div>
+                <p>Automatic lab and wearable integration, clinical-trial matching, biomarker trending with longitudinal charts, pharmacogenomics profiling, Visit Briefing exports.</p>
+              </div>
+            </div>
+            <div class="phase">
+              <div class="phase-rail"><div class="phase-node">03</div><div class="phase-line"></div></div>
+              <div class="phase-body">
+                <h4>Scale &amp; Monetize</h4>
+                <div class="phase-when">Months 9–14</div>
+                <p>Clinical-record integration, caregiver mode and multi-profile, community intelligence, the first B2B pilots with employers and health plans, Spanish-language support.</p>
+              </div>
+            </div>
+            <div class="phase">
+              <div class="phase-rail"><div class="phase-node">04</div></div>
+              <div class="phase-body">
+                <h4>Platform</h4>
+                <div class="phase-when">Months 15–24</div>
+                <p>National data access, a provider-facing view, life-sciences partnership programs, broader device parity, and a path toward insurance-reimbursed monitoring.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>North-star metrics</h3></div>
+          <h2>Success is measured in patient activation, not vanity</h2>
+          <div class="grid g2">
+            <div class="stat"><div class="num" style="color:var(--terra-500);font-size:30px;">+1 level</div><div class="lbl"><b>Patient Activation</b> — an average one-level rise in the Patient Activation Measure within 90 days of use.</div></div>
+            <div class="stat"><div class="num" style="color:var(--sage-500);font-size:30px;">70%+</div><div class="lbl"><b>Advocacy Action Rate</b> — share of users who take at least one advocacy action within 30 days.</div></div>
+            <div class="stat"><div class="num" style="color:var(--amber-500);font-size:30px;">10,000</div><div class="lbl"><b>Monthly Active Users</b> by month 12, with 3+ data sources connected per user.</div></div>
+            <div class="stat"><div class="num" style="color:var(--lav-500);font-size:30px;">&gt;95%</div><div class="lbl"><b>Cited-source accuracy</b> — and under a 1% error rate on drug-interaction outputs.</div></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label"><span class="dot"></span><h3>Business model</h3></div>
+          <h2>Patient-owned, enterprise-funded</h2>
+          <p>Longitude Lite is the free tier — the acquisition wedge. The paid tiers carry the full longitudinal platform; enterprise channels carry the revenue.</p>
+          <table class="tbl">
+            <thead><tr><th>Tier</th><th>Price</th><th>What it unlocks</th></tr></thead>
+            <tbody>
+              <tr><td>Lite</td><td class="col-h">$0</td><td>Longitude Lite — unlimited quick questions with calibrated red/yellow/green triage. No setup, no profile.</td></tr>
+              <tr><td>Plus</td><td class="col-h">$9.99/mo</td><td>The longitudinal profile, unlimited AI queries, food–drug interactions, basic lab tracking.</td></tr>
+              <tr><td>Pro</td><td class="col-h">$19.99/mo</td><td>+ Wearables, lab interpretation, biomarker trending, pharmacogenomics, trial matching.</td></tr>
+              <tr><td>Advocate</td><td class="col-h">$39.99/mo</td><td>+ Visit briefings, family accounts, priority AI, caregiver mode, PDF reports.</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:14px;font-size:13.5px;color:var(--brown-500);">Beyond consumer tiers: employer and health-plan contracts, life-sciences partnerships, and clinical-trial referral — the B2B2C channels that fund the mission without selling out the patient's data.</p>
+        </div>
+
+        <div class="section">
+          <div class="callout co-founder">
+            <span class="co-tag">What success looks like</span>
+            <p>A patient like Maya asks for genetic testing before starting steroids. A patient like David finds a trial his community oncologist never mentioned. A caregiver like Rosa catches a dangerous interaction before it happens.</p>
+            <p>Longitude succeeds when the conversations that today depend on luck, money, and connections become the <strong>default experience of being a patient</strong> — for everyone.</p>
+          </div>
+          <div style="text-align:center;margin-top:30px;color:var(--brown-300);font-size:12px;">
+            Longitude &middot; Product Overview &amp; PRD v1.1 &middot; PxlBrain &middot; Pre-Seed 2026 &middot; <a href="mailto:anjan@pxlbrain.com" style="color:var(--terra-500);text-decoration:none;">anjan@pxlbrain.com</a>
+          </div>
+        </div>
+
+        <div class="pagenav">
+          <button class="pn-btn prev" onclick="go(9)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span><span class="pn-dir">Back</span><span class="pn-ttl">Experience &amp; Design</span></span>
+          </button>
+          <button class="pn-btn next" onclick="go(0)">
+            <span><span class="pn-dir">Restart</span><span class="pn-ttl">Back to Cover</span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+    </div><!-- /doc -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+  var pages = document.querySelectorAll('.page');
+  var sideNav = document.getElementById('sideNav');
+  var doc = document.getElementById('doc');
+  var fill = document.getElementById('progressFill');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('scrim');
+  var collapseBtn = document.getElementById('collapseBtn');
+  var current = 0;
+
+  // build sidebar
+  pages.forEach(function(pg, i){
+    var btn = document.createElement('button');
+    btn.className = 'nav-item';
+    var label = pg.getAttribute('data-title');
+    btn.title = label;
+    btn.innerHTML = '<span class="nav-num">' + (i<10 ? '0'+i : i) + '</span><span>' + label + '</span>';
+    btn.addEventListener('click', function(){ go(i); });
+    sideNav.appendChild(btn);
+  });
+  var navItems = sideNav.querySelectorAll('.nav-item');
+
+  function go(i){
+    if(i < 0 || i >= pages.length) return;
+    pages[current].classList.remove('active');
+    navItems[current].classList.remove('active');
+    current = i;
+    pages[current].classList.add('active');
+    navItems[current].classList.add('active');
+    fill.style.width = ((current+1)/pages.length*100) + '%';
+    doc.scrollTop = 0;
+    closeSidebar();
+    if(history.replaceState) history.replaceState(null,'','#'+current);
+  }
+  window.go = go;
+
+  // keyboard nav
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight') go(current+1);
+    if(e.key === 'ArrowLeft') go(current-1);
+  });
+
+  // sidebar collapse (desktop)
+  if(window.innerWidth > 860 && localStorage.getItem('lng-collapsed') === '1'){
+    sidebar.classList.add('collapsed');
+  }
+  collapseBtn.addEventListener('click', function(){
+    var collapsed = sidebar.classList.toggle('collapsed');
+    collapseBtn.title = collapsed ? 'Expand sidebar' : 'Collapse sidebar';
+    localStorage.setItem('lng-collapsed', collapsed ? '1' : '0');
+  });
+
+  // mobile sidebar
+  function openSidebar(){ sidebar.classList.add('open'); scrim.classList.add('open'); }
+  function closeSidebar(){ sidebar.classList.remove('open'); scrim.classList.remove('open'); }
+  document.getElementById('menuBtn').addEventListener('click', openSidebar);
+  scrim.addEventListener('click', closeSidebar);
+
+  // deep link
+  var h = parseInt((location.hash||'').replace('#',''),10);
+  if(!isNaN(h) && h>0 && h<pages.length){ go(h); } else { go(0); }
+</script>
+
+</body>
+</html>
